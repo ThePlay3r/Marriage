@@ -1,0 +1,16 @@
+mysql:
+  host: ""
+  port: ""
+  database: ""
+  username: ""
+  password: ""
+
+particles: true
+
+defaulthome:
+  world: "world"
+  x: 0
+  y: 70
+  z: 0
+  yaw: 0
+  pitch: 0
