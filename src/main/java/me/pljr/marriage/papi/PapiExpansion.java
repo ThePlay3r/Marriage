@@ -110,7 +110,12 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         // %marriage_gender%
         if(identifier.equals("gender")){
-            return PlayerUtil.getPlayerManager(player.getName()).getGender().toString();
+            Gender gender = PlayerUtil.getPlayerManager(player.getName()).getGender();
+            switch (gender){
+                case MALE: return "♂";
+                case NONE: return "●";
+                case FEMALE: return "♀";
+            }
         }
         // %marriage_gendercolor%
         if(identifier.equals("gendercolor")){
