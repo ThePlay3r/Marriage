@@ -1,16 +1,198 @@
-mysql:
-  host: ""
-  port: ""
-  database: ""
-  username: ""
-  password: ""
+#             #
+# MySQL Setup #
+#             #
 
-particles: true
+# This is very important, as the plugin cannot operate without proper MySQL database. #
+
+mysql:
+  host: "localhost" # Hostname
+  port: 3306 # Port, it is very unlikely it won't be 3306
+  database: "database" # Name of the database
+  username: "user" # User's name
+  password: "pass" # User's password
+
+#                 #
+# Options Section #
+#                 #
+
+# Here you can enable, disable and change some of the plugin's functions. #
+
+options:
+  particles: true # Should we use particles for better effect?
+  sounds: true # Should we use sounds for better effect?
+  cost:
+    marry: 7500 # How much should the marrying someone cost?
+    divorce: 5000 # How much should divorcing someone cost?
+  cooldown: 200 # How much time does a player have, to accept a marry request? (In ticks, 20 ticks = 1 second)
+  shared:
+    food: true # Should the married couples have shared food?
+    xp: true # Should the married couples have shared xp?
+  toggle-pvp: true # Should the married couples have option to toggle theirs pvp?
+
+#              #
+# Default Home #
+#              #
+
+# This is the location of the home, couple will have, when they are married, you should set it to your spawn location. #
 
 defaulthome:
-  world: "world"
-  x: 0
-  y: 70
-  z: 0
-  yaw: 0
-  pitch: 0
+  world: "world" # Name of the world
+  x: 0 # X-Axis coordinate
+  y: 70 # Y-Axis coordinate
+  z: 0 # Z-Axis coordinate
+  # You can leave both values down on 0, as it only sets the direction player is looking at. #
+  yaw: 0 # Yaw
+  pitch: 0 # Pitch
+
+#            #
+# Menu Items #
+#            #
+
+# Here you can customize items in the /marry gui. #
+
+menu:
+  title: "§a§lMarriage" # Name of the menu
+  heart: # Item that the heart in the menu is formed out of.
+    type: "RED_STAINED_GLASS_PANE" # Material of the item
+    name: "§c" # Name of the item
+    amount: 1 # How many items should we display?
+    lore: {} # Lore of the item
+  white: # Item that the heart in the menu is filled with.
+    type: "WHITE_STAINED_GLASS_PANE"
+    name: "§f"
+    amount: 1
+    lore: {}
+  background:
+    type: "LIGHT_BLUE_STAINED_GLASS_PANE"
+    name: "§f"
+    amount: 1
+    lore: {}
+  lastseen:
+    type: "REDSTONE_LAMP"
+    name: "§eLast seen"
+    amount: 1
+    lore:
+      - "§8» §fClick to find out,"
+      - " §fwhen your partner was"
+      - " §flast seen on the server."
+  sharedxpinfo:
+    type: "EXPERIENCE_BOTTLE"
+    name: "§eShared Experience"
+    amount: 1
+    lore:
+      - "§8» §fGained XP are halved"
+      - " §fand shared with your partner."
+  tphome:
+    type: "RED_BED"
+    name: "§eHome Teleportation"
+    amount: 1
+    lore:
+      - "§8» §fClick to be teleported to"
+      - " §fyour shared home."
+  gift:
+    type: "CHEST"
+    name: "§eGift"
+    amount: 1
+    lore:
+      - "§8» §fClick to surprise your"
+      - " §fpartner with a lovely gift!"
+      - " §7(Will send your held item to"
+      - " §7your partner)"
+  tp:
+    type: "ENDER_PEARL"
+    name: "§eTeleportation"
+    amount: 1
+    lore:
+      - "§8» §fClick to be teleported to"
+      - " §fyour partner."
+  pvp:
+    type: "DIAMOND_SWORD"
+    name: "§ePvP"
+    amount: 1
+    lore:
+      - "§8» §fClick to turn ON/OFF your"
+      - " §fPvP with partner."
+  sethome:
+    type: "OAK_DOOR"
+    name: "§eSet Home"
+    amount: 1
+    lore:
+      - "§8» §fClick to set your shared home"
+      - " §fto your current location."
+  sharedfoodinfo:
+    type: "COOKED_PORKCHOP"
+    name: "§eShared Food"
+    amount: 1
+    lore:
+      - "§8» §fGained food is halved"
+      - " §fand shared with your partner."
+  privatechatinfo:
+    type: "PAPER"
+    name: "§eShared Chat"
+    amount: 1
+    lore:
+      - "§8» §fClick to start writing"
+      - " §fto your shared chat."
+
+#          #
+# Messages #
+#          #
+
+# Here you can customize all messages. #
+
+messages:
+  NO_CONSOLE: "§cThis command is only for players!"
+  NO_PERM: "§cYou don't have enough permissions to use this!"
+  NO_PARTNER: "§c§l❤ §aMarriage §8» §fYou don't have a partner!"
+  OFFLINE: "§c§l❤ §aMarriage §8» §b%name §fis not on the server!"
+  ITEM_IN_HAND: "§c§l❤ §aMarriage §8» §fYou aren't holding any item!"
+  GIFT_SEND: "§c§l❤ §aMarriage §8» §fYou've send a gift to §b%name§f."
+  GIFT_RECEIVE: "§c§l❤ §aMarriage §8» §fYou received a gift from §b%name§f."
+  TPHOME: "§c§l❤ §aMarriage §8» §bSuccessfully §fteleported to your shared home."
+  SETHOME_PLAYER: "§c§l❤ §aMarriage §8» §bSuccessfully §fset a location for shared home."
+  SETHOME_PARTNER: "§c§l❤ §aMarriage §8» §fYour partner set a new location for §bshared home§f."
+  LASTSEEN: "§c§l❤ §aMarriage §8» §b%name §fwas last seen §b%time §fago."
+  PVP_ON: "§c§l❤ §aMarriage §8» §fYou've §benabled §fyour PvP."
+  PVP_OFF: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fyour PvP."
+  TELEPORT_PLAYER: "§c§l❤ §aMarriage §8» §bSuccessfully §fteleported to §b%name§f."
+  TELEPORT_PARTNER: "§c§l❤ §aMarriage §8» §b%name §fhas been teleported to you."
+  NO_MONEY: "§c§l❤ §aMarriage §8» §fYou don't have enough money! §7(§e$%cost§7)"
+  DIVORCE_PLAYER_TITLE: "§cMarriage"
+  DIVORCE_PLAYER_SUBTITLE: "§c✖ §fDivorced."
+  DIVORCE_PARTNER_TITLE: "§cMarriage"
+  DIVORCE_PARTNER_SUBTITLE: "§c✖ §fDivorced."
+  DIVORCE_BROADCAST: "§c§l❤ §aMarriage §8» §b%name1 §fand §b%name2 §fwere divorced!"
+  HAVE_PARTNER: "§c§l❤ §aMarriage §8» §fYou already have a §bpartner§f!"
+  HAVE_PARTNER_PLAYER: "§c§l❤ §aMarriage §8» §fb%name §falready has a partner!"
+  REQUEST_PENDING: "§c§l❤ §aMarriage §8» §fYou still have a §bpending §frequest!"
+  REQUEST_PENDING_PLAYER: "§c§l❤ §aMarriage §8» §b%name §fhas a request pending§f!"
+  MARRY_ACCEPT_PLAYER1_TITLE: "§c§l❤ §aMarriage §c§l❤"
+  MARRY_ACCEPT_PLAYER1_SUBTITLE: "§fYou §baccepted §fa marry request from §b%name§f."
+  MARRY_ACCEPT_PLAYER2_TITLE: "§c§l❤ §aMarriage §c§l❤"
+  MARRY_ACCEPT_PLAYER2_SUBTITLE: "§b%name §f%accepted your marry request!"
+  MARRY_ACCEPT_BROADCAST: "§c§l❤ §aMarriage §8» §b%name1 §fand §b%name2 §fwere married!"
+  REQUEST_SEND: "§c§l❤ §aMarriage §8» §fYou've successfully send a request for marry to §b%name§f."
+  REQUEST_RECEIVED: "§c§l❤ §aMarriage §8» §b%name §fsend you marry request."
+  REQUEST_EXPIRED_SENDER: "§c§l❤ §aMarriage §8» §b%name §fdid not accept your marry request."
+  REQUEST_EXPIRED_RECEIVER: "§c§l❤ §aMarriage §8» §fYou §bdeclined §fmarry request from §b%name§f."
+  NO_NUMBER: "§c§l❤ §aMarriage §8» §b%arg §fis not a number!"
+  GENDER_SET: "§c§l❤ §aMarriage §8» §fYou set your gender to §b%gender§f."
+  NO_GENDER: "§c§l❤ §aMarriage §8» §b%gender §fis not a gender!"
+  PARTNER_NO_PARTNER: "§c§l❤ §aMarriage §8» §b%name §fdoes not have a partner!"
+  PARTNER: "§c§l❤ §aMarriage §8» §b%name's §fpartner is §b%partner§f."
+  CHAT_FORMAT: "§4§l❤§c§l-Chat §a%name §8» §e%message"
+  LIST_TITLE: "§c§l❤ §aMarriage §8» §fList of couples:"
+  GENDER_MALE: "Male"
+  GENDER_MALE_COLOR: "§b"
+  GENDER_MALE_SYMBOL: "♀"
+  GENDER_FEMALE: "Female"
+  GENDER_FEMALE_COLOR: "§d"
+  GENDER_FEMALE_SYMBOL: "♂"
+  GENDER_NONE: "None"
+  GENDER_NONE_COLOR: "§7"
+  GENDER_NONE_SYMBOL: "●"
+  KISS_PLAYER: "§c§l❤ §aMarriage §8» §bYou §fkissed §b%name§f."
+  KISS_PARTNER: "§c§l❤ §aMarriage §8» §b%name §fhas kissed you."
+  CLICK_TO_DIVORCE: "§8» §fClick for divorce."
+  CHAT_USAGE: "§c§l❤ §aMarriage §8» §bUsage: §f/marry c <text>"
+  ONLINE: "§c§l❤ §aMarriage §8» §b%name §fis on the server."

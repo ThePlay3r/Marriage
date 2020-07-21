@@ -2,7 +2,9 @@ package me.pljr.marriage.papi;
 
 import me.pljr.marriage.Marriage;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.enums.Gender;
+import me.pljr.marriage.enums.Message;
 import me.pljr.marriage.utils.PlayerUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -109,21 +111,21 @@ public class PapiExpansion extends PlaceholderExpansion {
         }
 
         // %marriage_gender%
-        if(identifier.equals("gender")){
+        if(identifier.equals("gender_symbol")){
             Gender gender = PlayerUtil.getPlayerManager(player.getName()).getGender();
             switch (gender){
-                case MALE: return "♂";
-                case NONE: return "●";
-                case FEMALE: return "♀";
+                case MALE: return CfgMessages.messages.get(Message.GENDER_MALE_SYMBOL);
+                case NONE: return CfgMessages.messages.get(Message.GENDER_NONE_SYMBOL);
+                case FEMALE: return CfgMessages.messages.get(Message.GENDER_FEMALE_SYMBOL);
             }
         }
         // %marriage_gendercolor%
-        if(identifier.equals("gendercolor")){
+        if(identifier.equals("gender_color")){
             Gender gender = PlayerUtil.getPlayerManager(player.getName()).getGender();
             switch (gender){
-                case MALE: return "§b";
-                case NONE: return "§7";
-                case FEMALE: return "§d";
+                case MALE: return CfgMessages.messages.get(Message.GENDER_MALE_COLOR);
+                case NONE: return CfgMessages.messages.get(Message.GENDER_NONE_COLOR);
+                case FEMALE: return CfgMessages.messages.get(Message.GENDER_FEMALE_COLOR);
             }
         }
 

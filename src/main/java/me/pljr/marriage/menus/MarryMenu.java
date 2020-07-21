@@ -1,6 +1,8 @@
 package me.pljr.marriage.menus;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgMenu;
+import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.enums.Message;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.utils.GuiUtil;
@@ -16,19 +18,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class MarryMenu implements Listener {
-    private static final String title = "§a§lSvadba";
+    private static final String title = CfgMenu.title;
 
     public static Inventory getMenu(String username){
         Inventory inventory = Bukkit.createInventory(null, 54, title);
         PlayerManager playerManager = PlayerUtil.getPlayerManager(username);
         String partner = playerManager.getPartner();
 
-        ItemStack background = GuiUtil.createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§c");
+        ItemStack background = CfgMenu.background;
         for (int i = 0; i<45; i++){
             inventory.setItem(i, background);
         }
 
-        ItemStack heart = GuiUtil.createItem(Material.RED_STAINED_GLASS_PANE, "§c");
+        ItemStack heart = CfgMenu.heart;
         inventory.setItem(2, heart);
         inventory.setItem(3, heart);
         inventory.setItem(5, heart);
@@ -42,7 +44,7 @@ public class MarryMenu implements Listener {
         inventory.setItem(32, heart);
         inventory.setItem(40, heart);
 
-        ItemStack white = GuiUtil.createItem(Material.WHITE_STAINED_GLASS_PANE, "§f");
+        ItemStack white = CfgMenu.white;
         inventory.setItem(11, white);
         inventory.setItem(12, white);
         inventory.setItem(14, white);
@@ -51,38 +53,38 @@ public class MarryMenu implements Listener {
         inventory.setItem(23, white);
         inventory.setItem(31, white);
 
-        ItemStack lastseen = GuiUtil.createItem(Material.REDSTONE_LAMP, "§eNaposledy videný/ná", "§8» §fKlikni pre zistenie,", "§fkedy bol/a partner/ka", "§fnaposledy na serveri.");
+        ItemStack lastseen = CfgMenu.lastseen;
         inventory.setItem(45, lastseen);
 
-        ItemStack sharedxpinfo = GuiUtil.createItem(Material.EXPERIENCE_BOTTLE, "§eZdieľané skúsenosti", "§8» §fZískané skúsenosti sa delia", "§f50/50 medzi Vami a partnerom/kou.");
+        ItemStack sharedxpinfo = CfgMenu.sharedxpinfo;
         inventory.setItem(46, sharedxpinfo);
 
-        ItemStack tphome = GuiUtil.createItem(Material.RED_BED, "§eTeleportacia domov", "§8» §fKlikni pre teleportovanie na domov.");
+        ItemStack tphome = CfgMenu.tphome;
         inventory.setItem(47, tphome);
 
-        ItemStack gift = GuiUtil.createItem(Material.CHEST, "§eDárek", "§8» §fKlikni pre darovanie predmetu v ruke.");
+        ItemStack gift = CfgMenu.gift;
         inventory.setItem(48, gift);
 
-        ItemStack tp = GuiUtil.createItem(Material.ENDER_PEARL, "§eTeleportacia", "§8» §fKlikni pre teleportovanie.");
+        ItemStack tp = CfgMenu.tp;
         inventory.setItem(49, tp);
 
-        ItemStack pvp = GuiUtil.createItem(Material.DIAMOND_SWORD, "§ePvP", "§8» §fKlikni pre zapnutie/vypnutie PvP.");
+        ItemStack pvp = CfgMenu.pvp;
         inventory.setItem(50, pvp);
 
-        ItemStack sethome = GuiUtil.createItem(Material.OAK_DOOR, "§eNastavenie domu", "§8» §fKlikni pre nastavenie domu.");
+        ItemStack sethome = CfgMenu.sethome;
         inventory.setItem(51, sethome);
 
-        ItemStack sharedfoodinfo = GuiUtil.createItem(Material.COOKED_PORKCHOP, "§eZdieľané jedlo", "§8» §fZískané jedlo sa deli", "§f50/50 medzi Vami a partnerom/kou.");
+        ItemStack sharedfoodinfo = CfgMenu.sharedfoodinfo;
         inventory.setItem(52, sharedfoodinfo);
 
-        ItemStack privatechatinfo = GuiUtil.createItem(Material.PAPER, "§eSpoločný chat", "§8» §fKlikni pre pisanie do spoločnéh chatu.");
+        ItemStack privatechatinfo = CfgMenu.privatechatinfo;
         inventory.setItem(53, privatechatinfo);
 
         ItemStack head;
         if (partner == null){
-            head = GuiUtil.createHead("Steve", "§cNemáš partnera/ku");
+            head = GuiUtil.createHead("Steve", CfgMessages.messages.get(Message.NO_PARTNER));
         }else{
-            head = GuiUtil.createHead(partner, "§e" + partner, "§8» §fKlikni pre zrušenie manželstva.");
+            head = GuiUtil.createHead(partner, "§e" + partner, CfgMessages.messages.get(Message.CLICK_TO_DIVORCE));
         }
         inventory.setItem(22, head);
 
@@ -118,7 +120,7 @@ public class MarryMenu implements Listener {
         } else if (slot == 53){
             player.closeInventory();
             player.sendMessage("");
-            player.sendMessage("§c§l❤ §aSvadba §8» §bPoužitie: §f/marry c <text>");
+            player.sendMessage(CfgMessages.messages.get(Message.CHAT_USAGE));
             player.sendMessage("");
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, 1);
         }

@@ -1,6 +1,10 @@
 package me.pljr.marriage;
 
 import me.pljr.marriage.commands.MarryCommand;
+import me.pljr.marriage.config.CfgDefaulthome;
+import me.pljr.marriage.config.CfgMenu;
+import me.pljr.marriage.config.CfgMessages;
+import me.pljr.marriage.config.CfgOptions;
 import me.pljr.marriage.database.DataSource;
 import me.pljr.marriage.database.QueryManager;
 import me.pljr.marriage.listeners.*;
@@ -62,8 +66,14 @@ public final class Marriage extends JavaPlugin {
 
     public void setupConfig(){
         saveDefaultConfig();
+        saveResource("translations/config-SK.yml", false);
+        saveResource("translations/readme.txt", false);
         config = getConfig();
         configManager = new ConfigManager(config);
+        CfgDefaulthome.load();
+        CfgMenu.load();
+        CfgMessages.load();
+        CfgOptions.load();
     }
 
     public void setupDatabase(){

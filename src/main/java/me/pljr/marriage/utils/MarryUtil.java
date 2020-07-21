@@ -2,8 +2,11 @@ package me.pljr.marriage.utils;
 
 import com.sun.org.apache.bcel.internal.generic.DCMPG;
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgMessages;
+import me.pljr.marriage.config.CfgOptions;
 import me.pljr.marriage.database.QueryManager;
 import me.pljr.marriage.enums.Gender;
+import me.pljr.marriage.enums.Message;
 import me.pljr.marriage.managers.ConfigManager;
 import me.pljr.marriage.managers.PlayerManager;
 import net.md_5.bungee.api.ChatMessageType;
@@ -25,9 +28,9 @@ public class MarryUtil {
         String partnerName = playerManager.getPartner();
         Player partner = Bukkit.getPlayer(partnerName);
         if (partner != null && partner.isOnline()){
-            partner.sendMessage("§4§l❤§c§l-Chat §a" + playerName + " §8» §e" + message);
+            partner.sendMessage(CfgMessages.messages.get(Message.CHAT_FORMAT).replace("%name", playerName).replace("%message", message));
         }
-        player.sendMessage("§4§l❤§c§l-Chat §a" + playerName + " §8» §e" + message);
+        player.sendMessage(CfgMessages.messages.get(Message.CHAT_FORMAT).replace("%name", playerName).replace("%message", message));
     }
 
     public static void marry(String player1, String player2){
@@ -36,7 +39,7 @@ public class MarryUtil {
         playerManager1.setPartner(player2);
         playerManager2.setPartner(player1);
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("§c§l❤ §bSvadba §8» §a" + player1 + " §fa §a" + player2 + " §fboli oddaní!");
+        Bukkit.broadcastMessage(CfgMessages.messages.get(Message.MARRY_ACCEPT_BROADCAST).replace("%name1", player1).replace("%name2", player2));
         Bukkit.broadcastMessage("");
         PlayerUtil.setPlayerManager(player1, playerManager1);
         PlayerUtil.setPlayerManager(player2, playerManager2);
@@ -54,7 +57,7 @@ public class MarryUtil {
             PlayerUtil.setPlayerManager(partnerName, partnerManager);
             PlayerUtil.savePlayer(partnerName);
         }else{
-            partner.sendMessage("§c§l❤ §aSvadba §8» §fTvoj/a partner/ka nastavil/a §bzdieľaný §fdomov.");
+            partner.sendMessage(CfgMessages.messages.get(Message.SETHOME_PARTNER));
             PlayerManager partnerManager = PlayerUtil.getPlayerManager(partnerName);
             partnerManager.setHome(location);
             PlayerUtil.setPlayerManager(partnerName, partnerManager);
@@ -75,14 +78,14 @@ public class MarryUtil {
             PlayerUtil.setPlayerManager(partnerName, partnerManager);
             PlayerUtil.savePlayer(partnerName);
         }else{
-            partner.sendTitle("§cSvadba", "§c✖ Tvoj/a partner/ka §bzrušil/a §fmanželstvo!.", 10, 20*3, 10);
-            partner.playSound(partner.getLocation(), Sound.ITEM_SHIELD_BREAK, 10, 1);
+            partner.sendTitle(CfgMessages.messages.get(Message.DIVORCE_PARTNER_TITLE), CfgMessages.messages.get(Message.DIVORCE_PARTNER_SUBTITLE), 10, 20*3, 10);
+            if (CfgOptions.particles)partner.playSound(partner.getLocation(), Sound.ITEM_SHIELD_BREAK, 10, 1);
             PlayerManager partnerManager = PlayerUtil.getPlayerManager(partnerName);
             partnerManager.setPartner(null);
             PlayerUtil.setPlayerManager(partnerName, partnerManager);
         }
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("§c§l❤ §cSvadba §8» §a" + player + " §fa §a" + partnerName + " §fboli rovedení!");
+        Bukkit.broadcastMessage(CfgMessages.messages.get(Message.DIVORCE_BROADCAST).replace("%name1", player).replace("%name2", partnerName));
         Bukkit.broadcastMessage("");
         playerManager.setPartner(null);
         PlayerUtil.setPlayerManager(player, playerManager);
@@ -95,7 +98,7 @@ public class MarryUtil {
             LinkedHashMap<String, String> marryList = query.getMarryListSync();
 
             player.sendMessage("");
-            player.sendMessage("§c§l❤ §aSvadba §8» §fZoznam párov:");
+            player.sendMessage(CfgMessages.messages.get(Message.LIST_TITLE));
             player.sendMessage("");
 
             int start = page*7;
@@ -109,23 +112,23 @@ public class MarryUtil {
             }
                 PlayerManager player1mngr = PlayerUtil.getPlayerManager(entry.getKey());
                 Gender gender1 = player1mngr.getGender();
-                String player1name = "§7" + entry.getKey();
+                String player1name = CfgMessages.messages.get(Message.GENDER_NONE_COLOR) + entry.getKey();
                 switch (gender1){
                     case FEMALE:
-                        player1name = "§d" + entry.getKey();
+                        player1name = CfgMessages.messages.get(Message.GENDER_FEMALE_COLOR) + entry.getKey();
                         break;
                     case MALE:
-                        player1name = "§b" + entry.getKey();
+                        player1name = CfgMessages.messages.get(Message.GENDER_MALE_COLOR) + entry.getKey();
                 }
                 PlayerManager player2mngr = PlayerUtil.getPlayerManager(entry.getValue());
                 Gender gender2 = player2mngr.getGender();
-                String player2name = "§7" + entry.getValue();
+                String player2name = CfgMessages.messages.get(Message.GENDER_NONE_COLOR) + entry.getValue();
                 switch (gender2){
                     case FEMALE:
-                        player2name = "§d" + entry.getValue();
+                        player2name = CfgMessages.messages.get(Message.GENDER_FEMALE_COLOR) + entry.getValue();
                         break;
                     case MALE:
-                        player2name = "§b" + entry.getValue();
+                        player2name = CfgMessages.messages.get(Message.GENDER_MALE_COLOR) + entry.getValue();
                 }
                 player.sendMessage(player1name + " §7+ " + player2name);
             }
@@ -134,11 +137,11 @@ public class MarryUtil {
 
     public static void kiss(Player player1, Player player2){
         World world = player1.getWorld();
-        if (config.getBoolean("particles")){
+        if (CfgOptions.particles){
             world.spawnParticle(Particle.HEART, player1.getLocation().clone().add(0,1,0), 4, 0.3, 0.3, 0.3);
             world.spawnParticle(Particle.HEART, player2.getLocation().clone().add(0,1,0), 4, 0.3, 0.3, 0.3);
         }
-        player1.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§l❤ §aSvadba §8» §b" + player2.getName() + " §fťa pobozkal/a."));
-        player2.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§l❤ §aSvadba §8» §b" + player1.getName() + " §fťa pobozkal/a."));
+        player1.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(CfgMessages.messages.get(Message.KISS_PLAYER).replace("%name", player2.getName())));
+        player2.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(CfgMessages.messages.get(Message.KISS_PARTNER).replace("%name", player1.getName())));
     }
 }

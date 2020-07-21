@@ -3,7 +3,7 @@ version: ${project.version}
 main: me.pljr.marriage.Marriage
 api-version: 1.13
 authors: [9hx]
-description: Plugin for in-game Marraige.
+description: Plugin for in-game Marriage.
 depend: [Vault]
 softdepend: [PlaceholderAPI]
 

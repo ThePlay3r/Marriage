@@ -1,6 +1,8 @@
 package me.pljr.marriage.commands;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgMessages;
+import me.pljr.marriage.config.CfgOptions;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.enums.Message;
 import me.pljr.marriage.managers.PlayerManager;
@@ -25,20 +27,26 @@ import org.bukkit.inventory.ItemStack;
 public class MarryCommand implements CommandExecutor {
     private final Economy economy = Marriage.getEconomy();
 
+    private final boolean sounds = CfgOptions.sounds;
+    private final int costMarry = CfgOptions.costMarry;
+    private final int costDivorce = CfgOptions.costDivorce;
+    private final int cooldown = CfgOptions.cooldown;
+    private final boolean togglepvp = CfgOptions.togglepvp;
+
     private void fail(Player player){
         Location playerLoc = player.getLocation();
-        player.playSound(playerLoc, Sound.ENTITY_VILLAGER_NO, 10, 1);
+        if (sounds) player.playSound(playerLoc, Sound.ENTITY_VILLAGER_NO, 10, 1);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)){
-            sender.sendMessage("§cTento príkaz je len pre hráčov!");
+            sender.sendMessage(CfgMessages.messages.get(Message.NO_CONSOLE));
             return false;
         }
         Player player = (Player) sender;
         if (!player.hasPermission("marriage.use")){
-            player.sendMessage("§cNemáte dostatočné pravomocie!");
+            player.sendMessage(CfgMessages.messages.get(Message.NO_PERM));
             fail(player);
             return false;
         }
@@ -48,7 +56,7 @@ public class MarryCommand implements CommandExecutor {
         if (args.length > 1){
             if (args[0].equalsIgnoreCase("c")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
@@ -59,24 +67,24 @@ public class MarryCommand implements CommandExecutor {
         if (args.length == 1){
             if (args[0].equalsIgnoreCase("give")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
                 String partnerName = playerManager.getPartner();
                 Player partner = Bukkit.getPlayer(partnerName);
                 if (partner == null || !partner.isOnline()){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §b" + partnerName + " §fnie je na serveri.");
+                    player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", partnerName));
                     fail(player);
                     return false;
                 }
                 if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fMusíš mať předmet v ruke!");
+                    player.sendMessage(CfgMessages.messages.get(Message.ITEM_IN_HAND));
                     fail(player);
                     return false;
                 }
-                player.sendMessage("§c§l❤ §aSvadba §8» §fOdoslal/a si darček pre §b" + partnerName + "§f.");
-                partner.sendMessage("§c§l❤ §aSvadba §8» §fObdržal/a si darček od §b" + playerName + "§f.");
+                player.sendMessage(CfgMessages.messages.get(Message.GIFT_SEND).replace("%name", partnerName));
+                partner.sendMessage(CfgMessages.messages.get(Message.GIFT_RECEIVE).replace("%name", playerName));
                 ItemStack giveItem = player.getInventory().getItemInMainHand();
                 player.getInventory().setItemInMainHand(null);
                 player.updateInventory();
@@ -90,41 +98,41 @@ public class MarryCommand implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("home")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
                 player.teleport(playerManager.getHome());
-                player.sendMessage("§c§l❤ §aSvadba §8» §bÚspešně §fsi sa teleportoval/a na Váš domov.");
+                player.sendMessage(CfgMessages.messages.get(Message.TPHOME));
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("sethome")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
                 MarryUtil.setHome(playerName, playerLoc);
-                player.sendMessage("§c§l❤ §aSvadba §8» §bÚspešně §fsi nastavil/a zdieľaný domov.");
+                player.sendMessage(CfgMessages.messages.get(Message.SETHOME_PLAYER));
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("seen")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
                 String partnerName = playerManager.getPartner();
                 Player partner = Bukkit.getPlayer(partnerName);
                 if (partner != null && partner.isOnline()){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §b" + partnerName + " §fje na serveri.");
+                    player.sendMessage(CfgMessages.messages.get(Message.ONLINE).replace("%name", partnerName));
                     return true;
                 }
                 PlayerManager partnerManager = PlayerUtil.getPlayerManager(partnerName);
                 String lastseen = FormatUtil.formatTime((System.currentTimeMillis() - partnerManager.getLastseen()) / 1000);
-                player.sendMessage("§c§l❤ §aSvadba §8» §b" + partnerName + " §fbol/a naposledy online pred §b" + lastseen);
+                player.sendMessage(CfgMessages.messages.get(Message.LASTSEEN).replace("%name", partnerName).replace("%time", lastseen));
                 return true;
             }
 
@@ -134,13 +142,14 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("pvp")){
+                if (!togglepvp) return false;
                 boolean pvp = playerManager.isPvp();
                 if (pvp){
                     pvp = false;
-                    player.sendMessage("§c§l❤ §aSvadba §8» §bVypol/la §fsi si PvP.");
+                    player.sendMessage(CfgMessages.messages.get(Message.PVP_ON));
                 }else{
                     pvp = true;
-                    player.sendMessage("§c§l❤ §aSvadba §8» §bZapol/la §fsi si PvP.");
+                    player.sendMessage(CfgMessages.messages.get(Message.PVP_OFF));
                 }
                 playerManager.setPvp(pvp);
                 PlayerUtil.setPlayerManager(playerName, playerManager);
@@ -149,37 +158,37 @@ public class MarryCommand implements CommandExecutor {
 
             if (args[0].equalsIgnoreCase("tp")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
                 String partnerName = playerManager.getPartner();
                 Player partner = Bukkit.getPlayer(partnerName);
                 if (partner == null || !partner.isOnline()){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §b" + partnerName + " §fnie je na serveri.");
+                    player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", partnerName));
                     fail(player);
                     return false;
                 }
                 player.teleport(partner);
-                player.sendMessage("§c§l❤ §aSvadba §8» §fTeleportoval/a si sa na §b" + partnerName + "§f.");
-                partner.sendMessage("§c§l❤ §aSvadba §8» §b" + playerName + " §fsa na teba teleportoval/a.");
+                player.sendMessage(CfgMessages.messages.get(Message.TELEPORT_PLAYER).replace("%name", partnerName));
+                partner.sendMessage(CfgMessages.messages.get(Message.TELEPORT_PARTNER).replace("%name", playerName));
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("divorce")){
                 if (playerManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f.");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
                     fail(player);
                     return false;
                 }
-                if (economy.getBalance(player) < 5000){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš dostatek financií. §7(§e$5,000§7)");
+                if (economy.getBalance(player) < costDivorce){
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_MONEY).replace("%cost", costDivorce+""));
                     return false;
                 }
-                economy.withdrawPlayer(player, 5000);
+                economy.withdrawPlayer(player, costDivorce);
                 MarryUtil.divorce(playerName);
-                player.sendTitle("§cSvadba", "§c✖ §fzrušil/a si §bmanželstvo§f.", 10, 20*3, 10);
-                player.playSound(playerLoc, Sound.ITEM_SHIELD_BREAK, 10, 1);
+                player.sendTitle(CfgMessages.messages.get(Message.DIVORCE_PLAYER_TITLE), CfgMessages.messages.get(Message.DIVORCE_PLAYER_SUBTITLE), 10, 20*3, 10);
+                if (sounds) player.playSound(playerLoc, Sound.ITEM_SHIELD_BREAK, 10, 1);
                 return true;
             }
 
@@ -191,66 +200,70 @@ public class MarryCommand implements CommandExecutor {
             String requestName = args[0];
             Player request = Bukkit.getPlayer(requestName);
             if (request == null || !request.isOnline()){
-                player.sendMessage("§c§l❤ §aSvadba §8» §b" + requestName + " §fnie je online." );
+                player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", requestName));
                 fail(player);
                 return false;
             }
             PlayerManager requestManager = PlayerUtil.getPlayerManager(requestName);
             if (playerManager.getPartner() != null){
-                player.sendMessage("§c§l❤ §aSvadba §8» §fUž máš §bpartnera/ku§f!");
+                player.sendMessage(CfgMessages.messages.get(Message.HAVE_PARTNER));
                 return true;
             }
             if (requestManager.getPartner() != null){
-                player.sendMessage("§c§l❤ §aSvadba §8» §fUž má §bpartnera§f!");
+                player.sendMessage(CfgMessages.messages.get(Message.HAVE_PARTNER_PLAYER).replace("%name", requestName));
                 fail(player);
                 return false;
             }
             if (PlayerUtil.getRequests().containsKey(playerName)){
-                player.sendMessage("§c§l❤ §aSvadba §8» §fUž si odoslal §bžiadosť§f!");
+                player.sendMessage(CfgMessages.messages.get(Message.REQUEST_PENDING));
                 return true;
             }
-            if (economy.getBalance(player) < 7500){
-                player.sendMessage("§c§l❤ §aSvadba §8» §fNemáš dostatek financií. §7(§e$7,500§7)");
+            if (economy.getBalance(player) < costMarry){
+                player.sendMessage(CfgMessages.messages.get(Message.NO_MONEY).replace("%cost", costMarry+""));
                 return false;
             }
             if (PlayerUtil.getRequests().containsKey(requestName)){
                 if (!PlayerUtil.getRequests().get(requestName).equals(playerName)){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §b" + requestName + " §fuž odoslal žiadosť §bniekomu inému§f!");
+                    player.sendMessage(CfgMessages.messages.get(Message.REQUEST_PENDING_PLAYER).replace("%name", requestName));
                     fail(player);
                     return false;
                 }
-                player.playSound(playerLoc, Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
-                player.sendTitle("§c§l❤ §aSvadba §c§l❤", "§bPrijal/a §fsi žiadosť o manželstve s §b" + requestName + "§f.", 10, 20*3, 10);
-                request.playSound(playerLoc, Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
-                request.sendTitle("§c§l❤ §aSvadba §c§l❤", "§b" + playerName + " prijal/a §ftvoju žiadosť o manželstve.", 10, 20*3, 10);
+                if (sounds) player.playSound(playerLoc, Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
+                player.sendTitle(CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER1_TITLE),
+                        CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER1_SUBTITLE).replace("%name", requestName),
+                        10, 20*3, 10);
+                if (sounds) request.playSound(playerLoc, Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
+                request.sendTitle(CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER2_TITLE),
+                        CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER2_SUBTITLE).replace("%name", playerName),
+                        10, 20*3, 10);
                 MarryUtil.marry(playerName, requestName);
-                economy.withdrawPlayer(player, 7500);
-                economy.withdrawPlayer(request, 7500);
+                economy.withdrawPlayer(player, costMarry);
+                economy.withdrawPlayer(request, costMarry);
                 PlayerUtil.getRequests().remove(requestName);
                 PlayerUtil.getRequests().remove(playerName);
                 return true;
             }
-            player.sendMessage("§c§l❤ §aSvadba §8» §fOdoslal/a si žiadosť o manželstvo hráči/ke §b" + requestName + "§f.");
-            request.sendMessage("§c§l❤ §aSvadba §8» §b" + playerName + " §fti odoslal/a žiadosť o manželstvo.");
-            request.playSound(request.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+            player.sendMessage(CfgMessages.messages.get(Message.REQUEST_SEND).replace("%name", requestName));
+            request.sendMessage(CfgMessages.messages.get(Message.REQUEST_RECEIVED).replace("%name", playerName));
+            if (sounds) request.playSound(request.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
             PlayerUtil.getRequests().put(playerName, requestName);
             Bukkit.getScheduler().runTaskLaterAsynchronously(Marriage.getInstance(), () ->{
                 if (PlayerUtil.getRequests().containsKey(playerName)){
                     if (player.isOnline()){
-                        player.sendMessage("§c§l❤ §aSvadba §8» §b" + requestName + " neprijal/a §ftvoju žiadosť o manželstvo.");
+                        player.sendMessage(CfgMessages.messages.get(Message.REQUEST_EXPIRED_SENDER));
                     }
                     if (request.isOnline()){
-                        request.sendMessage("§c§l❤ §aSvadba §8» §bNeprijal/a §fsi žiadosť o manželstvo hráči/ke §b" + playerName + "§f.");
+                        request.sendMessage(CfgMessages.messages.get(Message.REQUEST_EXPIRED_RECEIVER));
                     }
                     PlayerUtil.getRequests().remove(playerName);
                 }
-            }, 200);
+            }, cooldown);
             return true;
         }
         if (args.length == 2){
             if (args[0].equalsIgnoreCase("list")){
                 if (!NumberUtil.isInt(args[1])){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §b" + args[1] + " §fnie je číslo!");
+                    player.sendMessage(CfgMessages.messages.get(Message.NO_NUMBER).replace("%arg", args[1]));
                     fail(player);
                     return false;
                 }
@@ -262,13 +275,23 @@ public class MarryCommand implements CommandExecutor {
                 String genderType = args[1].toUpperCase();
                 for (Gender gender : Gender.values()){
                     if (gender.toString().equals(genderType)){
-                        player.sendMessage("§c§l❤ §aSvadba §8» §fNastavil/a si si pohlavie na §b" + genderType.toLowerCase() + "§f.");
+                        switch (gender){
+                            case FEMALE:
+                                player.sendMessage(CfgMessages.messages.get(Message.GENDER_SET).replace("%gender", CfgMessages.messages.get(Message.GENDER_FEMALE)));
+                                break;
+                            case NONE:
+                                player.sendMessage(CfgMessages.messages.get(Message.GENDER_SET).replace("%gender", CfgMessages.messages.get(Message.GENDER_NONE)));
+                                break;
+                            case MALE:
+                                player.sendMessage(CfgMessages.messages.get(Message.GENDER_SET).replace("%gender", CfgMessages.messages.get(Message.GENDER_MALE)));
+                                break;
+                        }
                         playerManager.setGender(gender);
                         PlayerUtil.setPlayerManager(playerName, playerManager);
                         return true;
                     }
                 }
-                player.sendMessage("§c§l❤ §aSvadba §8» §b" + genderType.toLowerCase() + " §fnie je platné pohlavie!");
+                player.sendMessage(CfgMessages.messages.get(Message.NO_GENDER).replace("%gender", genderType));
                 fail(player);
                 return false;
             }
@@ -277,9 +300,9 @@ public class MarryCommand implements CommandExecutor {
                 String requestedInfoName = args[1];
                 PlayerManager requestedInfoManager = PlayerUtil.getPlayerManager(requestedInfoName);
                 if (requestedInfoManager.getPartner() == null){
-                    player.sendMessage("§c§l❤ §aSvadba §8» §b" + requestedInfoName + " §fnemá partnera/ku!");
+                    player.sendMessage(CfgMessages.messages.get(Message.PARTNER_NO_PARTNER).replace("%name", requestedInfoName));
                 }else{
-                    player.sendMessage("§c§l❤ §aSvadba §8» §bPartner/ka §fhráča/ky §b" + requestedInfoName + " §fje §b" + requestedInfoManager.getPartner());
+                    player.sendMessage(CfgMessages.messages.get(Message.PARTNER).replace("%name", requestedInfoName).replace("%partner", requestedInfoManager.getPartner()));
                 }
                 return true;
             }

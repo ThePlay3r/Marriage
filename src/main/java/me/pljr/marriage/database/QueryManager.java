@@ -1,6 +1,7 @@
 package me.pljr.marriage.database;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgDefaulthome;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.managers.ConfigManager;
 import me.pljr.marriage.managers.PlayerManager;
@@ -18,7 +19,6 @@ import java.util.*;
 
 public class QueryManager {
     private final Marriage marriage = Marriage.getInstance();
-    private final ConfigManager config = Marriage.getConfigManager();
 
     public void loadPlayerSync(String username){
         try {
@@ -50,12 +50,12 @@ public class QueryManager {
                 partner = null;
                 pvp = false;
                 home = new Location(
-                        Bukkit.getWorld(config.getString("defaulthome.world")),
-                        config.getInt("defaulthome.x"),
-                        config.getInt("defaulthome.y"),
-                        config.getInt("defaulthome.z"),
-                        config.getInt("defaulthome.yaw"),
-                        config.getInt("defaulthome.pitch")
+                        Bukkit.getWorld(CfgDefaulthome.world),
+                        CfgDefaulthome.x,
+                        CfgDefaulthome.y,
+                        CfgDefaulthome.z,
+                        CfgDefaulthome.yaw,
+                        CfgDefaulthome.pitch
                 );
                 lastseen = System.currentTimeMillis();
                 gender = Gender.NONE;
