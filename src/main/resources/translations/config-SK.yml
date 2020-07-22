@@ -51,80 +51,80 @@ defaulthome:
 # Here you can customize items in the /marry gui. #
 
 menu:
-  title: "§a§lSvadba" # Name of the menu
+  title: "&a&lSvadba" # Name of the menu
   heart: # Item that the heart in the menu is formed out of.
     type: "RED_STAINED_GLASS_PANE" # Material of the item
-    name: "§c" # Name of the item
+    name: "&c" # Name of the item
     amount: 1 # How many items should we display?
     lore: {} # Lore of the item
   white: # Item that the heart in the menu is filled with.
     type: "WHITE_STAINED_GLASS_PANE"
-    name: "§f"
+    name: "&f"
     amount: 1
     lore: {}
   background:
     type: "LIGHT_BLUE_STAINED_GLASS_PANE"
-    name: "§f"
+    name: "&f"
     amount: 1
     lore: {}
   lastseen:
     type: "REDSTONE_LAMP"
-    name: "§eNaposledy videný/ná"
+    name: "&eNaposledy videný/á"
     amount: 1
-    lore:
-      - "§8» §fKlikni pre zistenie,"
-      - " §fkedy bol/a partner/ka"
-      - " §fnaposledy na serveri."
+    lore: |-
+      &8» &fKlikni pre zistenie,
+      &fkedy bol tvoj partner
+      &fnaposledy online.
   sharedxpinfo:
     type: "EXPERIENCE_BOTTLE"
-    name: "§eZdieľané skúsenosti"
+    name: "&eZdieľané skúsenosti"
     amount: 1
     lore:
-      - "§8» §fZískané skúsenosti sa delia"
-      - " §f50/50 medzi Vami a partnerom/kou."
+      - "&8» &fZískané skúsenosti sa delia"
+      - " &f50/50 medzi Vami a partnerom/kou."
   tphome:
     type: "RED_BED"
-    name: "§eTeleportacia domov"
+    name: "&eTeleportácia domov"
     amount: 1
     lore:
-      - "§8» §fKlikni pre teleportovanie na domov."
+      - "&8» &fKlikni pre teleportovanie na spoločný domov."
   gift:
     type: "CHEST"
-    name: "§eDárek"
+    name: "&eDárek"
     amount: 1
     lore:
-      - "§8» §fKlikni pre darovanie predmetu v ruke."
+      - "&8» &fKlikni pre darovanie predmetu v ruke."
   tp:
     type: "ENDER_PEARL"
-    name: "§eTeleportacia"
+    name: "&eTeleportácia"
     amount: 1
     lore:
-      - "§8» §fKlikni pre teleportovanie."
+      - "&8» &fKlikni pre teleportáciu na partnera."
   pvp:
     type: "DIAMOND_SWORD"
-    name: "§ePvP"
+    name: "&ePvP"
     amount: 1
     lore:
-      - "§fKlikni pre zapnutie/vypnutie PvP."
+      - "&fKlikni pre zapnutie/vypnutie PvP s partnerom."
   sethome:
     type: "OAK_DOOR"
-    name: "§eNastavenie domu"
+    name: "&eNastavenie domu"
     amount: 1
     lore:
-      - "§8» §fKlikni pre nastavenie domu."
+      - "&8» &fKlikni pre nastavenie spoločného domova."
   sharedfoodinfo:
     type: "COOKED_PORKCHOP"
-    name: "§eZdieľané jedlo"
+    name: "&eZdieľané jedlo"
     amount: 1
     lore:
-      - "§8» §fZískané jedlo sa deli"
-      - "§f50/50 medzi Vami a partnerom/kou."
+      - "&8» &fZískané jedlo sa delí"
+      - "&f50/50 medzi Vami a partnerom."
   privatechatinfo:
     type: "PAPER"
-    name: "§eSpoločný chat"
+    name: "&eSpoločný chat"
     amount: 1
     lore:
-      - "§8» §fKlikni pre pisanie do spoločnéh chatu."
+      - "&8» &fKlikni pre pisanie do spoločného chatu s partnerom."
 
 #          #
 # Messages #
@@ -133,58 +133,58 @@ menu:
 # Here you can customize all messages. #
 
 messages:
-  NO_CONSOLE: "§cTento príkaz je len pre hráčov!"
-  NO_PERM: "§cNemáte dostatočné pravomocie!"
-  NO_PARTNER: "§c§l❤ §aSvadba §8» §fNemáš §bpartnera/ku§f."
-  OFFLINE: "§c§l❤ §aSvadba §8» §b%name §fnie je na serveri."
-  ITEM_IN_HAND: "§c§l❤ §aSvadba §8» §fMusíš mať předmet v ruke!"
-  GIFT_SEND: "§c§l❤ §aSvadba §8» §fOdoslal/a si darček pre §b%name§f."
-  GIFT_RECEIVE: "§c§l❤ §aSvadba §8» §fObdržal/a si darček od §b%name§f."
-  TPHOME: "§c§l❤ §aSvadba §8» §bÚspešně §fsi sa teleportoval/a na Váš domov."
-  SETHOME_PLAYER: "§c§l❤ §aSvadba §8» §bÚspešně §fsi nastavil/a zdieľaný domov."
-  SETHOME_PARTNER: "§c§l❤ §aSvadba §8» §fTvoj/a partner/ka nastavil/a §bzdieľaný §fdomov."
-  LASTSEEN: "§c§l❤ §aSvadba §8» §b%name §fbol/a naposledy online pred §b%time"
-  PVP_ON: "§c§l❤ §aSvadba §8» §bVypol/la §fsi si PvP."
-  PVP_OFF: "§c§l❤ §aSvadba §8» §bZapol/la §fsi si PvP."
-  TELEPORT_PLAYER: "§c§l❤ §aSvadba §8» §fTeleportoval/a si sa na §b%name§f."
-  TELEPORT_PARTNER: "§c§l❤ §aSvadba §8» §b%name §fsa na teba teleportoval/a."
-  NO_MONEY: "§c§l❤ §aSvadba §8» §fNemáš dostatek financií. §7(§e%cost§7)"
-  DIVORCE_PLAYER_TITLE: "§cSvadba"
-  DIVORCE_PLAYER_SUBTITLE: "§c✖ §fzrušil/a si §bmanželstvo§f."
-  DIVORCE_PARTNER_TITLE: "§cSvadba"
-  DIVORCE_PARTNER_SUBTITLE: "§c✖ Tvoj/a partner/ka §bzrušil/a §fmanželstvo!."
-  DIVORCE_BROADCAST: "§c§l❤ §cSvadba §8» §a%name1 §fa §a%name2 §fboli rovedení!"
-  HAVE_PARTNER: "§c§l❤ §aSvadba §8» §fUž máš §bpartnera§f!"
-  HAVE_PARTNER_PLAYER: "§c§l❤ §aSvadba §8» §fUž má §bpartnera§f!"
-  REQUEST_PENDING: "§c§l❤ §aSvadba §8» §fUž si odoslal §bžiadosť§f!"
-  REQUEST_PENDING_PLAYER: "§c§l❤ §aSvadba §8» §b%name §fuž odoslal žiadosť §bniekomu inému§f!"
-  MARRY_ACCEPT_PLAYER1_TITLE: "§c§l❤ §aSvadba §c§l❤"
-  MARRY_ACCEPT_PLAYER1_SUBTITLE: "§bPrijal/a §fsi žiadosť o manželstve s §b%name§f."
-  MARRY_ACCEPT_PLAYER2_TITLE: "§c§l❤ §aSvadba §c§l❤"
-  MARRY_ACCEPT_PLAYER2_SUBTITLE: "§b%name prijal/a §ftvoju žiadosť o manželstve."
-  MARRY_ACCEPT_BROADCAST: "§c§l❤ §bSvadba §8» §a%name1 §fa §a%name2 §fboli oddaní!"
-  REQUEST_SEND: "§c§l❤ §aSvadba §8» §fOdoslal/a si žiadosť o manželstvo hráči/ke §b%name§f."
-  REQUEST_RECEIVED: "§c§l❤ §aSvadba §8» §b%name §fti odoslal/a žiadosť o manželstvo."
-  REQUEST_EXPIRED_SENDER: "§c§l❤ §aSvadba §8» §b%name neprijal/a §ftvoju žiadosť o manželstvo."
-  REQUEST_EXPIRED_RECEIVER: "§c§l❤ §aSvadba §8» §bNeprijal/a §fsi žiadosť o manželstvo hráči/ke §b%name§f."
-  NO_NUMBER: "§c§l❤ §aSvadba §8» §b%arg §fnie je číslo!"
-  GENDER_SET: "§c§l❤ §aSvadba §8» §fNastavil/a si si pohlavie na §b%gender§f."
-  NO_GENDER: "§c§l❤ §aSvadba §8» §b%gender §fnie je platné pohlavie!"
-  PARTNER_NO_PARTNER: "§c§l❤ §aSvadba §8» §b%name §fnemá partnera/ku!"
-  PARTNER: "§c§l❤ §aSvadba §8» §bPartner/ka §fhráča/ky §b%name §fje §b%partner"
-  CHAT_FORMAT: "§4§l❤§c§l-Chat §a%name §8» §e%message"
-  LIST_TITLE: "§c§l❤ §aSvadba §8» §fZoznam párov:"
+  NO_CONSOLE: "&cTento príkaz môže byť vykonaný len hráčom!"
+  NO_PERM: "&cNemáte dostatočné práva na vykonanie tejto akcie!"
+  NO_PARTNER: "&c&l❤ &aSvadba &8» &fNemáš &bpartnera&f."
+  OFFLINE: "&c&l❤ &aSvadba &8» &b%name &fnie je na serveri."
+  ITEM_IN_HAND: "&c&l❤ &aSvadba &8» &fMusíš mať předmet v ruke!"
+  GIFT_SEND: "&c&l❤ &aSvadba &8» &fOdoslal/a si darček pre &b%name&f."
+  GIFT_RECEIVE: "&c&l❤ &aSvadba &8» &fObdržal/a si darček od &b%name&f."
+  TPHOME: "&c&l❤ &aSvadba &8» &bÚspešně &fsi sa teleportoval/a na Váš spoločný domov."
+  SETHOME_PLAYER: "&c&l❤ &aSvadba &8» &bÚspešně &fsi nastavil/a zdieľaný domov."
+  SETHOME_PARTNER: "&c&l❤ &aSvadba &8» &fTvoj/a partner/ka nastavil/a &bzdieľaný &fdomov."
+  LASTSEEN: "&c&l❤ &aSvadba &8» &b%name &fbol/a naposledy online pred &b%time"
+  PVP_ON: "&c&l❤ &aSvadba &8» &bVypol/la &fsi si PvP s partnerom."
+  PVP_OFF: "&c&l❤ &aSvadba &8» &bZapol/la &fsi si PvP s partnerom."
+  TELEPORT_PLAYER: "&c&l❤ &aSvadba &8» &fTeleportoval/a si sa na &b%name&f."
+  TELEPORT_PARTNER: "&c&l❤ &aSvadba &8» &b%name &fsa na teba teleportoval/a."
+  NO_MONEY: "&c&l❤ &aSvadba &8» &fNemáš dostatok financií. &7(&e%cost&7)"
+  DIVORCE_PLAYER_TITLE: "&cSvadba"
+  DIVORCE_PLAYER_SUBTITLE: "&c✖ &fzrušil/a si &bmanželstvo&f."
+  DIVORCE_PARTNER_TITLE: "&cSvadba"
+  DIVORCE_PARTNER_SUBTITLE: "&c✖ Tvoj/a partner/ka &bzrušil/a &fmanželstvo!."
+  DIVORCE_BROADCAST: "&c&l❤ &cSvadba &8» &a%name1 &fa &a%name2 &fboli rozvedení!"
+  HAVE_PARTNER: "&c&l❤ &aSvadba &8» &fUž máš &bpartnera&f!"
+  HAVE_PARTNER_PLAYER: "&c&l❤ &aSvadba &8» &fUž má &bpartnera&f!"
+  REQUEST_PENDING: "&c&l❤ &aSvadba &8» &fUž si odoslal &bžiadosť&f!"
+  REQUEST_PENDING_PLAYER: "&c&l❤ &aSvadba &8» &b%name &fuž odoslal žiadosť &bniekomu inému&f!"
+  MARRY_ACCEPT_PLAYER1_TITLE: "&c&l❤ &aSvadba &c&l❤"
+  MARRY_ACCEPT_PLAYER1_SUBTITLE: "&bPrijal/a &fsi žiadosť o manželstvo s &b%name&f."
+  MARRY_ACCEPT_PLAYER2_TITLE: "&c&l❤ &aSvadba &c&l❤"
+  MARRY_ACCEPT_PLAYER2_SUBTITLE: "&b%name prijal/a &ftvoju žiadosť o manželstvo."
+  MARRY_ACCEPT_BROADCAST: "&c&l❤ &bSvadba &8» &a%name1 &fa &a%name2 &fboli oddaní!"
+  REQUEST_SEND: "&c&l❤ &aSvadba &8» &fOdoslal/a si žiadosť o manželstvo hráčovi/ke &b%name&f."
+  REQUEST_RECEIVED: "&c&l❤ &aSvadba &8» &b%name &fti odoslal/a žiadosť o manželstvo."
+  REQUEST_EXPIRED_SENDER: "&c&l❤ &aSvadba &8» &b%name neprijal/a &ftvoju žiadosť o manželstvo."
+  REQUEST_EXPIRED_RECEIVER: "&c&l❤ &aSvadba &8» &bNeprijal/a &fsi žiadosť o manželstvo hráčovi/ke &b%name&f."
+  NO_NUMBER: "&c&l❤ &aSvadba &8» &b%arg &fnie je číslo!"
+  GENDER_SET: "&c&l❤ &aSvadba &8» &fNastavil/a si si pohlavie na &b%gender&f."
+  NO_GENDER: "&c&l❤ &aSvadba &8» &b%gender &fnie je platné pohlavie!"
+  PARTNER_NO_PARTNER: "&c&l❤ &aSvadba &8» &b%name &fnemá partnera/ku!"
+  PARTNER: "&c&l❤ &aSvadba &8» &bPartner/ka &fhráča/ky &b%name &fje &b%partner"
+  CHAT_FORMAT: "&4&l❤&c&l-Chat &a%name &8» &e%message"
+  LIST_TITLE: "&c&l❤ &aSvadba &8» &fZoznam párov:"
   GENDER_MALE: "Male"
-  GENDER_MALE_COLOR: "§b"
+  GENDER_MALE_COLOR: "&b"
   GENDER_MALE_SYMBOL: "♀"
   GENDER_FEMALE: "Female"
-  GENDER_FEMALE_COLOR: "§d"
+  GENDER_FEMALE_COLOR: "&d"
   GENDER_FEMALE_SYMBOL: "♂"
   GENDER_NONE: "None"
-  GENDER_NONE_COLOR: "§7"
+  GENDER_NONE_COLOR: "&7"
   GENDER_NONE_SYMBOL: "●"
-  KISS_PLAYER: "§c§l❤ §aSvadba §8» §fPobozkal si §b%name."
-  KISS_PARTNER: "§c§l❤ §aSvadba §8» §b%name §fťa pobozkal/a."
-  CLICK_TO_DIVORCE: "§8» §fKlikni pre zrušenie manželstva."
-  CHAT_USAGE: "§c§l❤ §aSvadba §8» §bPoužitie: §f/marry c <text>"
-  ONLINE: "§c§l❤ §aSvadba §8» §b%name §fje na serveri."
+  KISS_PLAYER: "&c&l❤ &aSvadba &8» &fPobozkal/a si &b%name."
+  KISS_PARTNER: "&c&l❤ &aSvadba &8» &b%name &fťa pobozkal/a."
+  CLICK_TO_DIVORCE: "&8» &fKlikni pre zrušenie manželstva."
+  CHAT_USAGE: "&c&l❤ &aSvadba &8» &bPoužitie: &f/marry c <text>"
+  ONLINE: "&c&l❤ &aSvadba &8» &b%name &fje na serveri."
