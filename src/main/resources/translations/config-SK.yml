@@ -44,6 +44,19 @@ defaulthome:
   yaw: 0 # Yaw
   pitch: 0 # Pitch
 
+#        #
+# Sounds #
+#        #
+
+# Here you can set/change sounds.
+
+sounds:
+  FAIL: "ENTITY_VILLAGER_NO"
+  DIVORCE: "ITEM_SHIELD_BREAK"
+  MENU_CLICK: "BLOCK_NOTE_BLOCK_PLING"
+  MARRY_ACCEPT: "ENTITY_PLAYER_LEVELUP"
+  NOTIFY: "ENTITY_EXPERIENCE_ORB_PICKUP"
+
 #            #
 # Menu Items #
 #            #
