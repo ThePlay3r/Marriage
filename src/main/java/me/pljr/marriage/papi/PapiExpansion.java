@@ -187,7 +187,11 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         // %marriage_partner%
         if(identifier.equals("partner")){
-            return playerManager.getPartner();
+            String partnerName = playerManager.getPartner();
+            if (partnerName == null){
+                return "";
+            }
+            return partnerName;
         }
 
         // %marriage_partner_gender%
