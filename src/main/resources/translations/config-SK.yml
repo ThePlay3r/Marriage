@@ -64,6 +64,9 @@ sounds:
 # Here you can customize items in the /marry gui. #
 
 menu:
+  enabled: true # If "false", a help message will be send instead of opening the menu.
+  # !! Important
+  old-head: false # Change this to "true" if you are running Spigot version 1.12.2 and below.
   title: "§a§lSvadba" # Name of the menu
   heart: # Item that the heart in the menu is formed out of.
     type: "RED_STAINED_GLASS_PANE" # Material of the item
@@ -145,6 +148,19 @@ menu:
 
 # Here you can customize all messages. #
 
+help:
+  - ""
+  - "§a§lSvadba v${project.version}"
+  - ""
+  - "§e/marry seen §8» §fKedy bol/a partner/ka naposledy na serveri."
+  - "§e/marry tp §8» §fTeleportovanie."
+  - "§e/marry gift §8» §fDarovanie predmetu v ruke."
+  - "§e/marry sethome §8» §fNastavenie domu."
+  - "§e/marry home §8» §fTeleportovanie na domov."
+  - "§e/marry chat <text> §8» §fPisanie do spoločnéh chatu."
+  - "§e/marry pvp §8» §fZapnutie/vypnutie PvP."
+  - ""
+
 messages:
   NO_CONSOLE: "§cTento príkaz je len pre hráčov!"
   NO_PERM: "§cNemáte dostatočné pravomocie!"
@@ -201,3 +217,7 @@ messages:
   CLICK_TO_DIVORCE: "§8» §fKlikni pre zrušenie manželstva."
   CHAT_USAGE: "§c§l❤ §aSvadba §8» §bPoužitie: §f/marry c <text>"
   ONLINE: "§c§l❤ §aSvadba §8» §b%name §fje na serveri."
+  STATE_SINGLE: "Single"
+  STATE_MARRIED: "V manželstve"
+  PVP_ENABLED: "On"
+  PVP_DISABLED: "Off"

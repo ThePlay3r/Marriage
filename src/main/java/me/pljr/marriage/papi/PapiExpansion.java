@@ -5,7 +5,10 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.enums.Message;
+import me.pljr.marriage.managers.PlayerManager;
+import me.pljr.marriage.utils.FormatUtil;
 import me.pljr.marriage.utils.PlayerUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -105,23 +108,30 @@ public class PapiExpansion extends PlaceholderExpansion {
      */
     @Override
     public String onPlaceholderRequest(Player player, String identifier){
-
         if(player == null){
             return "";
         }
 
+        String playerName = player.getName();
+        PlayerManager playerManager = PlayerUtil.getPlayerManager(playerName);
+
         // %marriage_gender%
+        if(identifier.equals("gender")){
+            return playerManager.getGender().toString();
+        }
+
+        // %marriage_gender_symbol%
         if(identifier.equals("gender_symbol")){
-            Gender gender = PlayerUtil.getPlayerManager(player.getName()).getGender();
+            Gender gender = playerManager.getGender();
             switch (gender){
                 case MALE: return CfgMessages.messages.get(Message.GENDER_MALE_SYMBOL);
                 case NONE: return CfgMessages.messages.get(Message.GENDER_NONE_SYMBOL);
                 case FEMALE: return CfgMessages.messages.get(Message.GENDER_FEMALE_SYMBOL);
             }
         }
-        // %marriage_gendercolor%
+        // %marriage_gender_color%
         if(identifier.equals("gender_color")){
-            Gender gender = PlayerUtil.getPlayerManager(player.getName()).getGender();
+            Gender gender = playerManager.getGender();
             switch (gender){
                 case MALE: return CfgMessages.messages.get(Message.GENDER_MALE_COLOR);
                 case NONE: return CfgMessages.messages.get(Message.GENDER_NONE_COLOR);
@@ -129,9 +139,117 @@ public class PapiExpansion extends PlaceholderExpansion {
             }
         }
 
+        // %marriage_state%
+        if (identifier.equals("state")){
+            if (playerManager.getPartner() == null){
+                return CfgMessages.messages.get(Message.STATE_SINGLE);
+            }
+            return CfgMessages.messages.get(Message.STATE_MARRIED);
+        }
+
+        // %marriage_pvp%
+        if (identifier.equals("pvp")){
+            if (playerManager.isPvp()){
+                return CfgMessages.messages.get(Message.PVP_ENABLED);
+            }
+            return CfgMessages.messages.get(Message.PVP_DISABLED);
+        }
+
+        // %marriage_home_world%
+        if (identifier.equals("home_world")){
+            return playerManager.getHome().getWorld().getName();
+        }
+
+        // %marriage_home_x%
+        if (identifier.equals("home_x")){
+            return playerManager.getHome().getX()+"";
+        }
+
+        // %marriage_home_y%
+        if (identifier.equals("home_y")){
+            return playerManager.getHome().getY()+"";
+        }
+
+        // %marriage_home_z%
+        if (identifier.equals("home_z")){
+            return playerManager.getHome().getZ()+"";
+        }
+
+        // %marriage_home_yaw%
+        if (identifier.equals("home_yaw")){
+            return playerManager.getHome().getYaw()+"";
+        }
+
+        // %marraige_home_pitch%
+        if (identifier.equals("home_pitch")){
+            return playerManager.getHome().getPitch()+"";
+        }
+
         // %marriage_partner%
         if(identifier.equals("partner")){
-            return PlayerUtil.getPlayerManager(player.getName()).getPartner();
+            return playerManager.getPartner();
+        }
+
+        // %marriage_partner_gender%
+        if(identifier.equals("partner_gender")){
+            String partnerName = playerManager.getPartner();
+            if (partnerName == null){
+                return "";
+            }
+            return PlayerUtil.getPlayerManager(partnerName).getGender().toString();
+        }
+
+        // %marriage_partner_gender_symbol%
+        if(identifier.equals("partner_gender_symbol")){
+            String partnerName = playerManager.getPartner();
+            if (partnerName == null){
+                return "";
+            }
+            Gender gender = PlayerUtil.getPlayerManager(partnerName).getGender();
+            switch (gender){
+                case MALE: return CfgMessages.messages.get(Message.GENDER_MALE_SYMBOL);
+                case NONE: return CfgMessages.messages.get(Message.GENDER_NONE_SYMBOL);
+                case FEMALE: return CfgMessages.messages.get(Message.GENDER_FEMALE_SYMBOL);
+            }
+        }
+        // %marriage_partner_gender_color%
+        if(identifier.equals("partner_gender_color")){
+            String partnerName = playerManager.getPartner();
+            if (partnerName == null){
+                return "";
+            }
+            Gender gender = PlayerUtil.getPlayerManager(partnerName).getGender();
+            switch (gender){
+                case MALE: return CfgMessages.messages.get(Message.GENDER_MALE_COLOR);
+                case NONE: return CfgMessages.messages.get(Message.GENDER_NONE_COLOR);
+                case FEMALE: return CfgMessages.messages.get(Message.GENDER_FEMALE_COLOR);
+            }
+        }
+
+        // %marriage_partner_lastseen%
+        if (identifier.equals("partner_lastseen")){
+            String partnerName = playerManager.getPartner();
+            if (partnerName == null){
+                return "";
+            }
+            Player partner = Bukkit.getPlayer(partnerName);
+            if (partner == null || !partner.isOnline()){
+                return FormatUtil.formatTime(PlayerUtil.getPlayerManager(partnerName).getLastseen());
+            }else{
+                return CfgMessages.messages.get(Message.ONLINE);
+            }
+        }
+
+        // %marriage_partner_pvp%
+        if (identifier.equals("partner_pvp")){
+            String partnerName = playerManager.getPartner();
+            if (partnerName == null){
+                return "";
+            }
+            if (PlayerUtil.getPlayerManager(partnerName).isPvp()){
+                return CfgMessages.messages.get(Message.PVP_ENABLED);
+            }
+            return CfgMessages.messages.get(Message.PVP_DISABLED);
         }
 
         // We return null if an invalid placeholder (f.e. %someplugin_placeholder3%)

@@ -64,6 +64,7 @@ sounds:
 # Here you can customize items in the /marry gui. #
 
 menu:
+  enabled: true # If "false", a help message will be send instead of opening the menu.
   # !! Important
   old-head: false # Change this to "true" if you are running Spigot version 1.12.2 and below.
   title: "§a§lMarriage" # Name of the menu
@@ -155,6 +156,19 @@ menu:
 
 # Here you can customize all messages. #
 
+help:
+  - ""
+  - "§a§lMarriage Help v${project.version}"
+  - ""
+  - "§e/marry seen §8» §fChecks when your partner was last connected."
+  - "§e/marry tp §8» §fTeleportation to your partner."
+  - "§e/marry gift §8» §fGives currently held item to your partner."
+  - "§e/marry sethome §8» §fSets your location as the current shared home."
+  - "§e/marry home §8» §fTeleportation to your shared home."
+  - "§e/marry chat <message> §8» §fSends message to shared private chat."
+  - "§e/marry pvp §8» §fToggles your PvP with partner."
+  - ""
+
 messages:
   NO_CONSOLE: "§cThis command is only for players!"
   NO_PERM: "§cYou don't have enough permissions to use this!"
@@ -211,3 +225,7 @@ messages:
   CLICK_TO_DIVORCE: "§8» §fClick for divorce."
   CHAT_USAGE: "§c§l❤ §aMarriage §8» §bUsage: §f/marry c <text>"
   ONLINE: "§c§l❤ §aMarriage §8» §b%name §fis on the server."
+  STATE_SINGLE: "Single"
+  STATE_MARRIED: "Married"
+  PVP_ENABLED: "On"
+  PVP_DISABLED: "Off"

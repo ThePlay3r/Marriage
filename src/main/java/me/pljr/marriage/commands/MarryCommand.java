@@ -1,6 +1,7 @@
 package me.pljr.marriage.commands;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgMenu;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.config.CfgOptions;
 import me.pljr.marriage.config.CfgSounds;
@@ -67,6 +68,10 @@ public class MarryCommand implements CommandExecutor {
             }
         }
         if (args.length == 1){
+            if (args[0].equalsIgnoreCase("help")){
+                CfgMessages.help.forEach(player::sendMessage);
+                return true;
+            }
             if (args[0].equalsIgnoreCase("give")){
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
@@ -201,7 +206,11 @@ public class MarryCommand implements CommandExecutor {
              */
             String requestName = args[0];
             if (requestName.equalsIgnoreCase(playerName)){
-                player.openInventory(MarryMenu.getMenu(playerName));
+                if (CfgMenu.enabled){
+                    player.openInventory(MarryMenu.getMenu(playerName));
+                }else{
+                    CfgMessages.help.forEach(player::sendMessage);
+                }
                 return false;
             }
             Player request = Bukkit.getPlayer(requestName);
@@ -313,7 +322,11 @@ public class MarryCommand implements CommandExecutor {
                 return true;
             }
         }
-        player.openInventory(MarryMenu.getMenu(playerName));
+        if (CfgMenu.enabled){
+            player.openInventory(MarryMenu.getMenu(playerName));
+        }else{
+            CfgMessages.help.forEach(player::sendMessage);
+        }
         return true;
     }
 }
