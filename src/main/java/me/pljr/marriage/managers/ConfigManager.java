@@ -21,35 +21,35 @@ public class ConfigManager {
     private final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 
     private void pathNotFound(String path){
-        console.sendMessage("§cDCCore+: Path " + path + " was not found in " + config.toString());
+        console.sendMessage("§cMarriage: Path " + path + " was not found in configuration!");
     }
 
     private void isNotSound(String sound, String path){
-        console.sendMessage("§cDCCore+: " + sound + " is not a sound on " + path +" in " + config.toString());
+        console.sendMessage("§cMarriage: " + sound + " is not a sound on " + path +" in configuration!");
     }
 
     private void isNotInt(String integer, String path){
-        console.sendMessage("§cDCCore+: " + integer + " is not an int on " + path + " in " + config.toString());
+        console.sendMessage("§cMarriage: " + integer + " is not an int on " + path + " in configuration!");
     }
 
     private void isNotBoolean(String bool, String path){
-        console.sendMessage("§cDCCore+: " + bool + " is not a boolean on " + path +" in " + config.toString());
+        console.sendMessage("§cMarriage: " + bool + " is not a boolean on " + path +" in configuration!");
     }
 
     private void isNotStringlist(String path){
-        console.sendMessage("§cDCCore+: Couldn't find a String List on " + path +" in " + config.toString());
+        console.sendMessage("§cMarriage: Couldn't find a String List on " + path +" in configuration!");
     }
 
     private void isNotEntityType(String entity, String path){
-        console.sendMessage("§cDCCore+: " + entity + "is not an entity on " + path + " in " + config.toString());
+        console.sendMessage("§cMarriage: " + entity + "is not an entity on " + path + " in configuration!");
     }
 
     private void isNotMaterial(String material, String path){
-        console.sendMessage("§cDCCore+: " + material + " is not a material on " + path + " in " + config.toString());
+        console.sendMessage("§cMarriage: " + material + " is not a material on " + path + " in configuration!");
     }
 
     private void isNotDamageCause(String cause, String path){
-        console.sendMessage("§cDCCore+: " + cause + "is not a damage cause on " + path + " in " + config.toString());
+        console.sendMessage("§cMarriage: " + cause + "is not a damage cause on " + path + " in configuration!");
     }
 
     public ConfigManager(FileConfiguration config){
@@ -76,11 +76,11 @@ public class ConfigManager {
             }
 
             isNotSound(soundName, path);
-            return Sound.ENTITY_VILLAGER_NO;
+            return null;
         }
 
         pathNotFound(path);
-        return Sound.ENTITY_VILLAGER_NO;
+        return null;
     }
 
     public int getInt(String path){

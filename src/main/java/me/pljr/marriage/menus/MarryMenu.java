@@ -3,7 +3,9 @@ package me.pljr.marriage.menus;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMenu;
 import me.pljr.marriage.config.CfgMessages;
+import me.pljr.marriage.config.CfgSounds;
 import me.pljr.marriage.enums.Message;
+import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.utils.GuiUtil;
 import me.pljr.marriage.utils.PlayerUtil;
@@ -122,7 +124,7 @@ public class MarryMenu implements Listener {
             player.sendMessage("");
             player.sendMessage(CfgMessages.messages.get(Message.CHAT_USAGE));
             player.sendMessage("");
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, 1);
+            player.playSound(player.getLocation(), CfgSounds.sounds.get(Sounds.MENU_CLICK), 2, 1);
         }
     }
 }

@@ -4,9 +4,11 @@ import com.sun.org.apache.bcel.internal.generic.DCMPG;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.config.CfgOptions;
+import me.pljr.marriage.config.CfgSounds;
 import me.pljr.marriage.database.QueryManager;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.enums.Message;
+import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.ConfigManager;
 import me.pljr.marriage.managers.PlayerManager;
 import net.md_5.bungee.api.ChatMessageType;
@@ -79,7 +81,7 @@ public class MarryUtil {
             PlayerUtil.savePlayer(partnerName);
         }else{
             partner.sendTitle(CfgMessages.messages.get(Message.DIVORCE_PARTNER_TITLE), CfgMessages.messages.get(Message.DIVORCE_PARTNER_SUBTITLE), 10, 20*3, 10);
-            if (CfgOptions.particles)partner.playSound(partner.getLocation(), Sound.ITEM_SHIELD_BREAK, 10, 1);
+            if (CfgOptions.particles)partner.playSound(partner.getLocation(), CfgSounds.sounds.get(Sounds.DIVORCE), 10, 1);
             PlayerManager partnerManager = PlayerUtil.getPlayerManager(partnerName);
             partnerManager.setPartner(null);
             PlayerUtil.setPlayerManager(partnerName, partnerManager);

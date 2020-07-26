@@ -1,5 +1,7 @@
 package me.pljr.marriage.utils;
 
+import me.pljr.marriage.config.CfgMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +30,15 @@ public class GuiUtil {
     }
 
     public static ItemStack createHead(String owner, String name, String... lore){
+        if (CfgMenu.oldHead){
+            ItemStack skull = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+            SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+            skullMeta.setOwner(owner);
+            skullMeta.setDisplayName(name);
+            skullMeta.setLore(Arrays.asList(lore));
+            skull.setItemMeta(skullMeta);
+            return skull;
+        }
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(owner);
@@ -38,6 +49,15 @@ public class GuiUtil {
     }
 
     public static ItemStack createHead(String owner, String name, List<String> lore){
+        if (CfgMenu.oldHead){
+            ItemStack skull = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+            SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+            skullMeta.setOwner(owner);
+            skullMeta.setDisplayName(name);
+            skullMeta.setLore(lore);
+            skull.setItemMeta(skullMeta);
+            return skull;
+        }
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(owner);

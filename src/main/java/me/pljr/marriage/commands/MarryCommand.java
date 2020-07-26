@@ -3,8 +3,10 @@ package me.pljr.marriage.commands;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.config.CfgOptions;
+import me.pljr.marriage.config.CfgSounds;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.enums.Message;
+import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.menus.MarryMenu;
 import me.pljr.marriage.utils.FormatUtil;
@@ -35,7 +37,7 @@ public class MarryCommand implements CommandExecutor {
 
     private void fail(Player player){
         Location playerLoc = player.getLocation();
-        if (sounds) player.playSound(playerLoc, Sound.ENTITY_VILLAGER_NO, 10, 1);
+        if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.FAIL), 10, 1);
     }
 
     @Override
@@ -188,7 +190,7 @@ public class MarryCommand implements CommandExecutor {
                 economy.withdrawPlayer(player, costDivorce);
                 MarryUtil.divorce(playerName);
                 player.sendTitle(CfgMessages.messages.get(Message.DIVORCE_PLAYER_TITLE), CfgMessages.messages.get(Message.DIVORCE_PLAYER_SUBTITLE), 10, 20*3, 10);
-                if (sounds) player.playSound(playerLoc, Sound.ITEM_SHIELD_BREAK, 10, 1);
+                if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.DIVORCE), 10, 1);
                 return true;
             }
 
@@ -198,6 +200,10 @@ public class MarryCommand implements CommandExecutor {
 
              */
             String requestName = args[0];
+            if (requestName.equalsIgnoreCase(playerName)){
+                player.openInventory(MarryMenu.getMenu(playerName));
+                return false;
+            }
             Player request = Bukkit.getPlayer(requestName);
             if (request == null || !request.isOnline()){
                 player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", requestName));
@@ -228,11 +234,11 @@ public class MarryCommand implements CommandExecutor {
                     fail(player);
                     return false;
                 }
-                if (sounds) player.playSound(playerLoc, Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
+                if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.MARRY_ACCEPT), 10, 1);
                 player.sendTitle(CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER1_TITLE),
                         CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER1_SUBTITLE).replace("%name", requestName),
                         10, 20*3, 10);
-                if (sounds) request.playSound(playerLoc, Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
+                if (sounds) request.playSound(playerLoc, CfgSounds.sounds.get(Sounds.MARRY_ACCEPT), 10, 1);
                 request.sendTitle(CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER2_TITLE),
                         CfgMessages.messages.get(Message.MARRY_ACCEPT_PLAYER2_SUBTITLE).replace("%name", playerName),
                         10, 20*3, 10);
@@ -245,15 +251,15 @@ public class MarryCommand implements CommandExecutor {
             }
             player.sendMessage(CfgMessages.messages.get(Message.REQUEST_SEND).replace("%name", requestName));
             request.sendMessage(CfgMessages.messages.get(Message.REQUEST_RECEIVED).replace("%name", playerName));
-            if (sounds) request.playSound(request.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+            if (sounds) request.playSound(request.getLocation(), CfgSounds.sounds.get(Sounds.NOTIFY), 10, 1);
             PlayerUtil.getRequests().put(playerName, requestName);
             Bukkit.getScheduler().runTaskLaterAsynchronously(Marriage.getInstance(), () ->{
                 if (PlayerUtil.getRequests().containsKey(playerName)){
                     if (player.isOnline()){
-                        player.sendMessage(CfgMessages.messages.get(Message.REQUEST_EXPIRED_SENDER));
+                        player.sendMessage(CfgMessages.messages.get(Message.REQUEST_EXPIRED_SENDER).replace("%name", requestName));
                     }
                     if (request.isOnline()){
-                        request.sendMessage(CfgMessages.messages.get(Message.REQUEST_EXPIRED_RECEIVER));
+                        request.sendMessage(CfgMessages.messages.get(Message.REQUEST_EXPIRED_RECEIVER).replace("%name", playerName));
                     }
                     PlayerUtil.getRequests().remove(playerName);
                 }

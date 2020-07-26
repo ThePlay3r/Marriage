@@ -43,8 +43,4 @@ public class PlayerUtil {
     public static HashMap<String, String> getRequests() {
         return requests;
     }
-
-    public static void setRequests(HashMap<String, String> requests) {
-        PlayerUtil.requests = requests;
-    }
 }

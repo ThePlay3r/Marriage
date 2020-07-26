@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 public class CfgMenu {
     private final static ConfigManager config = Marriage.getConfigManager();
 
+    public static boolean oldHead;
     public static String title;
     public static ItemStack heart;
     public static ItemStack white;
@@ -22,6 +23,7 @@ public class CfgMenu {
     public static ItemStack privatechatinfo;
 
     public static void load(){
+        CfgMenu.oldHead = config.getBoolean("menu.old-head");
         CfgMenu.title = config.getString("menu.title");
         CfgMenu.heart = config.getItemStack("menu.heart");
         CfgMenu.white = config.getItemStack("menu.white");

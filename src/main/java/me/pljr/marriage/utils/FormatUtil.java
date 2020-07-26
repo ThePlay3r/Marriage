@@ -15,10 +15,10 @@ public class FormatUtil {
             minutes %= 60;
             if (hours >= 24) {
                 long days = hours / 24;
-                return String.format("§b%d dní, §b%02d hod. §b%02d min. §b%02d sek.", days, hours % 24, minutes, seconds);
+                return String.format("§b%d d, §b%02d h. §b%02d m. §b%02d s.", days, hours % 24, minutes, seconds);
             }
-            return String.format("§b%02d hod. §b%02d min. §b%02d sek.", hours, minutes, seconds);
+            return String.format("§b%02d h. §b%02d m. §b%02d s.", hours, minutes, seconds);
         }
-        return String.format("§b00 hod. §b%02d min. §b%02d sek.", minutes, seconds);
+        return String.format("§b00 h. §b%02d m. §b%02d s.", minutes, seconds);
     }
 }
