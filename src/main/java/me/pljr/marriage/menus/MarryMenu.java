@@ -1,6 +1,5 @@
 package me.pljr.marriage.menus;
 
-import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMenu;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.config.CfgSounds;
@@ -10,8 +9,6 @@ import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.utils.GuiUtil;
 import me.pljr.marriage.utils.PlayerUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

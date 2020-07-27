@@ -1,6 +1,5 @@
 package me.pljr.marriage.utils;
 
-import com.sun.org.apache.bcel.internal.generic.DCMPG;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.config.CfgOptions;
@@ -13,10 +12,12 @@ import me.pljr.marriage.managers.ConfigManager;
 import me.pljr.marriage.managers.PlayerManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

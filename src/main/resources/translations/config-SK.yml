@@ -159,6 +159,7 @@ help:
   - "§e/marry home §8» §fTeleportovanie na domov."
   - "§e/marry chat <text> §8» §fPisanie do spoločnéh chatu."
   - "§e/marry pvp §8» §fZapnutie/vypnutie PvP."
+  - "§eStatus: §f%marriage_state%"
   - ""
 
 messages:

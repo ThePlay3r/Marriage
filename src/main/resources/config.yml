@@ -167,6 +167,7 @@ help:
   - "§e/marry home §8» §fTeleportation to your shared home."
   - "§e/marry chat <message> §8» §fSends message to shared private chat."
   - "§e/marry pvp §8» §fToggles your PvP with partner."
+  - "§eStatus: §f%marriage_state%"
   - ""
 
 messages:

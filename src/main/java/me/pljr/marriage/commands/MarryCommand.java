@@ -1,5 +1,6 @@
 package me.pljr.marriage.commands;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMenu;
 import me.pljr.marriage.config.CfgMessages;
@@ -20,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -209,7 +209,9 @@ public class MarryCommand implements CommandExecutor {
                 if (CfgMenu.enabled){
                     player.openInventory(MarryMenu.getMenu(playerName));
                 }else{
-                    CfgMessages.help.forEach(player::sendMessage);
+                    for (String message : CfgMessages.help){
+                        player.sendMessage(PlaceholderAPI.setPlaceholders(player, message));
+                    }
                 }
                 return false;
             }
@@ -325,7 +327,9 @@ public class MarryCommand implements CommandExecutor {
         if (CfgMenu.enabled){
             player.openInventory(MarryMenu.getMenu(playerName));
         }else{
-            CfgMessages.help.forEach(player::sendMessage);
+            for (String message : CfgMessages.help){
+                player.sendMessage(PlaceholderAPI.setPlaceholders(player, message));
+            }
         }
         return true;
     }

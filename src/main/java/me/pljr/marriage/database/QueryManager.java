@@ -3,22 +3,26 @@ package me.pljr.marriage.database;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgDefaulthome;
 import me.pljr.marriage.enums.Gender;
-import me.pljr.marriage.managers.ConfigManager;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.utils.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class QueryManager {
     private final Marriage marriage = Marriage.getInstance();
+    private final DataSource dataSource;
+
+    public QueryManager(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public void loadPlayerSync(String username){
         try {
@@ -28,7 +32,7 @@ public class QueryManager {
             Location home;
             long lastseen;
 
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM marriage_players WHERE username=?"
             );
@@ -63,7 +67,7 @@ public class QueryManager {
             PlayerManager playerManager = new PlayerManager(gender, partner, pvp, lastseen, home);
             PlayerUtil.setPlayerManager(username, playerManager);
 
-            DataSource.close(connection, preparedStatement, resultSet);
+            dataSource.close(connection, preparedStatement, resultSet);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -74,7 +78,7 @@ public class QueryManager {
            try {
                PlayerManager playerManager = PlayerUtil.getPlayerManager(username);
 
-               Connection connection = DataSource.getConnection();
+               Connection connection = dataSource.getConnection();
                PreparedStatement preparedStatement = connection.prepareStatement(
                        "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?)"
                );
@@ -91,7 +95,7 @@ public class QueryManager {
                preparedStatement.setFloat(11, playerManager.getHome().getPitch());
                preparedStatement.executeUpdate();
 
-               DataSource.close(connection, preparedStatement, null);
+               dataSource.close(connection, preparedStatement, null);
            }catch (SQLException e){
                e.printStackTrace();
            }
@@ -101,7 +105,7 @@ public class QueryManager {
     public LinkedHashMap<String, String> getMarryListSync(){
         LinkedHashMap<String, String> marryList = new LinkedHashMap<>();
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM marriage_players"
             );
@@ -124,7 +128,7 @@ public class QueryManager {
 
     public void setupTables() {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS marriage_players (" +
                             "username varchar(16) NOT NULL PRIMARY KEY," +
@@ -140,7 +144,7 @@ public class QueryManager {
                             "home_pitch float NOT NULL);"
             );
             preparedStatement.executeUpdate();
-            DataSource.close(connection, preparedStatement, null);
+            dataSource.close(connection, preparedStatement, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }

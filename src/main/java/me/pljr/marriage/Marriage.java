@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 public final class Marriage extends JavaPlugin {
@@ -22,6 +23,7 @@ public final class Marriage extends JavaPlugin {
     private static Marriage instance;
     private static QueryManager query;
     private static Economy econ = null;
+    private static DataSource dataSource;
     private static final Logger log = Logger.getLogger("Minecraft");
 
     @Override
@@ -35,11 +37,10 @@ public final class Marriage extends JavaPlugin {
         setupPapi();
     }
 
-    public void setupVault(){
+    private void setupVault(){
         if (!setupEconomy() ) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
-            return;
         }
     }
 
@@ -55,16 +56,16 @@ public final class Marriage extends JavaPlugin {
         return econ != null;
     }
 
-    public void setupPapi(){
+    private void setupPapi(){
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             new PapiExpansion(this).register();
         }
     }
 
-    public void setupConfig(){
+    private void setupConfig(){
         saveDefaultConfig();
-        saveResource("translations/config-SK.yml", false);
-        saveResource("translations/readme.txt", false);
+        createResource("translations/config-SK.yml", false);
+        createResource("translations/readme.txt", false);
         config = getConfig();
         configManager = new ConfigManager(config);
         CfgDefaulthome.load();
@@ -74,18 +75,21 @@ public final class Marriage extends JavaPlugin {
         CfgSounds.load();
     }
 
-    public void setupDatabase(){
-        DataSource.load();
-        DataSource.initPool();
-        query = new QueryManager();
+    private void createResource(String resourcePath, boolean replace){
+        File file = new File(resourcePath);
+        if (file.exists()) return;
+        saveResource(resourcePath, replace);
+    }
+
+    private void setupDatabase(){
+        dataSource = new DataSource();
+        dataSource.load();
+        dataSource.initPool();
+        query = new QueryManager(dataSource);
         query.setupTables();
     }
 
-    public static Economy getEconomy() {
-        return econ;
-    }
-
-    public void loadListeners(){
+    private void loadListeners(){
         getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         getServer().getPluginManager().registerEvents(new MarryMenu(), this);
@@ -95,10 +99,13 @@ public final class Marriage extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
     }
 
-    public void loadCommands(){
+    private void loadCommands(){
         getCommand("marry").setExecutor(new MarryCommand());
     }
 
+    public static Economy getEconomy() {
+        return econ;
+    }
     public static QueryManager getQuery() {
         return query;
     }

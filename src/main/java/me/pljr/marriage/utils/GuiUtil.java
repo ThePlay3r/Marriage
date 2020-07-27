@@ -1,7 +1,6 @@
 package me.pljr.marriage.utils;
 
 import me.pljr.marriage.config.CfgMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

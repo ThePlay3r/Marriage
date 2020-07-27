@@ -1,7 +1,6 @@
 package me.pljr.marriage.managers;
 
 import me.pljr.marriage.enums.Gender;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class PlayerManager {

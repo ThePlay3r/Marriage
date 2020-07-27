@@ -3,7 +3,6 @@ package me.pljr.marriage.utils;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.database.QueryManager;
 import me.pljr.marriage.managers.PlayerManager;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;

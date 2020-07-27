@@ -1,7 +1,7 @@
 package me.pljr.marriage.papi;
 
-import me.pljr.marriage.Marriage;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgMessages;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.enums.Message;
@@ -9,7 +9,6 @@ import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.utils.FormatUtil;
 import me.pljr.marriage.utils.PlayerUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**

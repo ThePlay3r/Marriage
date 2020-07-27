@@ -1,7 +1,6 @@
 package me.pljr.marriage.config;
 
 import me.pljr.marriage.Marriage;
-import me.pljr.marriage.enums.Message;
 import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.ConfigManager;
 import org.bukkit.Sound;

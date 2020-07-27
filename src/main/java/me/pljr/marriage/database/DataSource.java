@@ -12,13 +12,13 @@ import java.sql.SQLException;
 
 public class DataSource {
 
-    private static String host, port, database, username, password;
-    private static FileConfiguration configuration;
+    private String host, port, database, username, password;
+    private FileConfiguration configuration;
 
-    private static final HikariConfig config = new HikariConfig();
-    private static HikariDataSource ds;
+    private final HikariConfig config = new HikariConfig();
+    private HikariDataSource ds;
 
-    public static void load() {
+    public void load() {
         configuration = Marriage.getConf();
         host = configuration.getString("mysql.host");
         port = configuration.getString("mysql.port");
@@ -27,24 +27,24 @@ public class DataSource {
         password = configuration.getString("mysql.password");
     }
 
-    public static void initPool() {
+    public void initPool() {
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + Integer.parseInt(port) + "/" + database + "?characterEncoding=UTF-8&autoReconnect=true&useSSL=false");
         config.setUsername(username);
         config.setPassword(password);
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.setMaximumPoolSize(70);
+        config.setMaximumPoolSize(16);
         ds = new HikariDataSource(config);
     }
 
-    private DataSource() {}
+    public DataSource() {}
 
-    public static Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
 
-    public static void close(Connection conn, PreparedStatement ps, ResultSet res) {
+    public void close(Connection conn, PreparedStatement ps, ResultSet res) {
         if (conn != null) try {
             conn.close();
         } catch (SQLException ignored) {
