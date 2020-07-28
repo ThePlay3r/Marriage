@@ -11,10 +11,7 @@ import me.pljr.marriage.enums.Message;
 import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.menus.MarryMenu;
-import me.pljr.marriage.utils.FormatUtil;
-import me.pljr.marriage.utils.MarryUtil;
-import me.pljr.marriage.utils.NumberUtil;
-import me.pljr.marriage.utils.PlayerUtil;
+import me.pljr.marriage.utils.*;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,11 +33,6 @@ public class MarryCommand implements CommandExecutor {
     private final int cooldown = CfgOptions.cooldown;
     private final boolean togglepvp = CfgOptions.togglepvp;
 
-    private void fail(Player player){
-        Location playerLoc = player.getLocation();
-        if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.FAIL), 10, 1);
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)){
@@ -48,19 +40,16 @@ public class MarryCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player) sender;
-        if (!player.hasPermission("marriage.use")){
-            player.sendMessage(CfgMessages.messages.get(Message.NO_PERM));
-            fail(player);
-            return false;
-        }
+        if (!CommandUtil.checkPerm(player, "marriage.use")) return false;
         String playerName = player.getName();
         Location playerLoc = player.getLocation();
         PlayerManager playerManager = PlayerUtil.getPlayerManager(playerName);
         if (args.length > 1){
             if (args[0].equalsIgnoreCase("c")){
+                if (!CommandUtil.checkPerm(player, "marriage.chat")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 MarryUtil.chat(player, FormatUtil.colorString(StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ")));
@@ -69,25 +58,29 @@ public class MarryCommand implements CommandExecutor {
         }
         if (args.length == 1){
             if (args[0].equalsIgnoreCase("help")){
-                CfgMessages.help.forEach(player::sendMessage);
+                if (!CommandUtil.checkPerm(player, "marriage.help")) return false;
+                for (String message : CfgMessages.help){
+                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, message));
+                }
                 return true;
             }
             if (args[0].equalsIgnoreCase("give")){
+                if (!CommandUtil.checkPerm(player, "marriage.give")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 String partnerName = playerManager.getPartner();
                 Player partner = Bukkit.getPlayer(partnerName);
                 if (partner == null || !partner.isOnline()){
                     player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", partnerName));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR){
                     player.sendMessage(CfgMessages.messages.get(Message.ITEM_IN_HAND));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 player.sendMessage(CfgMessages.messages.get(Message.GIFT_SEND).replace("%name", partnerName));
@@ -104,9 +97,10 @@ public class MarryCommand implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("home")){
+                if (!CommandUtil.checkPerm(player, "marriage.home")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 player.teleport(playerManager.getHome());
@@ -115,9 +109,10 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("sethome")){
+                if (!CommandUtil.checkPerm(player, "marriage.sethome")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 MarryUtil.setHome(playerName, playerLoc);
@@ -126,9 +121,10 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("seen")){
+                if (!CommandUtil.checkPerm(player, "marriage.seen")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 String partnerName = playerManager.getPartner();
@@ -144,19 +140,21 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("list")){
+                if (!CommandUtil.checkPerm(player, "marriage.list")) return false;
                 MarryUtil.sendMarryList(player, 0);
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("pvp")){
+                if (!CommandUtil.checkPerm(player, "marriage.pvp")) return false;
                 if (!togglepvp) return false;
                 boolean pvp = playerManager.isPvp();
                 if (pvp){
                     pvp = false;
-                    player.sendMessage(CfgMessages.messages.get(Message.PVP_ON));
+                    player.sendMessage(CfgMessages.messages.get(Message.PVP_OFF));
                 }else{
                     pvp = true;
-                    player.sendMessage(CfgMessages.messages.get(Message.PVP_OFF));
+                    player.sendMessage(CfgMessages.messages.get(Message.PVP_ON));
                 }
                 playerManager.setPvp(pvp);
                 PlayerUtil.setPlayerManager(playerName, playerManager);
@@ -164,16 +162,17 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("tp")){
+                if (!CommandUtil.checkPerm(player, "marriage.tp")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 String partnerName = playerManager.getPartner();
                 Player partner = Bukkit.getPlayer(partnerName);
                 if (partner == null || !partner.isOnline()){
                     player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", partnerName));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 player.teleport(partner);
@@ -183,9 +182,10 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("divorce")){
+                if (!CommandUtil.checkPerm(player, "marriage.divorce")) return false;
                 if (playerManager.getPartner() == null){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_PARTNER));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 if (economy.getBalance(player) < costDivorce){
@@ -218,7 +218,7 @@ public class MarryCommand implements CommandExecutor {
             Player request = Bukkit.getPlayer(requestName);
             if (request == null || !request.isOnline()){
                 player.sendMessage(CfgMessages.messages.get(Message.OFFLINE).replace("%name", requestName));
-                fail(player);
+                CommandUtil.fail(player);
                 return false;
             }
             PlayerManager requestManager = PlayerUtil.getPlayerManager(requestName);
@@ -228,7 +228,7 @@ public class MarryCommand implements CommandExecutor {
             }
             if (requestManager.getPartner() != null){
                 player.sendMessage(CfgMessages.messages.get(Message.HAVE_PARTNER_PLAYER).replace("%name", requestName));
-                fail(player);
+                CommandUtil.fail(player);
                 return false;
             }
             if (PlayerUtil.getRequests().containsKey(playerName)){
@@ -242,7 +242,7 @@ public class MarryCommand implements CommandExecutor {
             if (PlayerUtil.getRequests().containsKey(requestName)){
                 if (!PlayerUtil.getRequests().get(requestName).equals(playerName)){
                     player.sendMessage(CfgMessages.messages.get(Message.REQUEST_PENDING_PLAYER).replace("%name", requestName));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.MARRY_ACCEPT), 10, 1);
@@ -279,9 +279,10 @@ public class MarryCommand implements CommandExecutor {
         }
         if (args.length == 2){
             if (args[0].equalsIgnoreCase("list")){
+                if (!CommandUtil.checkPerm(player, "marriage.list")) return false;
                 if (!NumberUtil.isInt(args[1])){
                     player.sendMessage(CfgMessages.messages.get(Message.NO_NUMBER).replace("%arg", args[1]));
-                    fail(player);
+                    CommandUtil.fail(player);
                     return false;
                 }
                 MarryUtil.sendMarryList(player, Integer.parseInt(args[1]));
@@ -289,6 +290,7 @@ public class MarryCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("gender")){
+                if (!CommandUtil.checkPerm(player, "marriage.gender")) return false;
                 String genderType = args[1].toUpperCase();
                 for (Gender gender : Gender.values()){
                     if (gender.toString().equals(genderType)){
@@ -309,11 +311,12 @@ public class MarryCommand implements CommandExecutor {
                     }
                 }
                 player.sendMessage(CfgMessages.messages.get(Message.NO_GENDER).replace("%gender", genderType));
-                fail(player);
+                CommandUtil.fail(player);
                 return false;
             }
 
             if (args[0].equalsIgnoreCase("partner")){
+                if (!CommandUtil.checkPerm(player, "marriage.partner")) return false;
                 String requestedInfoName = args[1];
                 PlayerManager requestedInfoManager = PlayerUtil.getPlayerManager(requestedInfoName);
                 if (requestedInfoManager.getPartner() == null){

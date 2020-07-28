@@ -28,6 +28,7 @@ options:
     food: true # Should the married couples have shared food?
     xp: true # Should the married couples have shared xp?
   toggle-pvp: true # Should the married couples have option to toggle theirs pvp?
+  bungee: false # Should we use bungee functions? (Only for bungee private chat for now)
 
 #              #
 # Default Home #
@@ -167,7 +168,20 @@ help:
   - "§e/marry home §8» §fTeleportation to your shared home."
   - "§e/marry chat <message> §8» §fSends message to shared private chat."
   - "§e/marry pvp §8» §fToggles your PvP with partner."
+  - "§e/marry list [page] §8» §fList of all married couples."
   - "§eStatus: §f%marriage_state%"
+  - ""
+
+admin-help:
+  - ""
+  - "§a§lMarriage Admin-Help v${project.version}"
+  - ""
+  - "§e/amarry spy §8» §fToggles displaying private chats of other players."
+  - "§e/amarry marry <player> <player> §8» §fForces players to marry each other. §7(With no cost)"
+  - "§e/amarry unmarry <player> §8» §fForces players to divorce. §7(With no cost)"
+  - "§e/amarry sethome <player> §8» §fSets location as the current shared home for player."
+  - "§e/amarry home <player> §8» §fTeleportation to player's shared home."
+  - "§e/amarry pvp <pvp> §8» §fToggles player's PvP with partner."
   - ""
 
 messages:
@@ -184,6 +198,8 @@ messages:
   LASTSEEN: "§c§l❤ §aMarriage §8» §b%name §fwas last seen §b%time §fago."
   PVP_ON: "§c§l❤ §aMarriage §8» §fYou've §benabled §fyour PvP."
   PVP_OFF: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fyour PvP."
+  PVP_ON_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §benabled §fplayer's PvP."
+  PVP_OFF_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fplayer's PvP."
   TELEPORT_PLAYER: "§c§l❤ §aMarriage §8» §bSuccessfully §fteleported to §b%name§f."
   TELEPORT_PARTNER: "§c§l❤ §aMarriage §8» §b%name §fhas been teleported to you."
   NO_MONEY: "§c§l❤ §aMarriage §8» §fYou don't have enough money! §7(§e$%cost§7)"
@@ -211,6 +227,7 @@ messages:
   PARTNER_NO_PARTNER: "§c§l❤ §aMarriage §8» §b%name §fdoes not have a partner!"
   PARTNER: "§c§l❤ §aMarriage §8» §b%name's §fpartner is §b%partner§f."
   CHAT_FORMAT: "§4§l❤§c§l-Chat §a%name §8» §e%message"
+  CHAT_FORMAT_SPY: "§7❤-Chat §c%name §7» §c%message"
   LIST_TITLE: "§c§l❤ §aMarriage §8» §fList of couples:"
   GENDER_MALE: "Male"
   GENDER_MALE_COLOR: "§b"
@@ -230,3 +247,5 @@ messages:
   STATE_MARRIED: "Married"
   PVP_ENABLED: "On"
   PVP_DISABLED: "Off"
+  SPY_ACTIVE: "§c§l❤ §aMarriage §8» §bSpy §factivated."
+  SPY_UNACTIVE: "§c§l❤ §aMarriage §8» §bSpy §fdeactivated."

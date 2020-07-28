@@ -14,6 +14,7 @@ public class CfgOptions {
     public static boolean sharedFood;
     public static boolean sharedXp;
     public static boolean togglepvp;
+    public static boolean bungee;
 
     public static void load(){
         CfgOptions.particles = config.getBoolean("options.particles");
@@ -24,5 +25,6 @@ public class CfgOptions {
         CfgOptions.sharedFood = config.getBoolean("options.shared.food");
         CfgOptions.sharedXp = config.getBoolean("options.shared.xp");
         CfgOptions.togglepvp = config.getBoolean("options.toggle-pvp");
+        CfgOptions.bungee = config.getBoolean("options.bungee");
     }
 }

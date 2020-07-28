@@ -35,6 +35,7 @@ public class DataSource {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.setMaximumPoolSize(16);
+        config.setMinimumIdle(2);
         ds = new HikariDataSource(config);
     }
 

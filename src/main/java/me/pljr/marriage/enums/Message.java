@@ -14,6 +14,8 @@ public enum Message {
     LASTSEEN,
     PVP_ON,
     PVP_OFF,
+    PVP_ON_OTHERS,
+    PVP_OFF_OTHERS,
     TELEPORT_PLAYER,
     TELEPORT_PARTNER,
     NO_MONEY,
@@ -37,6 +39,7 @@ public enum Message {
     PARTNER_NO_PARTNER,
     PARTNER,
     CHAT_FORMAT,
+    CHAT_FORMAT_SPY,
     LIST_TITLE,
     GENDER_MALE,
     GENDER_MALE_COLOR,
@@ -59,5 +62,7 @@ public enum Message {
     STATE_SINGLE,
     STATE_MARRIED,
     PVP_ENABLED,
-    PVP_DISABLED
+    PVP_DISABLED,
+    SPY_ACTIVE,
+    SPY_UNACTIVE
 }

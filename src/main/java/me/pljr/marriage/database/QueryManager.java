@@ -64,7 +64,7 @@ public class QueryManager {
                 lastseen = System.currentTimeMillis();
                 gender = Gender.NONE;
             }
-            PlayerManager playerManager = new PlayerManager(gender, partner, pvp, lastseen, home);
+            PlayerManager playerManager = new PlayerManager(gender, partner, pvp, lastseen, home, false);
             PlayerUtil.setPlayerManager(username, playerManager);
 
             dataSource.close(connection, preparedStatement, resultSet);

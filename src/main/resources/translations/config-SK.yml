@@ -162,6 +162,19 @@ help:
   - "§eStatus: §f%marriage_state%"
   - ""
 
+admin-help:
+  - ""
+  - "§a§lMarriage Admin-Help v${project.version}"
+  - ""
+  - "§e/amarry spy §8» §fToggles displaying private chats of other players."
+  - "§e/amarry marry <player> <player> §8» §fForces players to marry each other. §7(With no cost)"
+  - "§e/amarry unmarry <player> §8» §fForces players to divorce. §7(With no cost)"
+  - "§e/amarry sethome <player> §8» §fSets location as the current shared home for player."
+  - "§e/amarry home <player> §8» §fTeleportation to player's shared home."
+  - "§e/amarry chat <player> <message> §8» §fSends message to player's shared private chat."
+  - "§e/amarry pvp <pvp> §8» §fToggles player's PvP with partner."
+  - ""
+
 messages:
   NO_CONSOLE: "§cTento príkaz je len pre hráčov!"
   NO_PERM: "§cNemáte dostatočné pravomocie!"
@@ -176,6 +189,8 @@ messages:
   LASTSEEN: "§c§l❤ §aSvadba §8» §b%name §fbol/a naposledy online pred §b%time"
   PVP_ON: "§c§l❤ §aSvadba §8» §bVypol/la §fsi si PvP."
   PVP_OFF: "§c§l❤ §aSvadba §8» §bZapol/la §fsi si PvP."
+  PVP_ON_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §benabled §fplayer's PvP."
+  PVP_OFF_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fplayer's PvP."
   TELEPORT_PLAYER: "§c§l❤ §aSvadba §8» §fTeleportoval/a si sa na §b%name§f."
   TELEPORT_PARTNER: "§c§l❤ §aSvadba §8» §b%name §fsa na teba teleportoval/a."
   NO_MONEY: "§c§l❤ §aSvadba §8» §fNemáš dostatek financií. §7(§e%cost§7)"
@@ -203,6 +218,7 @@ messages:
   PARTNER_NO_PARTNER: "§c§l❤ §aSvadba §8» §b%name §fnemá partnera/ku!"
   PARTNER: "§c§l❤ §aSvadba §8» §bPartner/ka §fhráča/ky §b%name §fje §b%partner"
   CHAT_FORMAT: "§4§l❤§c§l-Chat §a%name §8» §e%message"
+  CHAT_FORMAT_SPY: "§7❤-Chat §c%name §7» §c%message"
   LIST_TITLE: "§c§l❤ §aSvadba §8» §fZoznam párov:"
   GENDER_MALE: "Male"
   GENDER_MALE_COLOR: "§b"
@@ -222,3 +238,5 @@ messages:
   STATE_MARRIED: "V manželstve"
   PVP_ENABLED: "On"
   PVP_DISABLED: "Off"
+  SPY_ACTIVE: "§c§l❤ §aMarriage §8» §bSpy §aON."
+  SPY_UNACTIVE: "§c§l❤ §aMarriage §8» §bSpy §cOFF."

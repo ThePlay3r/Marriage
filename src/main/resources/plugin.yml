@@ -9,4 +9,6 @@ softdepend: [PlaceholderAPI]
 
 commands:
   marry:
-    description: Hlavný príkaz.
+    description: Main command.
+  amarry:
+    description: Main admin command.

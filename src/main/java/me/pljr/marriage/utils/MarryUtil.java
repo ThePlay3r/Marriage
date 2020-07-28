@@ -30,10 +30,21 @@ public class MarryUtil {
         PlayerManager playerManager = PlayerUtil.getPlayerManager(playerName);
         String partnerName = playerManager.getPartner();
         Player partner = Bukkit.getPlayer(partnerName);
-        if (partner != null && partner.isOnline()){
-            partner.sendMessage(CfgMessages.messages.get(Message.CHAT_FORMAT).replace("%name", playerName).replace("%message", message));
+        String format = CfgMessages.messages.get(Message.CHAT_FORMAT).replace("%name", playerName).replace("%message", message);
+        if (CfgOptions.bungee){
+            BungeeUtils.message(partnerName, format);
+        }else if (partner != null && partner.isOnline()){
+            partner.sendMessage(format);
         }
-        player.sendMessage(CfgMessages.messages.get(Message.CHAT_FORMAT).replace("%name", playerName).replace("%message", message));
+        player.sendMessage(format);
+        for (Player p : Bukkit.getOnlinePlayers()){
+            if (p.hasPermission("marriage.admin.spy")){
+                PlayerManager pManager = PlayerUtil.getPlayerManager(p.getName());
+                if (pManager.isSpy()){
+                    player.sendMessage(CfgMessages.messages.get(Message.CHAT_FORMAT_SPY).replace("%name", playerName).replace("%message", message));
+                }
+            }
+        }
     }
 
     public static void marry(String player1, String player2){
@@ -146,5 +157,10 @@ public class MarryUtil {
         }
         player1.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(CfgMessages.messages.get(Message.KISS_PLAYER).replace("%name", player2.getName())));
         player2.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(CfgMessages.messages.get(Message.KISS_PARTNER).replace("%name", player1.getName())));
+    }
+
+    public static boolean isMarried(String player){
+        PlayerManager playerManager = PlayerUtil.getPlayerManager(player);
+        return (!(playerManager.getPartner() == null));
     }
 }

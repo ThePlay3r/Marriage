@@ -9,13 +9,15 @@ public class PlayerManager {
     private boolean pvp;
     private long lastseen;
     private Location home;
+    private boolean spy;
 
-    public PlayerManager(Gender gender, String partner, boolean pvp, long lastseen, Location home){
+    public PlayerManager(Gender gender, String partner, boolean pvp, long lastseen, Location home, boolean spy){
         this.gender = gender;
         this.partner = partner;
         this.pvp = pvp;
         this.lastseen = lastseen;
         this.home = home;
+        this.spy = spy;
     }
 
     public void setHome(Location home) {
@@ -51,5 +53,12 @@ public class PlayerManager {
     }
     public String getPartner() {
         return partner;
+    }
+
+    public void setSpy(boolean spy) {
+        this.spy = spy;
+    }
+    public boolean isSpy() {
+        return spy;
     }
 }

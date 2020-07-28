@@ -1,5 +1,6 @@
 package me.pljr.marriage;
 
+import me.pljr.marriage.commands.AmarryCommand;
 import me.pljr.marriage.commands.MarryCommand;
 import me.pljr.marriage.config.*;
 import me.pljr.marriage.database.DataSource;
@@ -35,6 +36,11 @@ public final class Marriage extends JavaPlugin {
         setupVault();
         loadCommands();
         setupPapi();
+        setupBungee();
+    }
+
+    private void setupBungee(){
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     private void setupVault(){
@@ -101,6 +107,7 @@ public final class Marriage extends JavaPlugin {
 
     private void loadCommands(){
         getCommand("marry").setExecutor(new MarryCommand());
+        getCommand("amarry").setExecutor(new AmarryCommand());
     }
 
     public static Economy getEconomy() {
