@@ -1,11 +1,11 @@
 package me.pljr.marriage.commands;
 
-import me.pljr.marriage.config.CfgMessages;
-import me.pljr.marriage.enums.Message;
-import me.pljr.marriage.managers.PlayerManager;
-import me.pljr.marriage.utils.CommandUtil;
+import me.pljr.marriage.config.CfgLang;
+import me.pljr.marriage.enums.Lang;
+import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.marriage.utils.MarryUtil;
-import me.pljr.marriage.utils.PlayerUtil;
+import me.pljr.marriage.managers.PlayerManager;
+import me.pljr.pljrapi.utils.CommandUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,132 +15,204 @@ public class AmarryCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        // /amarry help
         if (!(args.length > 0) || args[0].equalsIgnoreCase("help")){
             if (sender instanceof Player){
                 if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.help")) return false;
             }
-            CfgMessages.adminHelp.forEach(sender::sendMessage);
+            CfgLang.adminHelp.forEach(sender::sendMessage);
             return true;
         }
+
+        // /amarry spy
         if (args[0].equalsIgnoreCase("spy")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(CfgMessages.messages.get(Message.NO_CONSOLE));
+                sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
                 return false;
             }
             Player player = (Player) sender;
             String playerName = player.getName();
             if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.spy")) return false;
-            PlayerManager playerManager = PlayerUtil.getPlayerManager(playerName);
-            if (playerManager.isSpy()){
-                player.sendMessage(CfgMessages.messages.get(Message.SPY_UNACTIVE));
-                playerManager.setSpy(false);
+            CorePlayer corePlayer = PlayerManager.getPlayerManager(playerName);
+            if (corePlayer.isSpy()){
+                player.sendMessage(CfgLang.lang.get(Lang.SPY_UNACTIVE));
+                corePlayer.setSpy(false);
             }else{
-                player.sendMessage(CfgMessages.messages.get(Message.SPY_ACTIVE));
-                playerManager.setSpy(true);
+                player.sendMessage(CfgLang.lang.get(Lang.SPY_ACTIVE));
+                corePlayer.setSpy(true);
             }
-            PlayerUtil.setPlayerManager(playerName, playerManager);
+            PlayerManager.setPlayerManager(playerName, corePlayer);
             return true;
         }
+
+        // /amarry marry <playerName> <playerName>
         if (args[0].equalsIgnoreCase("marry")){
             if (sender instanceof Player){
                 if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.marry")) return false;
             }
             if (!(args.length == 3)){
-                CfgMessages.adminHelp.forEach(sender::sendMessage);
+                CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
             if (!CommandUtil.checkPlayer(sender, args[1]) || !CommandUtil.checkPlayer(sender, args[2])) return false;
             if (MarryUtil.isMarried(args[1])){
-                sender.sendMessage(CfgMessages.messages.get(Message.HAVE_PARTNER_PLAYER).replace("%name", args[1]));
+                sender.sendMessage(CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[1]));
                 return false;
             }
             if (MarryUtil.isMarried(args[2])){
-                sender.sendMessage(CfgMessages.messages.get(Message.HAVE_PARTNER_PLAYER).replace("%name", args[2]));
+                sender.sendMessage(CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[2]));
                 return false;
             }
             MarryUtil.marry(args[1], args[2]);
             return true;
         }
+
+        // /amarry unmarry <playerName>
         if (args[0].equalsIgnoreCase("unmarry")){
             if (sender instanceof Player){
                 if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.unmarry")) return false;
             }
             if (!(args.length == 2)){
-                CfgMessages.adminHelp.forEach(sender::sendMessage);
+                CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
             if (!CommandUtil.checkPlayer(sender, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
-                sender.sendMessage(CfgMessages.messages.get(Message.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             MarryUtil.divorce(args[1]);
             return true;
         }
+
+        // /amarry sethome <playerName>
         if (args[0].equalsIgnoreCase("sethome")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(CfgMessages.messages.get(Message.NO_CONSOLE));
+                sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
                 return false;
             }
             Player player = (Player) sender;
             if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.sethome")) return false;
             if (!(args.length == 2)){
-                CfgMessages.adminHelp.forEach(sender::sendMessage);
+                CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
             if (!CommandUtil.checkPlayer(player, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
-                player.sendMessage(CfgMessages.messages.get(Message.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            MarryUtil.setHome(args[1], player.getLocation());
+            MarryUtil.setHome(args[1], player.getLocation(), false);
             return true;
         }
+
+        // /amarry home <playerName>
         if (args[0].equalsIgnoreCase("home")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(CfgMessages.messages.get(Message.NO_CONSOLE));
+                sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
                 return false;
             }
             Player player = (Player) sender;
             if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.home")) return false;
             if (!(args.length == 2)){
-                CfgMessages.adminHelp.forEach(sender::sendMessage);
+                CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
             if (!CommandUtil.checkPlayer(player, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
-                player.sendMessage(CfgMessages.messages.get(Message.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            PlayerManager requestManager = PlayerUtil.getPlayerManager(args[1]);
+            CorePlayer requestManager = PlayerManager.getPlayerManager(args[1]);
             player.teleport(requestManager.getHome());
             return true;
         }
+
+        // /amarry pvp <playerName>
         if (args[0].equalsIgnoreCase("pvp")){
             if (sender instanceof Player){
                 if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.pvp")) return false;
             }
             if (!(args.length == 2)){
-                CfgMessages.adminHelp.forEach(sender::sendMessage);
+                CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
             if (!CommandUtil.checkPlayer(sender, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
-                sender.sendMessage(CfgMessages.messages.get(Message.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            PlayerManager requestManager = PlayerUtil.getPlayerManager(args[1]);
+            CorePlayer requestManager = PlayerManager.getPlayerManager(args[1]);
             if (requestManager.isPvp()){
                 requestManager.setPvp(false);
-                sender.sendMessage(CfgMessages.messages.get(Message.PVP_OFF_OTHERS));
+                sender.sendMessage(CfgLang.lang.get(Lang.PVP_OFF_OTHERS));
             }else{
                 requestManager.setPvp(true);
-                sender.sendMessage(CfgMessages.messages.get(Message.PVP_ON_OTHERS));
+                sender.sendMessage(CfgLang.lang.get(Lang.PVP_ON_OTHERS));
             }
-            PlayerUtil.setPlayerManager(args[1], requestManager);
+            PlayerManager.setPlayerManager(args[1], requestManager);
             return true;
         }
-        CfgMessages.adminHelp.forEach(sender::sendMessage);
-        return false;
+
+        // /amarry food <playerName>
+        if (args[0].equalsIgnoreCase("food")){
+            if (sender instanceof Player){
+                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.food")) return false;
+            }
+            if (!(args.length == 2)){
+                CfgLang.adminHelp.forEach(sender::sendMessage);
+                return false;
+            }
+            if (!CommandUtil.checkPlayer(sender, args[1])) return false;
+            if (!MarryUtil.isMarried(args[1])){
+                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                return false;
+            }
+            CorePlayer requestManager = PlayerManager.getPlayerManager(args[1]);
+            if (requestManager.isFood()){
+                requestManager.setFood(false);
+                sender.sendMessage(CfgLang.lang.get(Lang.FOOD_OFF_OTHERS));
+            }else{
+                requestManager.setFood(true);
+                sender.sendMessage(CfgLang.lang.get(Lang.FOOD_ON_OTHERS));
+            }
+            PlayerManager.setPlayerManager(args[1], requestManager);
+            return true;
+        }
+
+        // /amarry xp <playerName>
+        if (args[0].equalsIgnoreCase("xp")){
+            if (sender instanceof Player){
+                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.xp")) return false;
+            }
+            if (!(args.length == 2)){
+                CfgLang.adminHelp.forEach(sender::sendMessage);
+                return false;
+            }
+            if (!CommandUtil.checkPlayer(sender, args[1])) return false;
+            if (!MarryUtil.isMarried(args[1])){
+                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                return false;
+            }
+            CorePlayer requestManager = PlayerManager.getPlayerManager(args[1]);
+            if (requestManager.isXp()){
+                requestManager.setXp(false);
+                sender.sendMessage(CfgLang.lang.get(Lang.XP_OFF_OTHERS));
+            }else{
+                requestManager.setXp(true);
+                sender.sendMessage(CfgLang.lang.get(Lang.XP_ON_OTHERS));
+            }
+            PlayerManager.setPlayerManager(args[1], requestManager);
+            return true;
+        }
+
+        if (sender instanceof Player){
+            if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.help")) return false;
+            CommandUtil.sendHelp(sender, CfgLang.adminHelp);
+            return true;
+        }
+        CommandUtil.sendHelp(sender, CfgLang.adminHelp);
+        return true;
     }
 }

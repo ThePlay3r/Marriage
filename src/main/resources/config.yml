@@ -1,80 +1,70 @@
-#             #
-# MySQL Setup #
-#             #
+# Big thanks and love for using my plugins! ^^
 
-# This is very important, as the plugin cannot operate without proper MySQL database. #
+#|--------------------------------------------------------------------------------------------------------------------|#
+# Plugin: Marriage
+# Author: https://www.mc-market.org/members/89497/ | https://www.spigotmc.org/members/radekjenejlepsi.227786/
+# Description: Plugin for in-game Marriage.
+# Dependencies:
+#   -> PLJRApi
+#   -> Vault (https://www.spigotmc.org/resources/vault.34315/)
+#   -> PlaceholderAPI<Optional> (https://www.spigotmc.org/resources/placeholderapi.6245/)
+#|--------------------------------------------------------------------------------------------------------------------|#
 
-mysql:
-  host: "localhost" # Hostname
-  port: 3306 # Port, it is very unlikely it won't be 3306
-  database: "database" # Name of the database
-  username: "user" # User's name
-  password: "pass" # User's password
+##################\
+# Settings Setup #############################################################\
+################## Here, you can enable or disable functions of this plugin. # \
+                 #############################################################  \
+settings:
+  particles: true #-> Should we use particles?
+  sounds: true  #-> Should we use sounds?
+  shared-food: true #-> Should the sharing food be enabled?
+  shared-xp: true #-> Should the sharing XP be enabled?
+  toggle-pvp: true #-> Should the players be able to toggle pvp?
+  toggle-food: true #-> Should the players be able to toggle food sharing?
+  toggle-xp: true #-> Should the players be able to toggle xp sharing?
+  menu: true #-> Should /marry open a GUI? (false = help message will be send instead)
+  cost-marry: 7500 #-> How much should marrying someone cost?
+  cost-divorce: 5000 #-> How much should divorcing someone cost?
+  cooldown: 200 #-> How long should it take for marry request to get cancelled?
+#|--------------------------------------------------------------------------------------------------------------------|#
 
-#                 #
-# Options Section #
-#                 #
-
-# Here you can enable, disable and change some of the plugin's functions. #
-
-options:
-  particles: true # Should we use particles for better effect?
-  sounds: true # Should we use sounds for better effect?
-  cost:
-    marry: 7500 # How much should the marrying someone cost?
-    divorce: 5000 # How much should divorcing someone cost?
-  cooldown: 200 # How much time does a player have, to accept a marry request? (In ticks, 20 ticks = 1 second)
-  shared:
-    food: true # Should the married couples have shared food?
-    xp: true # Should the married couples have shared xp?
-  toggle-pvp: true # Should the married couples have option to toggle theirs pvp?
-  bungee: false # Should we use bungee functions? (Only for bungee private chat for now)
-
-#              #
-# Default Home #
-#              #
-
-# This is the location of the home, couple will have, when they are married, you should set it to your spawn location. #
-
+######################
+# Default Home Setup ################################################################################################
+###################### Here, you can set the location of default home. # (I recommend setting it to server's spawn) #
+                     ################################################################################################
 defaulthome:
-  world: "world" # Name of the world
-  x: 0 # X-Axis coordinate
-  y: 70 # Y-Axis coordinate
-  z: 0 # Z-Axis coordinate
-  # You can leave both values down on 0, as it only sets the direction player is looking at. #
-  yaw: 0 # Yaw
-  pitch: 0 # Pitch
+  world: "world"
+  x: 0
+  y: 70
+  z: 0
+  yaw: 0
+  pitch: 0
+#|--------------------------------------------------------------------------------------------------------------------|#
 
-#        #
-# Sounds #
-#        #
-
-# Here you can set/change sounds.
-
+################\
+# Sounds Setup #######################################################\
+################ Here, you can customize sounds, made by the plugin. # \
+               #######################################################  \
 sounds:
   FAIL: "ENTITY_VILLAGER_NO"
   DIVORCE: "ITEM_SHIELD_BREAK"
   MENU_CLICK: "BLOCK_NOTE_BLOCK_PLING"
   MARRY_ACCEPT: "ENTITY_PLAYER_LEVELUP"
   NOTIFY: "ENTITY_EXPERIENCE_ORB_PICKUP"
+#|--------------------------------------------------------------------------------------------------------------------|#
 
-#            #
-# Menu Items #
-#            #
-
-# Here you can customize items in the /marry gui. #
-
+##############\
+# Menu Setup ####################################################\
+############## Here, you can customize the looks of Marry menu. # \
+             ####################################################  \
 menu:
-  enabled: true # If "false", a help message will be send instead of opening the menu.
-  # !! Important
-  old-head: false # Change this to "true" if you are running Spigot version 1.12.2 and below.
-  title: "§a§lMarriage" # Name of the menu
-  heart: # Item that the heart in the menu is formed out of.
-    type: "RED_STAINED_GLASS_PANE" # Material of the item
-    name: "§c" # Name of the item
-    amount: 1 # How many items should we display?
-    lore: {} # Lore of the item
-  white: # Item that the heart in the menu is filled with.
+  title: "§a§lMarriage"
+  heart:
+    type: "RED_STAINED_GLASS_PANE"
+    name: "§c"
+    amount: 1
+    lore: {}
+  white:
     type: "WHITE_STAINED_GLASS_PANE"
     name: "§f"
     amount: 1
@@ -130,7 +120,7 @@ menu:
       - "§8» §fClick to turn ON/OFF your"
       - " §fPvP with partner."
   sethome:
-    type: "OAK_DOOR"
+    type: "DOOR"
     name: "§eSet Home"
     amount: 1
     lore:
@@ -150,13 +140,12 @@ menu:
     lore:
       - "§8» §fClick to start writing"
       - " §fto your shared chat."
+#|--------------------------------------------------------------------------------------------------------------------|#
 
-#          #
-# Messages #
-#          #
-
-# Here you can customize all messages. #
-
+##############\
+# Lang Setup ################################################################\
+############## Here, you can customize messages, send by the plugin itself. # \
+             ################################################################  \
 help:
   - ""
   - "§a§lMarriage Help v${project.version}"
@@ -168,6 +157,8 @@ help:
   - "§e/marry home §8» §fTeleportation to your shared home."
   - "§e/marry chat <message> §8» §fSends message to shared private chat."
   - "§e/marry pvp §8» §fToggles your PvP with partner."
+  - "§e/marry xp §8» §fToggles your XP Sharing with partner."
+  - "§e/marry food §8» §fToggles your Food Sharing with partner."
   - "§e/marry list [page] §8» §fList of all married couples."
   - "§eStatus: §f%marriage_state%"
   - ""
@@ -181,14 +172,14 @@ admin-help:
   - "§e/amarry unmarry <player> §8» §fForces players to divorce. §7(With no cost)"
   - "§e/amarry sethome <player> §8» §fSets location as the current shared home for player."
   - "§e/amarry home <player> §8» §fTeleportation to player's shared home."
-  - "§e/amarry pvp <pvp> §8» §fToggles player's PvP with partner."
+  - "§e/amarry pvp <player> §8» §fToggles player's PvP with partner."
+  - "§e/amarry food <player> §8» §fToggles player's Food Sharing with partner."
+  - "§e/amarry xp <player> §8» §fToggles player's XP Sharing with partner."
   - ""
 
-messages:
+lang:
   NO_CONSOLE: "§cThis command is only for players!"
-  NO_PERM: "§cYou don't have enough permissions to use this!"
   NO_PARTNER: "§c§l❤ §aMarriage §8» §fYou don't have a partner!"
-  OFFLINE: "§c§l❤ §aMarriage §8» §b%name §fis not on the server!"
   ITEM_IN_HAND: "§c§l❤ §aMarriage §8» §fYou aren't holding any item!"
   GIFT_SEND: "§c§l❤ §aMarriage §8» §fYou've send a gift to §b%name§f."
   GIFT_RECEIVE: "§c§l❤ §aMarriage §8» §fYou received a gift from §b%name§f."
@@ -249,3 +240,12 @@ messages:
   PVP_DISABLED: "Off"
   SPY_ACTIVE: "§c§l❤ §aMarriage §8» §bSpy §factivated."
   SPY_UNACTIVE: "§c§l❤ §aMarriage §8» §bSpy §fdeactivated."
+  FOOD_ON: "§c§l❤ §aMarriage §8» §fYou've §benabled §fFood sharing."
+  FOOD_OFF: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fFood sharing."
+  FOOD_ON_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §benabled §fplayer 's food sharing."
+  FOOD_OFF_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fplayer 's food sharing."
+  XP_ON: "§c§l❤ §aMarriage §8» §fYou've §benabled §fXP sharing."
+  XP_OFF: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fXP sharing."
+  XP_ON_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §benabled §fplayer 's xp sharing."
+  XP_OFF_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fplayer 's xp sharing."
+#|--------------------------------------------------------------------------------------------------------------------|#

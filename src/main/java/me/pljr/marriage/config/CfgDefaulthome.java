@@ -1,7 +1,7 @@
 package me.pljr.marriage.config;
 
 import me.pljr.marriage.Marriage;
-import me.pljr.marriage.managers.ConfigManager;
+import me.pljr.pljrapi.managers.ConfigManager;
 
 public class CfgDefaulthome {
     private final static ConfigManager config = Marriage.getConfigManager();

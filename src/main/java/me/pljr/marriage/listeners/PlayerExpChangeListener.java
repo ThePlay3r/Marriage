@@ -1,9 +1,9 @@
 package me.pljr.marriage.listeners;
 
 import me.pljr.marriage.managers.PlayerManager;
-import me.pljr.marriage.utils.PlayerUtil;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import me.pljr.marriage.objects.CorePlayer;
+import me.pljr.pljrapi.managers.ActionBarManager;
+import me.pljr.pljrapi.objects.PLJRActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,15 +15,16 @@ public class PlayerExpChangeListener implements Listener {
     @EventHandler
     public void onChange(PlayerExpChangeEvent event){
         Player player = event.getPlayer();
-        PlayerManager playerManager = PlayerUtil.getPlayerManager(player.getName());
-        if (playerManager.getPartner() != null){
-            String partnerName = playerManager.getPartner();
+        CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getName());
+        if (!corePlayer.isXp()) return;
+        if (corePlayer.getPartner() != null){
+            String partnerName = corePlayer.getPartner();
             Player partner = Bukkit.getPlayer(partnerName);
             if (partner != null && partner.isOnline()){
                 if (event.getAmount() > 2){
                     int halfAmount = event.getAmount() / 2;
                     event.setAmount(halfAmount);
-                    partner.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§l❤ §aSvadba §8» §fObdržal/a si §b" + halfAmount + "§fXP"));
+                    ActionBarManager.send(partner, new PLJRActionBar("§c§l❤ §aSvadba §8» §fObdržal/a si §b" + halfAmount + "§fXP", 20));
                 }
             }
         }

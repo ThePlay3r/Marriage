@@ -1,10 +1,11 @@
-package me.pljr.marriage.database;
+package me.pljr.marriage.managers;
 
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgDefaulthome;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.managers.PlayerManager;
-import me.pljr.marriage.utils.PlayerUtil;
+import me.pljr.marriage.objects.CorePlayer;
+import me.pljr.pljrapi.database.DataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -29,6 +30,8 @@ public class QueryManager {
             String partner;
             Gender gender;
             boolean pvp;
+            boolean food;
+            boolean xp;
             Location home;
             long lastseen;
 
@@ -42,6 +45,8 @@ public class QueryManager {
                 partner = resultSet.getString("partner");
                 gender = Gender.valueOf(resultSet.getString("gender"));
                 pvp = resultSet.getBoolean("pvp");
+                food = resultSet.getBoolean("food");
+                xp = resultSet.getBoolean("xp");
                 lastseen = resultSet.getLong("lastseen");
                 home = new Location(
                         Bukkit.getWorld(resultSet.getString("home_world")),
@@ -53,6 +58,8 @@ public class QueryManager {
             }else{
                 partner = null;
                 pvp = false;
+                food = true;
+                xp = true;
                 home = new Location(
                         Bukkit.getWorld(CfgDefaulthome.world),
                         CfgDefaulthome.x,
@@ -64,8 +71,8 @@ public class QueryManager {
                 lastseen = System.currentTimeMillis();
                 gender = Gender.NONE;
             }
-            PlayerManager playerManager = new PlayerManager(gender, partner, pvp, lastseen, home, false);
-            PlayerUtil.setPlayerManager(username, playerManager);
+            CorePlayer corePlayer = new CorePlayer(gender, partner, pvp, lastseen, home, false, food, xp);
+            PlayerManager.setPlayerManager(username, corePlayer);
 
             dataSource.close(connection, preparedStatement, resultSet);
         }catch (SQLException e){
@@ -76,23 +83,25 @@ public class QueryManager {
     public void savePlayer(String username){
         Bukkit.getScheduler().runTaskAsynchronously(marriage, () ->{
            try {
-               PlayerManager playerManager = PlayerUtil.getPlayerManager(username);
+               CorePlayer corePlayer = PlayerManager.getPlayerManager(username);
 
                Connection connection = dataSource.getConnection();
                PreparedStatement preparedStatement = connection.prepareStatement(
-                       "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                       "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
                );
                preparedStatement.setString(1, username);
-               preparedStatement.setString(2, playerManager.getPartner());
-               preparedStatement.setString(3, playerManager.getGender().toString());
-               preparedStatement.setBoolean(4, playerManager.isPvp());
-               preparedStatement.setLong(5, playerManager.getLastseen());
-               preparedStatement.setString(6, playerManager.getHome().getWorld().getName());
-               preparedStatement.setDouble(7, playerManager.getHome().getX());
-               preparedStatement.setDouble(8, playerManager.getHome().getY());
-               preparedStatement.setDouble(9, playerManager.getHome().getZ());
-               preparedStatement.setFloat(10, playerManager.getHome().getYaw());
-               preparedStatement.setFloat(11, playerManager.getHome().getPitch());
+               preparedStatement.setString(2, corePlayer.getPartner());
+               preparedStatement.setString(3, corePlayer.getGender().toString());
+               preparedStatement.setBoolean(4, corePlayer.isPvp());
+               preparedStatement.setBoolean(5, corePlayer.isFood());
+               preparedStatement.setBoolean(6, corePlayer.isXp());
+               preparedStatement.setLong(7, corePlayer.getLastseen());
+               preparedStatement.setString(8, corePlayer.getHome().getWorld().getName());
+               preparedStatement.setDouble(9, corePlayer.getHome().getX());
+               preparedStatement.setDouble(10, corePlayer.getHome().getY());
+               preparedStatement.setDouble(11, corePlayer.getHome().getZ());
+               preparedStatement.setFloat(12, corePlayer.getHome().getYaw());
+               preparedStatement.setFloat(13, corePlayer.getHome().getPitch());
                preparedStatement.executeUpdate();
 
                dataSource.close(connection, preparedStatement, null);
@@ -135,6 +144,8 @@ public class QueryManager {
                             "partner varchar(16)," +
                             "gender varchar(255) NOT NULL," +
                             "pvp tinyint(1) NOT NULL," +
+                            "food tinyint(1) NOT NULL," +
+                            "xp tinyint(1) NOT NULL," +
                             "lastseen bigint(20) NOT NULL," +
                             "home_world varchar(255) NOT NULL," +
                             "home_x double NOT NULL," +

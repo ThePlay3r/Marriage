@@ -3,63 +3,48 @@ package me.pljr.marriage;
 import me.pljr.marriage.commands.AmarryCommand;
 import me.pljr.marriage.commands.MarryCommand;
 import me.pljr.marriage.config.*;
-import me.pljr.marriage.database.DataSource;
-import me.pljr.marriage.database.QueryManager;
+import me.pljr.marriage.managers.QueryManager;
 import me.pljr.marriage.listeners.*;
-import me.pljr.marriage.managers.ConfigManager;
 import me.pljr.marriage.menus.MarryMenu;
 import me.pljr.marriage.papi.PapiExpansion;
-import net.milkbowl.vault.economy.Economy;
+import me.pljr.pljrapi.PLJRApi;
+import me.pljr.pljrapi.database.DataSource;
+import me.pljr.pljrapi.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.util.logging.Logger;
-
 public final class Marriage extends JavaPlugin {
-    private static FileConfiguration config;
     private static ConfigManager configManager;
     private static Marriage instance;
     private static QueryManager query;
-    private static Economy econ = null;
-    private static DataSource dataSource;
-    private static final Logger log = Logger.getLogger("Minecraft");
 
     @Override
     public void onEnable() {
         instance = this;
+        if (!setupPLJRApi()) return;
         setupConfig();
         setupDatabase();
         loadListeners();
-        setupVault();
         loadCommands();
         setupPapi();
         setupBungee();
     }
 
+    private boolean setupPLJRApi(){
+        PLJRApi api = (PLJRApi) Bukkit.getServer().getPluginManager().getPlugin("PLJRApi");
+        if (api == null){
+            Bukkit.getConsoleSender().sendMessage("§cKillStreak: PLJRApi not found, disabling plugin!");
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        }else{
+            Bukkit.getConsoleSender().sendMessage("§aKillStreak: Hooked into PLJRApi!");
+            return true;
+        }
+    }
+
     private void setupBungee(){
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-    }
-
-    private void setupVault(){
-        if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-        }
-    }
-
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return econ != null;
     }
 
     private void setupPapi(){
@@ -70,27 +55,17 @@ public final class Marriage extends JavaPlugin {
 
     private void setupConfig(){
         saveDefaultConfig();
-        createResource("translations/config-SK.yml", false);
-        createResource("translations/readme.txt", false);
-        config = getConfig();
-        configManager = new ConfigManager(config);
+        FileConfiguration config = getConfig();
+        configManager = new ConfigManager(config, "§cMarriage:", "config.yml");
         CfgDefaulthome.load();
         CfgMenu.load();
-        CfgMessages.load();
-        CfgOptions.load();
+        CfgLang.load();
+        CfgSettings.load();
         CfgSounds.load();
     }
 
-    private void createResource(String resourcePath, boolean replace){
-        File file = new File(resourcePath);
-        if (file.exists()) return;
-        saveResource(resourcePath, replace);
-    }
-
     private void setupDatabase(){
-        dataSource = new DataSource();
-        dataSource.load();
-        dataSource.initPool();
+        DataSource dataSource = PLJRApi.getDataSource();
         query = new QueryManager(dataSource);
         query.setupTables();
     }
@@ -110,14 +85,8 @@ public final class Marriage extends JavaPlugin {
         getCommand("amarry").setExecutor(new AmarryCommand());
     }
 
-    public static Economy getEconomy() {
-        return econ;
-    }
     public static QueryManager getQuery() {
         return query;
-    }
-    public static FileConfiguration getConf() {
-        return config;
     }
     public static ConfigManager getConfigManager() {
         return configManager;

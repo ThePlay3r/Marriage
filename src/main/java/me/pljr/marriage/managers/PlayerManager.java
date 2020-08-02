@@ -1,64 +1,33 @@
 package me.pljr.marriage.managers;
 
-import me.pljr.marriage.enums.Gender;
-import org.bukkit.Location;
+import me.pljr.marriage.Marriage;
+import me.pljr.marriage.objects.CorePlayer;
+
+import java.util.HashMap;
 
 public class PlayerManager {
-    private Gender gender;
-    private String partner;
-    private boolean pvp;
-    private long lastseen;
-    private Location home;
-    private boolean spy;
+    private static final HashMap<String, CorePlayer> players = new HashMap<>();
+    private static final QueryManager query = Marriage.getQuery();
+    private static final HashMap<String, String> requests = new HashMap<>();
 
-    public PlayerManager(Gender gender, String partner, boolean pvp, long lastseen, Location home, boolean spy){
-        this.gender = gender;
-        this.partner = partner;
-        this.pvp = pvp;
-        this.lastseen = lastseen;
-        this.home = home;
-        this.spy = spy;
+    public static CorePlayer getPlayerManager(String pName){
+        if (players.containsKey(pName)){
+            return players.get(pName);
+        }
+        query.loadPlayerSync(pName);
+        return getPlayerManager(pName);
     }
 
-    public void setHome(Location home) {
-        this.home = home;
-    }
-    public Location getHome() {
-        return home;
+    public static void setPlayerManager(String pName, CorePlayer corePlayer){
+        players.put(pName, corePlayer);
     }
 
-    public void setLastseen(long lastseen) {
-        this.lastseen = lastseen;
-    }
-    public long getLastseen() {
-        return lastseen;
+    public static void savePlayer(String pName){
+        if (!players.containsKey(pName)) return;
+        query.savePlayer(pName);
     }
 
-    public void setPvp(boolean pvp) {
-        this.pvp = pvp;
-    }
-    public boolean isPvp() {
-        return pvp;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setPartner(String partner) {
-        this.partner = partner;
-    }
-    public String getPartner() {
-        return partner;
-    }
-
-    public void setSpy(boolean spy) {
-        this.spy = spy;
-    }
-    public boolean isSpy() {
-        return spy;
+    public static HashMap<String, String> getRequests() {
+        return requests;
     }
 }

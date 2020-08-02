@@ -1,14 +1,12 @@
 package me.pljr.marriage.config;
 
 import me.pljr.marriage.Marriage;
-import me.pljr.marriage.managers.ConfigManager;
+import me.pljr.pljrapi.managers.ConfigManager;
 import org.bukkit.inventory.ItemStack;
 
 public class CfgMenu {
     private final static ConfigManager config = Marriage.getConfigManager();
 
-    public static boolean enabled;
-    public static boolean oldHead;
     public static String title;
     public static ItemStack heart;
     public static ItemStack white;
@@ -24,20 +22,18 @@ public class CfgMenu {
     public static ItemStack privatechatinfo;
 
     public static void load(){
-        CfgMenu.enabled = config.getBoolean("menu.enabled");
-        CfgMenu.oldHead = config.getBoolean("menu.old-head");
         CfgMenu.title = config.getString("menu.title");
-        CfgMenu.heart = config.getItemStack("menu.heart");
-        CfgMenu.white = config.getItemStack("menu.white");
-        CfgMenu.background = config.getItemStack("menu.background");
-        CfgMenu.lastseen = config.getItemStack("menu.lastseen");
-        CfgMenu.sharedxpinfo = config.getItemStack("menu.sharedxpinfo");
-        CfgMenu.tphome = config.getItemStack("menu.tphome");
-        CfgMenu.gift = config.getItemStack("menu.gift");
-        CfgMenu.tp = config.getItemStack("menu.tp");
-        CfgMenu.pvp = config.getItemStack("menu.pvp");
-        CfgMenu.sethome = config.getItemStack("menu.sethome");
-        CfgMenu.sharedfoodinfo = config.getItemStack("menu.sharedfoodinfo");
-        CfgMenu.privatechatinfo = config.getItemStack("menu.privatechatinfo");
+        CfgMenu.heart = config.getSimpleItemStack("menu.heart");
+        CfgMenu.white = config.getSimpleItemStack("menu.white");
+        CfgMenu.background = config.getSimpleItemStack("menu.background");
+        CfgMenu.lastseen = config.getSimpleItemStack("menu.lastseen");
+        CfgMenu.sharedxpinfo = config.getSimpleItemStack("menu.sharedxpinfo");
+        CfgMenu.tphome = config.getSimpleItemStack("menu.tphome");
+        CfgMenu.gift = config.getSimpleItemStack("menu.gift");
+        CfgMenu.tp = config.getSimpleItemStack("menu.tp");
+        CfgMenu.pvp = config.getSimpleItemStack("menu.pvp");
+        CfgMenu.sethome = config.getSimpleItemStack("menu.sethome");
+        CfgMenu.sharedfoodinfo = config.getSimpleItemStack("menu.sharedfoodinfo");
+        CfgMenu.privatechatinfo = config.getSimpleItemStack("menu.privatechatinfo");
     }
 }

@@ -1,10 +1,8 @@
 package me.pljr.marriage.enums;
 
-public enum Message {
+public enum Lang {
     NO_CONSOLE,
-    NO_PERM,
     NO_PARTNER,
-    OFFLINE,
     ITEM_IN_HAND,
     GIFT_SEND,
     GIFT_RECEIVE,
@@ -64,5 +62,13 @@ public enum Message {
     PVP_ENABLED,
     PVP_DISABLED,
     SPY_ACTIVE,
-    SPY_UNACTIVE
+    SPY_UNACTIVE,
+    FOOD_ON,
+    FOOD_OFF,
+    XP_ON,
+    XP_OFF,
+    FOOD_ON_OTHERS,
+    FOOD_OFF_OTHERS,
+    XP_ON_OTHERS,
+    XP_OFF_OTHERS
 }

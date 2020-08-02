@@ -1,13 +1,13 @@
 package me.pljr.marriage.menus;
 
 import me.pljr.marriage.config.CfgMenu;
-import me.pljr.marriage.config.CfgMessages;
+import me.pljr.marriage.config.CfgLang;
 import me.pljr.marriage.config.CfgSounds;
-import me.pljr.marriage.enums.Message;
+import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.PlayerManager;
-import me.pljr.marriage.utils.GuiUtil;
-import me.pljr.marriage.utils.PlayerUtil;
+import me.pljr.marriage.objects.CorePlayer;
+import me.pljr.pljrapi.managers.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,8 +21,8 @@ public class MarryMenu implements Listener {
 
     public static Inventory getMenu(String username){
         Inventory inventory = Bukkit.createInventory(null, 54, title);
-        PlayerManager playerManager = PlayerUtil.getPlayerManager(username);
-        String partner = playerManager.getPartner();
+        CorePlayer corePlayer = PlayerManager.getPlayerManager(username);
+        String partner = corePlayer.getPartner();
 
         ItemStack background = CfgMenu.background;
         for (int i = 0; i<45; i++){
@@ -81,9 +81,9 @@ public class MarryMenu implements Listener {
 
         ItemStack head;
         if (partner == null){
-            head = GuiUtil.createHead("Steve", CfgMessages.messages.get(Message.NO_PARTNER));
+            head = GuiManager.createHead("Steve", CfgLang.lang.get(Lang.NO_PARTNER));
         }else{
-            head = GuiUtil.createHead(partner, "§e" + partner, CfgMessages.messages.get(Message.CLICK_TO_DIVORCE));
+            head = GuiManager.createHead(partner, "§e" + partner, CfgLang.lang.get(Lang.CLICK_TO_DIVORCE));
         }
         inventory.setItem(22, head);
 
@@ -101,6 +101,9 @@ public class MarryMenu implements Listener {
         } else if (slot == 45){
             player.closeInventory();
             Bukkit.dispatchCommand(player, "marry seen");
+        } else if (slot == 46){
+            player.closeInventory();
+            Bukkit.dispatchCommand(player, "marry xp");
         } else if (slot == 47){
             player.closeInventory();
             Bukkit.dispatchCommand(player, "marry home");
@@ -116,10 +119,13 @@ public class MarryMenu implements Listener {
         } else if (slot == 51){
             player.closeInventory();
             Bukkit.dispatchCommand(player, "marry sethome");
+        } else if (slot == 52){
+            player.closeInventory();
+            Bukkit.dispatchCommand(player, "marry food");
         } else if (slot == 53){
             player.closeInventory();
             player.sendMessage("");
-            player.sendMessage(CfgMessages.messages.get(Message.CHAT_USAGE));
+            player.sendMessage(CfgLang.lang.get(Lang.CHAT_USAGE));
             player.sendMessage("");
             player.playSound(player.getLocation(), CfgSounds.sounds.get(Sounds.MENU_CLICK), 2, 1);
         }

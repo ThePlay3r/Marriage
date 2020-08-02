@@ -1,9 +1,9 @@
 package me.pljr.marriage.listeners;
 
 import me.pljr.marriage.Marriage;
-import me.pljr.marriage.managers.PlayerManager;
+import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.marriage.utils.MarryUtil;
-import me.pljr.marriage.utils.PlayerUtil;
+import me.pljr.marriage.managers.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerInteractEntityListener implements Listener {
-    private List<Player> kissing = new ArrayList<>();
+    private final List<Player> kissing = new ArrayList<>();
 
     @EventHandler
     public void onClick(PlayerInteractEntityEvent event){
         if (event.getRightClicked() instanceof Player){
             Player player1 = event.getPlayer();
             Player player2 = (Player) event.getRightClicked();
-            PlayerManager playerManager = PlayerUtil.getPlayerManager(player1.getName());
-            if (playerManager.getPartner() != null && playerManager.getPartner().equals(player2.getName())){
+            CorePlayer corePlayer = PlayerManager.getPlayerManager(player1.getName());
+            if (corePlayer.getPartner() != null && corePlayer.getPartner().equals(player2.getName())){
                 if (!kissing.contains(player1)){
                     MarryUtil.kiss(player1, player2);
                     kissing.add(player1);
