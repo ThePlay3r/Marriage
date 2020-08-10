@@ -124,7 +124,7 @@
             <artifactId>PLJRApi</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/PLJRApi.jar</systemPath>
+            <systemPath>${project.basedir}/libraries/PLJRApi.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

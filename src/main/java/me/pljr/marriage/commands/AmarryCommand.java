@@ -11,7 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class AmarryCommand implements CommandExecutor {
+public class AmarryCommand extends CommandUtil implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -19,7 +19,7 @@ public class AmarryCommand implements CommandExecutor {
         // /amarry help
         if (!(args.length > 0) || args[0].equalsIgnoreCase("help")){
             if (sender instanceof Player){
-                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.help")) return false;
+                if (!checkPerm(sender, "marriage.admin.help")) return false;
             }
             CfgLang.adminHelp.forEach(sender::sendMessage);
             return true;
@@ -33,7 +33,7 @@ public class AmarryCommand implements CommandExecutor {
             }
             Player player = (Player) sender;
             String playerName = player.getName();
-            if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.spy")) return false;
+            if (!checkPerm(sender, "marriage.admin.spy")) return false;
             CorePlayer corePlayer = PlayerManager.getPlayerManager(playerName);
             if (corePlayer.isSpy()){
                 player.sendMessage(CfgLang.lang.get(Lang.SPY_UNACTIVE));
@@ -49,13 +49,13 @@ public class AmarryCommand implements CommandExecutor {
         // /amarry marry <playerName> <playerName>
         if (args[0].equalsIgnoreCase("marry")){
             if (sender instanceof Player){
-                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.marry")) return false;
+                if (!checkPerm(sender, "marriage.admin.marry")) return false;
             }
             if (!(args.length == 3)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(sender, args[1]) || !CommandUtil.checkPlayer(sender, args[2])) return false;
+            if (!checkPlayer(sender, args[1]) || !checkPlayer(sender, args[2])) return false;
             if (MarryUtil.isMarried(args[1])){
                 sender.sendMessage(CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[1]));
                 return false;
@@ -71,13 +71,13 @@ public class AmarryCommand implements CommandExecutor {
         // /amarry unmarry <playerName>
         if (args[0].equalsIgnoreCase("unmarry")){
             if (sender instanceof Player){
-                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.unmarry")) return false;
+                if (!checkPerm(sender, "marriage.admin.unmarry")) return false;
             }
             if (!(args.length == 2)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(sender, args[1])) return false;
+            if (!checkPlayer(sender, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
@@ -93,12 +93,12 @@ public class AmarryCommand implements CommandExecutor {
                 return false;
             }
             Player player = (Player) sender;
-            if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.sethome")) return false;
+            if (!checkPerm(sender, "marriage.admin.sethome")) return false;
             if (!(args.length == 2)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(player, args[1])) return false;
+            if (!checkPlayer(player, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
                 player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
@@ -114,12 +114,12 @@ public class AmarryCommand implements CommandExecutor {
                 return false;
             }
             Player player = (Player) sender;
-            if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.home")) return false;
+            if (!checkPerm(sender, "marriage.admin.home")) return false;
             if (!(args.length == 2)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(player, args[1])) return false;
+            if (!checkPlayer(player, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
                 player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
@@ -132,13 +132,13 @@ public class AmarryCommand implements CommandExecutor {
         // /amarry pvp <playerName>
         if (args[0].equalsIgnoreCase("pvp")){
             if (sender instanceof Player){
-                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.pvp")) return false;
+                if (!checkPerm(sender, "marriage.admin.pvp")) return false;
             }
             if (!(args.length == 2)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(sender, args[1])) return false;
+            if (!checkPlayer(sender, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
@@ -158,13 +158,13 @@ public class AmarryCommand implements CommandExecutor {
         // /amarry food <playerName>
         if (args[0].equalsIgnoreCase("food")){
             if (sender instanceof Player){
-                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.food")) return false;
+                if (!checkPerm(sender, "marriage.admin.food")) return false;
             }
             if (!(args.length == 2)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(sender, args[1])) return false;
+            if (!checkPlayer(sender, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
@@ -184,13 +184,13 @@ public class AmarryCommand implements CommandExecutor {
         // /amarry xp <playerName>
         if (args[0].equalsIgnoreCase("xp")){
             if (sender instanceof Player){
-                if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.xp")) return false;
+                if (!checkPerm(sender, "marriage.admin.xp")) return false;
             }
             if (!(args.length == 2)){
                 CfgLang.adminHelp.forEach(sender::sendMessage);
                 return false;
             }
-            if (!CommandUtil.checkPlayer(sender, args[1])) return false;
+            if (!checkPlayer(sender, args[1])) return false;
             if (!MarryUtil.isMarried(args[1])){
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
@@ -208,11 +208,11 @@ public class AmarryCommand implements CommandExecutor {
         }
 
         if (sender instanceof Player){
-            if (!CommandUtil.checkPerm((Player) sender, "marriage.admin.help")) return false;
-            CommandUtil.sendHelp(sender, CfgLang.adminHelp);
+            if (!checkPerm(sender, "marriage.admin.help")) return false;
+            sendHelp(sender, CfgLang.adminHelp);
             return true;
         }
-        CommandUtil.sendHelp(sender, CfgLang.adminHelp);
+        sendHelp(sender, CfgLang.adminHelp);
         return true;
     }
 }
