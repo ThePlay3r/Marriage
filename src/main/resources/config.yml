@@ -76,17 +76,20 @@ menu:
     type: "RED_STAINED_GLASS_PANE"
     name: "§c"
     amount: 1
-    lore: {}
+    lore:
+      - "§r"
   white:
     type: "WHITE_STAINED_GLASS_PANE"
     name: "§f"
     amount: 1
-    lore: {}
+    lore:
+      - "§r"
   background:
     type: "LIGHT_BLUE_STAINED_GLASS_PANE"
     name: "§f"
     amount: 1
-    lore: {}
+    lore:
+      - "§r"
   lastseen:
     type: "REDSTONE_LAMP"
     name: "§eLast seen"
