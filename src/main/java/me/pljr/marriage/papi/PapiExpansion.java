@@ -8,8 +8,11 @@ import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.utils.FormatUtil;
+import me.pljr.pljrapi.utils.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 /**
  * This class will be registered through the register-method in the
@@ -111,8 +114,8 @@ public class PapiExpansion extends PlaceholderExpansion {
             return "";
         }
 
-        String playerName = player.getName();
-        CorePlayer corePlayer = PlayerManager.getPlayerManager(playerName);
+        UUID playerId = player.getUniqueId();
+        CorePlayer corePlayer = PlayerManager.getPlayerManager(playerId);
 
         // %marriage_gender%
         if(identifier.equals("gender")){
@@ -186,7 +189,7 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         // %marriage_partner%
         if(identifier.equals("partner")){
-            String partnerName = corePlayer.getPartner();
+            String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(corePlayer.getPartner()));
             if (partnerName == null){
                 return "";
             }
@@ -195,20 +198,20 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         // %marriage_partner_gender%
         if(identifier.equals("partner_gender")){
-            String partnerName = corePlayer.getPartner();
-            if (partnerName == null){
+            UUID partnerId = corePlayer.getPartner();
+            if (partnerId == null){
                 return "";
             }
-            return PlayerManager.getPlayerManager(partnerName).getGender().toString();
+            return PlayerManager.getPlayerManager(partnerId).getGender().toString();
         }
 
         // %marriage_partner_gender_symbol%
         if(identifier.equals("partner_gender_symbol")){
-            String partnerName = corePlayer.getPartner();
-            if (partnerName == null){
+            UUID partnerId = corePlayer.getPartner();
+            if (partnerId == null){
                 return "";
             }
-            Gender gender = PlayerManager.getPlayerManager(partnerName).getGender();
+            Gender gender = PlayerManager.getPlayerManager(partnerId).getGender();
             switch (gender){
                 case MALE: return CfgLang.lang.get(Lang.GENDER_MALE_SYMBOL);
                 case NONE: return CfgLang.lang.get(Lang.GENDER_NONE_SYMBOL);
@@ -217,11 +220,11 @@ public class PapiExpansion extends PlaceholderExpansion {
         }
         // %marriage_partner_gender_color%
         if(identifier.equals("partner_gender_color")){
-            String partnerName = corePlayer.getPartner();
-            if (partnerName == null){
+            UUID partnerId = corePlayer.getPartner();
+            if (partnerId == null){
                 return "";
             }
-            Gender gender = PlayerManager.getPlayerManager(partnerName).getGender();
+            Gender gender = PlayerManager.getPlayerManager(partnerId).getGender();
             switch (gender){
                 case MALE: return CfgLang.lang.get(Lang.GENDER_MALE_COLOR);
                 case NONE: return CfgLang.lang.get(Lang.GENDER_NONE_COLOR);
@@ -231,13 +234,13 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         // %marriage_partner_lastseen%
         if (identifier.equals("partner_lastseen")){
-            String partnerName = corePlayer.getPartner();
-            if (partnerName == null){
+            UUID partnerId = corePlayer.getPartner();
+            if (partnerId == null){
                 return "";
             }
-            Player partner = Bukkit.getPlayer(partnerName);
+            Player partner = Bukkit.getPlayer(partnerId);
             if (partner == null || !partner.isOnline()){
-                return FormatUtil.formatTime(PlayerManager.getPlayerManager(partnerName).getLastseen());
+                return FormatUtil.formatTime(PlayerManager.getPlayerManager(partnerId).getLastseen());
             }else{
                 return CfgLang.lang.get(Lang.ONLINE);
             }
@@ -245,11 +248,11 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         // %marriage_partner_pvp%
         if (identifier.equals("partner_pvp")){
-            String partnerName = corePlayer.getPartner();
-            if (partnerName == null){
+            UUID partnerId = corePlayer.getPartner();
+            if (partnerId == null){
                 return "";
             }
-            if (PlayerManager.getPlayerManager(partnerName).isPvp()){
+            if (PlayerManager.getPlayerManager(partnerId).isPvp()){
                 return CfgLang.lang.get(Lang.PVP_ENABLED);
             }
             return CfgLang.lang.get(Lang.PVP_DISABLED);

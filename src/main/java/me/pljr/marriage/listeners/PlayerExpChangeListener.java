@@ -15,11 +15,10 @@ public class PlayerExpChangeListener implements Listener {
     @EventHandler
     public void onChange(PlayerExpChangeEvent event){
         Player player = event.getPlayer();
-        CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getName());
+        CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getUniqueId());
         if (!corePlayer.isXp()) return;
         if (corePlayer.getPartner() != null){
-            String partnerName = corePlayer.getPartner();
-            Player partner = Bukkit.getPlayer(partnerName);
+            Player partner = Bukkit.getPlayer(corePlayer.getPartner());
             if (partner != null && partner.isOnline()){
                 if (event.getAmount() > 2){
                     int halfAmount = event.getAmount() / 2;

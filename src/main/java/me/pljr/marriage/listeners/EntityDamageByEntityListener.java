@@ -13,9 +13,9 @@ public class EntityDamageByEntityListener implements Listener {
     public void onDamage(EntityDamageByEntityEvent event){
         if (event.getDamager() instanceof Player){
             if (event.getEntity() instanceof Player){
-                CorePlayer damagerManager = PlayerManager.getPlayerManager(event.getDamager().getName());
+                CorePlayer damagerManager = PlayerManager.getPlayerManager(event.getDamager().getUniqueId());
                 if (damagerManager.getPartner() == null) return;
-                if (damagerManager.getPartner().equals(event.getEntity().getName())){
+                if (damagerManager.getPartner().equals(event.getEntity().getUniqueId())){
                     if (!damagerManager.isPvp()){
                         event.setCancelled(true);
                     }

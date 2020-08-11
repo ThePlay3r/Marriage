@@ -16,11 +16,10 @@ public class FoodLevelChangeListener implements Listener {
     public void onChange(FoodLevelChangeEvent event){
         if (event.getEntity() instanceof Player){
             Player player = (Player) event.getEntity();
-            CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getName());
+            CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getUniqueId());
             if (!corePlayer.isFood()) return;
             if (corePlayer.getPartner() != null){
-                String partnerName = corePlayer.getPartner();
-                Player partner = Bukkit.getPlayer(partnerName);
+                Player partner = Bukkit.getPlayer(corePlayer.getPartner());
                 if (partner != null && partner.isOnline()){
                     if (partner.getFoodLevel() < 20){
                         int amount = (event.getFoodLevel() - player.getFoodLevel()) / 2;

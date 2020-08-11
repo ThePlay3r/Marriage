@@ -8,6 +8,7 @@ import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.managers.GuiManager;
+import me.pljr.pljrapi.utils.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,13 +17,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class MarryMenu implements Listener {
     private static final String title = CfgMenu.title;
 
-    public static Inventory getMenu(String username){
+    public static void open(Player player){
         Inventory inventory = Bukkit.createInventory(null, 54, title);
-        CorePlayer corePlayer = PlayerManager.getPlayerManager(username);
-        String partner = corePlayer.getPartner();
+        CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getUniqueId());
+        UUID partnerId = corePlayer.getPartner();
 
         ItemStack background = CfgMenu.background;
         for (int i = 0; i<45; i++){
@@ -80,14 +83,15 @@ public class MarryMenu implements Listener {
         inventory.setItem(53, privatechatinfo);
 
         ItemStack head;
-        if (partner == null){
+        if (partnerId == null){
             head = GuiManager.createHead("Steve", CfgLang.lang.get(Lang.NO_PARTNER));
         }else{
-            head = GuiManager.createHead(partner, "§e" + partner, CfgLang.lang.get(Lang.CLICK_TO_DIVORCE));
+            String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(partnerId));
+            head = GuiManager.createHead(partnerName, "§e" + partnerName, CfgLang.lang.get(Lang.CLICK_TO_DIVORCE));
         }
         inventory.setItem(22, head);
 
-        return inventory;
+        player.openInventory(inventory);
     }
 
     @EventHandler

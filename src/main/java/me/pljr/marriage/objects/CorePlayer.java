@@ -3,9 +3,11 @@ package me.pljr.marriage.objects;
 import me.pljr.marriage.enums.Gender;
 import org.bukkit.Location;
 
+import java.util.UUID;
+
 public class CorePlayer {
     private Gender gender;
-    private String partner;
+    private UUID partner;
     private boolean pvp;
     private long lastseen;
     private Location home;
@@ -13,7 +15,7 @@ public class CorePlayer {
     private boolean food;
     private boolean xp;
 
-    public CorePlayer(Gender gender, String partner, boolean pvp, long lastseen, Location home, boolean spy, boolean food, boolean xp){
+    public CorePlayer(Gender gender, UUID partner, boolean pvp, long lastseen, Location home, boolean spy, boolean food, boolean xp){
         this.gender = gender;
         this.partner = partner;
         this.pvp = pvp;
@@ -52,10 +54,10 @@ public class CorePlayer {
         return gender;
     }
 
-    public void setPartner(String partner) {
+    public void setPartner(UUID partner) {
         this.partner = partner;
     }
-    public String getPartner() {
+    public UUID getPartner() {
         return partner;
     }
 
