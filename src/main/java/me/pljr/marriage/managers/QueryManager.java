@@ -42,7 +42,12 @@ public class QueryManager {
             preparedStatement.setString(1, uuid.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                partner = UUID.fromString(resultSet.getString("partner"));
+                String partnerUUID = resultSet.getString("partner");
+                if (partnerUUID == null){
+                    partner = null;
+                }else{
+                    partner = UUID.fromString(partnerUUID);
+                }
                 gender = Gender.valueOf(resultSet.getString("gender"));
                 pvp = resultSet.getBoolean("pvp");
                 food = resultSet.getBoolean("food");
@@ -90,7 +95,11 @@ public class QueryManager {
                        "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
                );
                preparedStatement.setString(1, uuid.toString());
-               preparedStatement.setString(2, corePlayer.getPartner().toString());
+               if (corePlayer.getPartner() == null){
+                   preparedStatement.setString(2, null);
+               }else{
+                   preparedStatement.setString(2, corePlayer.getPartner().toString());
+               }
                preparedStatement.setString(3, corePlayer.getGender().toString());
                preparedStatement.setBoolean(4, corePlayer.isPvp());
                preparedStatement.setBoolean(5, corePlayer.isFood());
