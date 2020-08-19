@@ -28,6 +28,7 @@ mysql:
 ################## Here, you can enable or disable functions of this plugin. # \
                  #############################################################  \
 settings:
+  bungee: false #-> Should we use bungee functions?
   particles: true #-> Should we use particles?
   sounds: true  #-> Should we use sounds?
   shared-food: true #-> Should the sharing food be enabled?

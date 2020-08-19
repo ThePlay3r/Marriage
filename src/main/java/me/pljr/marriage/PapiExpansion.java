@@ -1,4 +1,4 @@
-package me.pljr.marriage.papi;
+package me.pljr.marriage;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.pljr.marriage.Marriage;
@@ -115,7 +115,7 @@ public class PapiExpansion extends PlaceholderExpansion {
         }
 
         UUID playerId = player.getUniqueId();
-        CorePlayer corePlayer = PlayerManager.getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
 
         // %marriage_gender%
         if(identifier.equals("gender")){
@@ -202,7 +202,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            return PlayerManager.getPlayerManager(partnerId).getGender().toString();
+            return Marriage.getPlayerManager().getPlayerManager(partnerId).getGender().toString();
         }
 
         // %marriage_partner_gender_symbol%
@@ -211,7 +211,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            Gender gender = PlayerManager.getPlayerManager(partnerId).getGender();
+            Gender gender = Marriage.getPlayerManager().getPlayerManager(partnerId).getGender();
             switch (gender){
                 case MALE: return CfgLang.lang.get(Lang.GENDER_MALE_SYMBOL);
                 case NONE: return CfgLang.lang.get(Lang.GENDER_NONE_SYMBOL);
@@ -224,7 +224,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            Gender gender = PlayerManager.getPlayerManager(partnerId).getGender();
+            Gender gender = Marriage.getPlayerManager().getPlayerManager(partnerId).getGender();
             switch (gender){
                 case MALE: return CfgLang.lang.get(Lang.GENDER_MALE_COLOR);
                 case NONE: return CfgLang.lang.get(Lang.GENDER_NONE_COLOR);
@@ -240,7 +240,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             }
             Player partner = Bukkit.getPlayer(partnerId);
             if (partner == null || !partner.isOnline()){
-                return FormatUtil.formatTime(PlayerManager.getPlayerManager(partnerId).getLastseen());
+                return FormatUtil.formatTime(Marriage.getPlayerManager().getPlayerManager(partnerId).getLastseen());
             }else{
                 return CfgLang.lang.get(Lang.ONLINE);
             }
@@ -252,7 +252,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            if (PlayerManager.getPlayerManager(partnerId).isPvp()){
+            if (Marriage.getPlayerManager().getPlayerManager(partnerId).isPvp()){
                 return CfgLang.lang.get(Lang.PVP_ENABLED);
             }
             return CfgLang.lang.get(Lang.PVP_DISABLED);

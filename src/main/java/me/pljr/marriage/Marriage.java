@@ -3,18 +3,20 @@ package me.pljr.marriage;
 import me.pljr.marriage.commands.AmarryCommand;
 import me.pljr.marriage.commands.MarryCommand;
 import me.pljr.marriage.config.*;
+import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.managers.QueryManager;
 import me.pljr.marriage.listeners.*;
 import me.pljr.marriage.menus.MarryMenu;
-import me.pljr.marriage.papi.PapiExpansion;
 import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.database.DataSource;
 import me.pljr.pljrapi.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Marriage extends JavaPlugin {
+    private static PlayerManager playerManager;
     private static ConfigManager configManager;
     private static Marriage instance;
     private static QueryManager query;
@@ -24,6 +26,7 @@ public final class Marriage extends JavaPlugin {
         instance = this;
         if (!setupPLJRApi()) return;
         setupConfig();
+        setupManagers();
         setupDatabase();
         loadListeners();
         loadCommands();
@@ -64,10 +67,17 @@ public final class Marriage extends JavaPlugin {
         CfgSounds.load();
     }
 
+    private void setupManagers(){
+        playerManager = new PlayerManager();
+    }
+
     private void setupDatabase(){
         DataSource dataSource = PLJRApi.getDataSource();
         query = new QueryManager(dataSource);
         query.setupTables();
+        for (Player player : Bukkit.getOnlinePlayers()){
+            query.loadPlayer(player.getUniqueId());
+        }
     }
 
     private void loadListeners(){
@@ -94,9 +104,15 @@ public final class Marriage extends JavaPlugin {
     public static Marriage getInstance() {
         return instance;
     }
+    public static PlayerManager getPlayerManager() {
+        return playerManager;
+    }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for (Player player : Bukkit.getOnlinePlayers()){
+            query.savePlayerSync(player.getUniqueId());
+        }
     }
 }
