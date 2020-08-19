@@ -3,7 +3,6 @@ package me.pljr.marriage.listeners;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.marriage.utils.MarryUtil;
-import me.pljr.marriage.managers.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +20,7 @@ public class PlayerInteractEntityListener implements Listener {
         if (event.getRightClicked() instanceof Player){
             Player player1 = event.getPlayer();
             Player player2 = (Player) event.getRightClicked();
-            CorePlayer corePlayer = PlayerManager.getPlayerManager(player1.getUniqueId());
+            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(player1.getUniqueId());
             if (corePlayer.getPartner() != null && corePlayer.getPartner().equals(player2.getUniqueId())){
                 if (!kissing.contains(player1)){
                     MarryUtil.kiss(player1, player2);

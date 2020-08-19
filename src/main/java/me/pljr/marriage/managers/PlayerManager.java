@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerManager {
-    private static final HashMap<UUID, CorePlayer> players = new HashMap<>();
-    private static final QueryManager query = Marriage.getQuery();
-    private static final HashMap<UUID, UUID> requests = new HashMap<>();
+    private final HashMap<UUID, CorePlayer> players = new HashMap<>();
+    private final QueryManager query = Marriage.getQuery();
+    private final HashMap<UUID, UUID> requests = new HashMap<>();
 
-    public static CorePlayer getPlayerManager(UUID uuid){
+    public CorePlayer getPlayerManager(UUID uuid){
         if (players.containsKey(uuid)){
             return players.get(uuid);
         }
@@ -19,16 +19,16 @@ public class PlayerManager {
         return getPlayerManager(uuid);
     }
 
-    public static void setPlayerManager(UUID uuid, CorePlayer corePlayer){
+    public void setPlayerManager(UUID uuid, CorePlayer corePlayer){
         players.put(uuid, corePlayer);
     }
 
-    public static void savePlayer(UUID uuid){
+    public void savePlayer(UUID uuid){
         if (!players.containsKey(uuid)) return;
         query.savePlayer(uuid);
     }
 
-    public static HashMap<UUID, UUID> getRequests() {
+    public HashMap<UUID, UUID> getRequests() {
         return requests;
     }
 }

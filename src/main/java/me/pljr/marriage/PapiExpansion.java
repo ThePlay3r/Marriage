@@ -1,11 +1,9 @@
 package me.pljr.marriage;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgLang;
 import me.pljr.marriage.enums.Gender;
 import me.pljr.marriage.enums.Lang;
-import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.utils.FormatUtil;
 import me.pljr.pljrapi.utils.PlayerUtil;

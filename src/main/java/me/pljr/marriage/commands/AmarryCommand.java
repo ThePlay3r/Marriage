@@ -1,10 +1,10 @@
 package me.pljr.marriage.commands;
 
+import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgLang;
 import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.marriage.utils.MarryUtil;
-import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.pljrapi.utils.CommandUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -37,7 +37,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
             Player player = (Player) sender;
             UUID playerId = player.getUniqueId();
             if (!checkPerm(sender, "marriage.admin.spy")) return false;
-            CorePlayer corePlayer = PlayerManager.getPlayerManager(playerId);
+            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
             if (corePlayer.isSpy()){
                 player.sendMessage(CfgLang.lang.get(Lang.SPY_UNACTIVE));
                 corePlayer.setSpy(false);
@@ -45,7 +45,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 player.sendMessage(CfgLang.lang.get(Lang.SPY_ACTIVE));
                 corePlayer.setSpy(true);
             }
-            PlayerManager.setPlayerManager(playerId, corePlayer);
+            Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
             return true;
         }
 
@@ -132,7 +132,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = PlayerManager.getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             player.teleport(requestManager.getHome());
             return true;
         }
@@ -152,7 +152,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = PlayerManager.getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             if (requestManager.isPvp()){
                 requestManager.setPvp(false);
                 sender.sendMessage(CfgLang.lang.get(Lang.PVP_OFF_OTHERS));
@@ -160,7 +160,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 requestManager.setPvp(true);
                 sender.sendMessage(CfgLang.lang.get(Lang.PVP_ON_OTHERS));
             }
-            PlayerManager.setPlayerManager(player1Id, requestManager);
+            Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
             return true;
         }
 
@@ -179,7 +179,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = PlayerManager.getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             if (requestManager.isFood()){
                 requestManager.setFood(false);
                 sender.sendMessage(CfgLang.lang.get(Lang.FOOD_OFF_OTHERS));
@@ -187,7 +187,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 requestManager.setFood(true);
                 sender.sendMessage(CfgLang.lang.get(Lang.FOOD_ON_OTHERS));
             }
-            PlayerManager.setPlayerManager(player1Id, requestManager);
+            Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
             return true;
         }
 
@@ -206,7 +206,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = PlayerManager.getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             if (requestManager.isXp()){
                 requestManager.setXp(false);
                 sender.sendMessage(CfgLang.lang.get(Lang.XP_OFF_OTHERS));
@@ -214,7 +214,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 requestManager.setXp(true);
                 sender.sendMessage(CfgLang.lang.get(Lang.XP_ON_OTHERS));
             }
-            PlayerManager.setPlayerManager(player1Id, requestManager);
+            Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
             return true;
         }
 

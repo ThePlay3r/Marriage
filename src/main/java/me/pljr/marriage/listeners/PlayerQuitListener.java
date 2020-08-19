@@ -1,6 +1,6 @@
 package me.pljr.marriage.listeners;
 
-import me.pljr.marriage.managers.PlayerManager;
+import me.pljr.marriage.Marriage;
 import me.pljr.marriage.objects.CorePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,9 +15,8 @@ public class PlayerQuitListener implements Listener {
     public void onLeave(PlayerQuitEvent event){
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
-        CorePlayer corePlayer = PlayerManager.getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
         corePlayer.setLastseen(System.currentTimeMillis());
-        PlayerManager.setPlayerManager(playerId, corePlayer);
-        PlayerManager.savePlayer(playerId);
+        Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
     }
 }

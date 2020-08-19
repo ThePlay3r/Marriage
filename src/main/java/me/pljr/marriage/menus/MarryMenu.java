@@ -1,12 +1,11 @@
 package me.pljr.marriage.menus;
 
 import me.pljr.marriage.Marriage;
-import me.pljr.marriage.config.CfgMenu;
 import me.pljr.marriage.config.CfgLang;
+import me.pljr.marriage.config.CfgMenu;
 import me.pljr.marriage.config.CfgSounds;
 import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.enums.Sounds;
-import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.utils.ItemStackUtil;
 import me.pljr.pljrapi.utils.PlayerUtil;

@@ -1,6 +1,6 @@
 package me.pljr.marriage.listeners;
 
-import me.pljr.marriage.managers.PlayerManager;
+import me.pljr.marriage.Marriage;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.managers.ActionBarManager;
 import me.pljr.pljrapi.objects.PLJRActionBar;
@@ -16,7 +16,7 @@ public class FoodLevelChangeListener implements Listener {
     public void onChange(FoodLevelChangeEvent event){
         if (event.getEntity() instanceof Player){
             Player player = (Player) event.getEntity();
-            CorePlayer corePlayer = PlayerManager.getPlayerManager(player.getUniqueId());
+            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(player.getUniqueId());
             if (!corePlayer.isFood()) return;
             if (corePlayer.getPartner() != null){
                 Player partner = Bukkit.getPlayer(corePlayer.getPartner());

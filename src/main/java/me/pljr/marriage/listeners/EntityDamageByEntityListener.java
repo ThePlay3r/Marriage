@@ -1,6 +1,6 @@
 package me.pljr.marriage.listeners;
 
-import me.pljr.marriage.managers.PlayerManager;
+import me.pljr.marriage.Marriage;
 import me.pljr.marriage.objects.CorePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,7 @@ public class EntityDamageByEntityListener implements Listener {
     public void onDamage(EntityDamageByEntityEvent event){
         if (event.getDamager() instanceof Player){
             if (event.getEntity() instanceof Player){
-                CorePlayer damagerManager = PlayerManager.getPlayerManager(event.getDamager().getUniqueId());
+                CorePlayer damagerManager = Marriage.getPlayerManager().getPlayerManager(event.getDamager().getUniqueId());
                 if (damagerManager.getPartner() == null) return;
                 if (damagerManager.getPartner().equals(event.getEntity().getUniqueId())){
                     if (!damagerManager.isPvp()){
