@@ -8,24 +8,24 @@ import java.util.UUID;
 
 public class PlayerManager {
     private final HashMap<UUID, CorePlayer> players = new HashMap<>();
-    private final QueryManager query = Marriage.getQuery();
     private final HashMap<UUID, UUID> requests = new HashMap<>();
 
     public CorePlayer getPlayerManager(UUID uuid){
         if (players.containsKey(uuid)){
             return players.get(uuid);
         }
-        query.loadPlayerSync(uuid);
+        Marriage.getQuery().loadPlayerSync(uuid);
         return getPlayerManager(uuid);
     }
 
     public void setPlayerManager(UUID uuid, CorePlayer corePlayer){
         players.put(uuid, corePlayer);
+        savePlayer(uuid);
     }
 
     public void savePlayer(UUID uuid){
         if (!players.containsKey(uuid)) return;
-        query.savePlayer(uuid);
+        Marriage.getQuery().savePlayer(uuid);
     }
 
     public HashMap<UUID, UUID> getRequests() {

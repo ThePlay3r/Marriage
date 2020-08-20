@@ -37,11 +37,11 @@ public final class Marriage extends JavaPlugin {
     private boolean setupPLJRApi(){
         PLJRApi api = (PLJRApi) Bukkit.getServer().getPluginManager().getPlugin("PLJRApi");
         if (api == null){
-            Bukkit.getConsoleSender().sendMessage("§cKillStreak: PLJRApi not found, disabling plugin!");
+            Bukkit.getConsoleSender().sendMessage("§cMarriage: PLJRApi not found, disabling plugin!");
             getServer().getPluginManager().disablePlugin(this);
             return false;
         }else{
-            Bukkit.getConsoleSender().sendMessage("§aKillStreak: Hooked into PLJRApi!");
+            Bukkit.getConsoleSender().sendMessage("§aMarriage: Hooked into PLJRApi!");
             return true;
         }
     }
