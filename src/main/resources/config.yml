@@ -6,7 +6,6 @@
 # Description: Plugin for in-game Marriage.
 # Dependencies:
 #   -> PLJRApi
-#   -> Vault (https://www.spigotmc.org/resources/vault.34315/)
 #   -> PlaceholderAPI<Optional> (https://www.spigotmc.org/resources/placeholderapi.6245/)
 #|--------------------------------------------------------------------------------------------------------------------|#
 
