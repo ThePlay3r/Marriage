@@ -1,6 +1,8 @@
 package me.pljr.marriage.listeners;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgLang;
+import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.managers.ActionBarManager;
 import me.pljr.pljrapi.objects.PLJRActionBar;
@@ -26,7 +28,7 @@ public class FoodLevelChangeListener implements Listener {
                         if (amount > 1){
                             event.setFoodLevel(player.getFoodLevel() + amount);
                             partner.setFoodLevel(partner.getFoodLevel() + amount);
-                            ActionBarManager.send(partner, new PLJRActionBar("§c§l❤ §aSvadba §8» §fObdržal/a si §b" + amount + " §fjedla", 20));
+                            ActionBarManager.send(partner, new PLJRActionBar(CfgLang.lang.get(Lang.FOOD_ACTIONBAR).replace("%amount", amount+""), 20));
                         }
                     }
                 }

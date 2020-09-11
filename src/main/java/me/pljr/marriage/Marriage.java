@@ -10,7 +10,9 @@ import me.pljr.marriage.menus.MarryMenu;
 import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.database.DataSource;
 import me.pljr.pljrapi.managers.ConfigManager;
+import me.pljr.pljrapi.utils.SpigotUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +27,7 @@ public final class Marriage extends JavaPlugin {
     public void onEnable() {
         instance = this;
         if (!setupPLJRApi()) return;
+        updateCheck();
         setupConfig();
         setupManagers();
         setupDatabase();
@@ -44,6 +47,17 @@ public final class Marriage extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage("§aMarriage: Hooked into PLJRApi!");
             return true;
         }
+    }
+
+    private void updateCheck(){
+        Bukkit.getScheduler().runTaskAsynchronously(this, ()->{
+            boolean isUpToDate = SpigotUtil.upToDate(81807, this.getDescription().getVersion());
+            if (!isUpToDate){
+                Bukkit.getConsoleSender().sendMessage("");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Marriage: Your current version is not up-to-date!");
+                Bukkit.getConsoleSender().sendMessage("");
+            }
+        });
     }
 
     private void setupBungee(){

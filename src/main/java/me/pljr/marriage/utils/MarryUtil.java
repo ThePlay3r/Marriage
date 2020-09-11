@@ -14,9 +14,7 @@ import me.pljr.pljrapi.managers.ConfigManager;
 import me.pljr.pljrapi.managers.TitleManager;
 import me.pljr.pljrapi.objects.PLJRActionBar;
 import me.pljr.pljrapi.objects.PLJRTitle;
-import me.pljr.pljrapi.utils.ChatUtil;
-import me.pljr.pljrapi.utils.ParticleUtil;
-import me.pljr.pljrapi.utils.PlayerUtil;
+import me.pljr.pljrapi.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -31,18 +29,23 @@ public class MarryUtil {
     public static ConfigManager config = Marriage.getConfigManager();
 
     public static void chat(Player player, String message){
+        message = MiniMessageUtil.strip(message);
         UUID playerId = player.getUniqueId();
         String playerName = player.getName();
         CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
-        String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(corePlayer.getPartner()));
+        OfflinePlayer partner = Bukkit.getOfflinePlayer(corePlayer.getPartner());
         String format = CfgLang.lang.get(Lang.CHAT_FORMAT).replace("%name", playerName).replace("%message", message);
-        ChatUtil.message(partnerName, format, CfgSettings.bungee);
-        player.sendMessage(format);
+        if (CfgSettings.bungee){
+            BungeeUtil.message(partner.getName(), format);
+        }else{
+            ChatUtil.sendMessage(partner, format);
+        }
+        ChatUtil.sendMessage(player, format);
         for (Player p : Bukkit.getOnlinePlayers()){
             if (p.hasPermission("marriage.admin.spy")){
                 CorePlayer pManager = Marriage.getPlayerManager().getPlayerManager(p.getUniqueId());
                 if (pManager.isSpy()){
-                    player.sendMessage(CfgLang.lang.get(Lang.CHAT_FORMAT_SPY).replace("%name", playerName).replace("%message", message));
+                    ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.CHAT_FORMAT_SPY).replace("%name", playerName).replace("%message", message));
                 }
             }
         }
@@ -55,9 +58,9 @@ public class MarryUtil {
         corePlayer2.setPartner(player1);
         String player1Name = PlayerUtil.getName(Bukkit.getOfflinePlayer(player1));
         String player2Name = PlayerUtil.getName(Bukkit.getOfflinePlayer(player2));
-        ChatUtil.broadcast("", CfgSettings.bungee);
-        ChatUtil.broadcast(CfgLang.lang.get(Lang.MARRY_ACCEPT_BROADCAST).replace("%name1", player1Name).replace("%name2", player2Name), CfgSettings.bungee);
-        ChatUtil.broadcast("", CfgSettings.bungee);
+        ChatUtil.broadcastClean("", "", CfgSettings.bungee);
+        ChatUtil.broadcast(CfgLang.lang.get(Lang.MARRY_ACCEPT_BROADCAST).replace("%name1", player1Name).replace("%name2", player2Name), "", CfgSettings.bungee);
+        ChatUtil.broadcastClean("", "", CfgSettings.bungee);
         Marriage.getPlayerManager().setPlayerManager(player1, corePlayer1);
         Marriage.getPlayerManager().setPlayerManager(player2, corePlayer2);
     }
@@ -73,7 +76,7 @@ public class MarryUtil {
         OfflinePlayer partner = Bukkit.getOfflinePlayer(partnerId);
         if (partner.isOnline()) {
             Player onlinePartner = (Player) partner;
-            if (notify) onlinePartner.sendMessage(CfgLang.lang.get(Lang.SETHOME_PARTNER));
+            if (notify) ChatUtil.sendMessage(onlinePartner, CfgLang.lang.get(Lang.SETHOME_PARTNER));
         }
 
     }
@@ -94,18 +97,18 @@ public class MarryUtil {
             TitleManager.send(onlinePartner, new PLJRTitle(CfgLang.lang.get(Lang.DIVORCE_PARTNER_TITLE), CfgLang.lang.get(Lang.DIVORCE_PARTNER_SUBTITLE), 10, 20*3, 10));
             if (CfgSettings.particles)onlinePartner.playSound(onlinePartner.getLocation(), CfgSounds.sounds.get(Sounds.DIVORCE), 10, 1);
         }
-        ChatUtil.broadcast("", CfgSettings.bungee);
-        ChatUtil.broadcast(CfgLang.lang.get(Lang.DIVORCE_BROADCAST).replace("%name1", playerName).replace("%name2", partnerName), CfgSettings.bungee);
-        ChatUtil.broadcast("", CfgSettings.bungee);
+        ChatUtil.broadcastClean("", "", CfgSettings.bungee);
+        ChatUtil.broadcast(CfgLang.lang.get(Lang.DIVORCE_BROADCAST).replace("%name1", playerName).replace("%name2", partnerName), "", CfgSettings.bungee);
+        ChatUtil.broadcastClean("", "", CfgSettings.bungee);
     }
 
     public static void sendMarryList(Player player, int page){
         Bukkit.getScheduler().runTaskAsynchronously(Marriage.getInstance(), () ->{
             LinkedHashMap<UUID, UUID> marryList = query.getMarryListSync();
 
-            player.sendMessage("");
-            player.sendMessage(CfgLang.lang.get(Lang.LIST_TITLE));
-            player.sendMessage("");
+            ChatUtil.sendMessageClean(player, "");
+            ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.LIST_TITLE));
+            ChatUtil.sendMessageClean(player, "");
 
             int start = page*7;
             int stop = start+7;
@@ -148,7 +151,7 @@ public class MarryUtil {
                     case NONE:
                         player2name = CfgLang.lang.get(Lang.GENDER_NONE_COLOR) + player2name;
                 }
-                player.sendMessage(player1name + " §7+ " + player2name);
+                ChatUtil.sendMessageClean(player, player1name + " §7+ " + player2name);
             }
         });
     }

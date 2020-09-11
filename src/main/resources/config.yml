@@ -2,7 +2,7 @@
 
 #|--------------------------------------------------------------------------------------------------------------------|#
 # Plugin: Marriage
-# Author: https://www.mc-market.org/members/89497/ | https://www.spigotmc.org/members/radekjenejlepsi.227786/
+# Author: https://www.mc-market.org/members/89497/
 # Description: Plugin for in-game Marriage.
 # Dependencies:
 #   -> PLJRApi
@@ -77,20 +77,14 @@ menu:
     type: "RED_STAINED_GLASS_PANE"
     name: "§c"
     amount: 1
-    lore:
-      - "§r"
   white:
     type: "WHITE_STAINED_GLASS_PANE"
     name: "§f"
     amount: 1
-    lore:
-      - "§r"
   background:
     type: "LIGHT_BLUE_STAINED_GLASS_PANE"
     name: "§f"
     amount: 1
-    lore:
-      - "§r"
   lastseen:
     type: "REDSTONE_LAMP"
     name: "§eLast seen"
@@ -137,7 +131,7 @@ menu:
       - "§8» §fClick to turn ON/OFF your"
       - " §fPvP with partner."
   sethome:
-    type: "DOOR"
+    type: "WOODEN_DOOR"
     name: "§eSet Home"
     amount: 1
     lore:
@@ -265,4 +259,6 @@ lang:
   XP_OFF: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fXP sharing."
   XP_ON_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §benabled §fplayer 's xp sharing."
   XP_OFF_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fplayer 's xp sharing."
+  FOOD_ACTIONBAR: "§c§l❤ §aMarriage §8» §fYou received §b%amount §ffood."
+  XP_ACTIONBAR: "§c§l❤ §aMarriage §8» §fYou received §b%amount §fXP."
 #|--------------------------------------------------------------------------------------------------------------------|#

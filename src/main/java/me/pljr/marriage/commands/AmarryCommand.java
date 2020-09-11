@@ -24,14 +24,14 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
             if (sender instanceof Player){
                 if (!checkPerm(sender, "marriage.admin.help")) return false;
             }
-            CfgLang.adminHelp.forEach(sender::sendMessage);
+            sendHelp(sender, CfgLang.adminHelp);
             return true;
         }
 
         // /amarry spy
         if (args[0].equalsIgnoreCase("spy")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
+                sendMessage(sender, CfgLang.lang.get(Lang.NO_CONSOLE));
                 return false;
             }
             Player player = (Player) sender;
@@ -39,10 +39,10 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
             if (!checkPerm(sender, "marriage.admin.spy")) return false;
             CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
             if (corePlayer.isSpy()){
-                player.sendMessage(CfgLang.lang.get(Lang.SPY_UNACTIVE));
+                sendMessage(player, CfgLang.lang.get(Lang.SPY_UNACTIVE));
                 corePlayer.setSpy(false);
             }else{
-                player.sendMessage(CfgLang.lang.get(Lang.SPY_ACTIVE));
+                sendMessage(player, CfgLang.lang.get(Lang.SPY_ACTIVE));
                 corePlayer.setSpy(true);
             }
             Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
@@ -55,18 +55,18 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 if (!checkPerm(sender, "marriage.admin.marry")) return false;
             }
             if (!(args.length == 3)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(sender, args[1]) || !checkPlayer(sender, args[2])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             UUID player2Id = Bukkit.getPlayer(args[2]).getUniqueId();
             if (MarryUtil.isMarried(player1Id)){
-                sender.sendMessage(CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[1]));
+                sendMessage(sender, CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[1]));
                 return false;
             }
             if (MarryUtil.isMarried(player2Id)){
-                sender.sendMessage(CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[2]));
+                sendMessage(sender, CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", args[2]));
                 return false;
             }
             MarryUtil.marry(player1Id, player2Id);
@@ -79,13 +79,13 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 if (!checkPerm(sender, "marriage.admin.unmarry")) return false;
             }
             if (!(args.length == 2)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(sender, args[1])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             if (!MarryUtil.isMarried(player1Id)){
-                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             MarryUtil.divorce(player1Id);
@@ -95,19 +95,19 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
         // /amarry sethome <playerName>
         if (args[0].equalsIgnoreCase("sethome")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
+                sendMessage(sender, CfgLang.lang.get(Lang.NO_CONSOLE));
                 return false;
             }
             Player player = (Player) sender;
             if (!checkPerm(sender, "marriage.admin.sethome")) return false;
             if (!(args.length == 2)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(player, args[1])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             if (!MarryUtil.isMarried(player1Id)){
-                player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sendMessage(player, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             MarryUtil.setHome(player1Id, player.getLocation(), false);
@@ -117,19 +117,19 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
         // /amarry home <playerName>
         if (args[0].equalsIgnoreCase("home")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
+                sendMessage(sender, CfgLang.lang.get(Lang.NO_CONSOLE));
                 return false;
             }
             Player player = (Player) sender;
             if (!checkPerm(sender, "marriage.admin.home")) return false;
             if (!(args.length == 2)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(player, args[1])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             if (!MarryUtil.isMarried(player1Id)){
-                player.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sendMessage(player, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
@@ -143,22 +143,22 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 if (!checkPerm(sender, "marriage.admin.pvp")) return false;
             }
             if (!(args.length == 2)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(sender, args[1])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             if (!MarryUtil.isMarried(player1Id)){
-                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             if (requestManager.isPvp()){
                 requestManager.setPvp(false);
-                sender.sendMessage(CfgLang.lang.get(Lang.PVP_OFF_OTHERS));
+                sendMessage(sender, CfgLang.lang.get(Lang.PVP_OFF_OTHERS));
             }else{
                 requestManager.setPvp(true);
-                sender.sendMessage(CfgLang.lang.get(Lang.PVP_ON_OTHERS));
+                sendMessage(sender, CfgLang.lang.get(Lang.PVP_ON_OTHERS));
             }
             Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
             return true;
@@ -170,22 +170,22 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 if (!checkPerm(sender, "marriage.admin.food")) return false;
             }
             if (!(args.length == 2)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(sender, args[1])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             if (!MarryUtil.isMarried(player1Id)){
-                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             if (requestManager.isFood()){
                 requestManager.setFood(false);
-                sender.sendMessage(CfgLang.lang.get(Lang.FOOD_OFF_OTHERS));
+                sendMessage(sender, CfgLang.lang.get(Lang.FOOD_OFF_OTHERS));
             }else{
                 requestManager.setFood(true);
-                sender.sendMessage(CfgLang.lang.get(Lang.FOOD_ON_OTHERS));
+                sendMessage(sender, CfgLang.lang.get(Lang.FOOD_ON_OTHERS));
             }
             Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
             return true;
@@ -197,22 +197,22 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 if (!checkPerm(sender, "marriage.admin.xp")) return false;
             }
             if (!(args.length == 2)){
-                CfgLang.adminHelp.forEach(sender::sendMessage);
+                sendHelp(sender, CfgLang.adminHelp);
                 return false;
             }
             if (!checkPlayer(sender, args[1])) return false;
             UUID player1Id = Bukkit.getPlayer(args[1]).getUniqueId();
             if (!MarryUtil.isMarried(player1Id)){
-                sender.sendMessage(CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
+                sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
             CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
             if (requestManager.isXp()){
                 requestManager.setXp(false);
-                sender.sendMessage(CfgLang.lang.get(Lang.XP_OFF_OTHERS));
+                sendMessage(sender, CfgLang.lang.get(Lang.XP_OFF_OTHERS));
             }else{
                 requestManager.setXp(true);
-                sender.sendMessage(CfgLang.lang.get(Lang.XP_ON_OTHERS));
+                sendMessage(sender, CfgLang.lang.get(Lang.XP_ON_OTHERS));
             }
             Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
             return true;

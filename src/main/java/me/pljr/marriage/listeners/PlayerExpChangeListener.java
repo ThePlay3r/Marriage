@@ -1,6 +1,8 @@
 package me.pljr.marriage.listeners;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgLang;
+import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.objects.CorePlayer;
 import me.pljr.pljrapi.managers.ActionBarManager;
 import me.pljr.pljrapi.objects.PLJRActionBar;
@@ -23,7 +25,7 @@ public class PlayerExpChangeListener implements Listener {
                 if (event.getAmount() > 2){
                     int halfAmount = event.getAmount() / 2;
                     event.setAmount(halfAmount);
-                    ActionBarManager.send(partner, new PLJRActionBar("§c§l❤ §aSvadba §8» §fObdržal/a si §b" + halfAmount + "§fXP", 20));
+                    ActionBarManager.send(partner, new PLJRActionBar(CfgLang.lang.get(Lang.XP_ACTIONBAR).replace("%amount", halfAmount+""), 20));
                 }
             }
         }

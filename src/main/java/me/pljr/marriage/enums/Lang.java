@@ -70,5 +70,7 @@ public enum Lang {
     FOOD_ON_OTHERS,
     FOOD_OFF_OTHERS,
     XP_ON_OTHERS,
-    XP_OFF_OTHERS
+    XP_OFF_OTHERS,
+    FOOD_ACTIONBAR,
+    XP_ACTIONBAR
 }

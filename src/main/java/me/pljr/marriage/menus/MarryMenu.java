@@ -7,6 +7,7 @@ import me.pljr.marriage.config.CfgSounds;
 import me.pljr.marriage.enums.Lang;
 import me.pljr.marriage.enums.Sounds;
 import me.pljr.marriage.objects.CorePlayer;
+import me.pljr.pljrapi.utils.ChatUtil;
 import me.pljr.pljrapi.utils.ItemStackUtil;
 import me.pljr.pljrapi.utils.PlayerUtil;
 import org.bukkit.Bukkit;
@@ -128,9 +129,9 @@ public class MarryMenu implements Listener {
             Bukkit.dispatchCommand(player, "marry food");
         } else if (slot == 53){
             player.closeInventory();
-            player.sendMessage("");
-            player.sendMessage(CfgLang.lang.get(Lang.CHAT_USAGE));
-            player.sendMessage("");
+            ChatUtil.sendMessageClean(player, "");
+            ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.CHAT_USAGE));
+            ChatUtil.sendMessageClean(player, "");
             player.playSound(player.getLocation(), CfgSounds.sounds.get(Sounds.MENU_CLICK), 2, 1);
         }
     }
