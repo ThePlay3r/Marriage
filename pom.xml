@@ -6,7 +6,7 @@
 
     <groupId>me.pljr</groupId>
     <artifactId>Marriage</artifactId>
-    <version>1.4</version>
+    <version>1.4.1</version>
     <packaging>jar</packaging>
 
     <name>Marriage</name>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>me.pljr.pljrapi</groupId>
             <artifactId>PLJRApi</artifactId>
-            <version>1.0</version>
+            <version>1.1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libraries/PLJRApi.jar</systemPath>
         </dependency>

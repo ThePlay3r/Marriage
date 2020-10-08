@@ -307,7 +307,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
             }, cooldown);
             return true;
         }
-        else if (args.length == 2){
+        else if (args.length >= 2){
 
             // /marry list <int>
             if (args[0].equalsIgnoreCase("list")){
