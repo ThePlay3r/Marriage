@@ -32,7 +32,7 @@ public class MarryUtil {
         message = MiniMessageUtil.strip(message);
         UUID playerId = player.getUniqueId();
         String playerName = player.getName();
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
         OfflinePlayer partner = Bukkit.getOfflinePlayer(corePlayer.getPartner());
         String format = CfgLang.lang.get(Lang.CHAT_FORMAT).replace("%name", playerName).replace("%message", message);
         if (CfgSettings.bungee){
@@ -43,7 +43,7 @@ public class MarryUtil {
         ChatUtil.sendMessage(player, format);
         for (Player p : Bukkit.getOnlinePlayers()){
             if (p.hasPermission("marriage.admin.spy")){
-                CorePlayer pManager = Marriage.getPlayerManager().getPlayerManager(p.getUniqueId());
+                CorePlayer pManager = Marriage.getPlayerManager().getCorePlayer(p.getUniqueId());
                 if (pManager.isSpy()){
                     ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.CHAT_FORMAT_SPY).replace("%name", playerName).replace("%message", message));
                 }
@@ -52,8 +52,8 @@ public class MarryUtil {
     }
 
     public static void marry(UUID player1, UUID player2){
-        CorePlayer corePlayer1 = Marriage.getPlayerManager().getPlayerManager(player1);
-        CorePlayer corePlayer2 = Marriage.getPlayerManager().getPlayerManager(player2);
+        CorePlayer corePlayer1 = Marriage.getPlayerManager().getCorePlayer(player1);
+        CorePlayer corePlayer2 = Marriage.getPlayerManager().getCorePlayer(player2);
         corePlayer1.setPartner(player2);
         corePlayer2.setPartner(player1);
         String player1Name = PlayerUtil.getName(Bukkit.getOfflinePlayer(player1));
@@ -61,18 +61,18 @@ public class MarryUtil {
         ChatUtil.broadcastClean("", "", CfgSettings.bungee);
         ChatUtil.broadcast(CfgLang.lang.get(Lang.MARRY_ACCEPT_BROADCAST).replace("%name1", player1Name).replace("%name2", player2Name), "", CfgSettings.bungee);
         ChatUtil.broadcastClean("", "", CfgSettings.bungee);
-        Marriage.getPlayerManager().setPlayerManager(player1, corePlayer1);
-        Marriage.getPlayerManager().setPlayerManager(player2, corePlayer2);
+        Marriage.getPlayerManager().setCorePlayer(player1, corePlayer1);
+        Marriage.getPlayerManager().setCorePlayer(player2, corePlayer2);
     }
 
     public static void setHome(UUID playerId, Location location, boolean notify){
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
         UUID partnerId = corePlayer.getPartner();
-        CorePlayer partnerManager = Marriage.getPlayerManager().getPlayerManager(partnerId);
+        CorePlayer partnerManager = Marriage.getPlayerManager().getCorePlayer(partnerId);
         corePlayer.setHome(location);
         partnerManager.setHome(location);
-        Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
-        Marriage.getPlayerManager().setPlayerManager(partnerId, partnerManager);
+        Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
+        Marriage.getPlayerManager().setCorePlayer(partnerId, partnerManager);
         OfflinePlayer partner = Bukkit.getOfflinePlayer(partnerId);
         if (partner.isOnline()) {
             Player onlinePartner = (Player) partner;
@@ -82,16 +82,16 @@ public class MarryUtil {
     }
 
     public static void divorce(UUID playerId){
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
         UUID partnerId = corePlayer.getPartner();
         OfflinePlayer partner = Bukkit.getOfflinePlayer(partnerId);
         String playerName = Bukkit.getOfflinePlayer(playerId).getName();
         String partnerName = PlayerUtil.getName(partner);
-        CorePlayer partnerManager = Marriage.getPlayerManager().getPlayerManager(partnerId);
+        CorePlayer partnerManager = Marriage.getPlayerManager().getCorePlayer(partnerId);
         corePlayer.setPartner(null);
         partnerManager.setPartner(null);
-        Marriage.getPlayerManager().setPlayerManager(partnerId, corePlayer);
-        Marriage.getPlayerManager().setPlayerManager(partnerId, partnerManager);
+        Marriage.getPlayerManager().setCorePlayer(partnerId, corePlayer);
+        Marriage.getPlayerManager().setCorePlayer(partnerId, partnerManager);
         if (partner.isOnline()){
             Player onlinePartner = (Player) partner;
             TitleManager.send(onlinePartner, new PLJRTitle(CfgLang.lang.get(Lang.DIVORCE_PARTNER_TITLE), CfgLang.lang.get(Lang.DIVORCE_PARTNER_SUBTITLE), 10, 20*3, 10));
@@ -119,7 +119,7 @@ public class MarryUtil {
                     loop++;
                     continue;
                 }
-                CorePlayer player1mngr = Marriage.getPlayerManager().getPlayerManager(entry.getKey());
+                CorePlayer player1mngr = Marriage.getPlayerManager().getCorePlayer(entry.getKey());
                 Gender gender1 = player1mngr.getGender();
                 String player1name = Bukkit.getOfflinePlayer(entry.getKey()).getName();
                 if (player1name == null){
@@ -135,7 +135,7 @@ public class MarryUtil {
                     case NONE:
                         player1name = CfgLang.lang.get(Lang.GENDER_NONE_COLOR) + player1name;
                 }
-                CorePlayer player2mngr = Marriage.getPlayerManager().getPlayerManager(entry.getValue());
+                CorePlayer player2mngr = Marriage.getPlayerManager().getCorePlayer(entry.getValue());
                 Gender gender2 = player2mngr.getGender();
                 String player2name = Bukkit.getOfflinePlayer(entry.getValue()).getName();
                 if (player2name == null){
@@ -166,7 +166,7 @@ public class MarryUtil {
     }
 
     public static boolean isMarried(UUID uuid){
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(uuid);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(uuid);
         return (!(corePlayer.getPartner() == null));
     }
 }

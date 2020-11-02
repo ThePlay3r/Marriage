@@ -77,7 +77,7 @@ public class QueryManager {
                 gender = Gender.NONE;
             }
             CorePlayer corePlayer = new CorePlayer(gender, partner, pvp, lastseen, home, false, food, xp);
-            Marriage.getPlayerManager().setPlayerManager(uuid, corePlayer);
+            Marriage.getPlayerManager().setCorePlayer(uuid, corePlayer);
 
             dataSource.close(connection, preparedStatement, resultSet);
         }catch (SQLException e){
@@ -137,7 +137,7 @@ public class QueryManager {
                 gender = Gender.NONE;
             }
             CorePlayer corePlayer = new CorePlayer(gender, partner, pvp, lastseen, home, false, food, xp);
-            Marriage.getPlayerManager().setPlayerManager(uuid, corePlayer);
+            Marriage.getPlayerManager().setCorePlayer(uuid, corePlayer);
 
             dataSource.close(connection, preparedStatement, resultSet);
         }catch (SQLException e){
@@ -147,7 +147,7 @@ public class QueryManager {
 
     public void savePlayerSync(UUID uuid){
         try {
-            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(uuid);
+            CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(uuid);
 
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -181,7 +181,7 @@ public class QueryManager {
     public void savePlayer(UUID uuid){
         Bukkit.getScheduler().runTaskAsynchronously(marriage, () ->{
            try {
-               CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(uuid);
+               CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(uuid);
 
                Connection connection = dataSource.getConnection();
                PreparedStatement preparedStatement = connection.prepareStatement(

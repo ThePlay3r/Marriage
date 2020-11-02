@@ -10,15 +10,15 @@ public class PlayerManager {
     private final HashMap<UUID, CorePlayer> players = new HashMap<>();
     private final HashMap<UUID, UUID> requests = new HashMap<>();
 
-    public CorePlayer getPlayerManager(UUID uuid){
+    public CorePlayer getCorePlayer(UUID uuid){
         if (players.containsKey(uuid)){
             return players.get(uuid);
         }
         Marriage.getQuery().loadPlayerSync(uuid);
-        return getPlayerManager(uuid);
+        return getCorePlayer(uuid);
     }
 
-    public void setPlayerManager(UUID uuid, CorePlayer corePlayer){
+    public void setCorePlayer(UUID uuid, CorePlayer corePlayer){
         players.put(uuid, corePlayer);
         savePlayer(uuid);
     }

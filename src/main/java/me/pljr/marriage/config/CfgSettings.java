@@ -1,11 +1,8 @@
 package me.pljr.marriage.config;
 
-import me.pljr.marriage.Marriage;
 import me.pljr.pljrapi.managers.ConfigManager;
 
 public class CfgSettings {
-    private final static ConfigManager config = Marriage.getConfigManager();
-
     public static boolean bungee;
     public static boolean particles;
     public static boolean sounds;
@@ -19,7 +16,7 @@ public class CfgSettings {
     public static boolean togglexp;
     public static boolean menu;
 
-    public static void load(){
+    public static void load(ConfigManager config){
         CfgSettings.bungee = config.getBoolean("settings.bungee");
         CfgSettings.particles = config.getBoolean("settings.particles");
         CfgSettings.sounds = config.getBoolean("settings.sounds");

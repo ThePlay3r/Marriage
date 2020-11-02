@@ -185,6 +185,7 @@ admin-help:
   - "§e/amarry pvp <player> §8» §fToggles player's PvP with partner."
   - "§e/amarry food <player> §8» §fToggles player's Food Sharing with partner."
   - "§e/amarry xp <player> §8» §fToggles player's XP Sharing with partner."
+  - "§e/amarry reload §8» §fReloads the configuration. §7(Not recommended)"
   - ""
 
 lang:
@@ -260,4 +261,5 @@ lang:
   XP_OFF_OTHERS: "§c§l❤ §aMarriage §8» §fYou've §bdisabled §fplayer 's xp sharing."
   FOOD_ACTIONBAR: "§c§l❤ §aMarriage §8» §fYou received §b%amount §ffood."
   XP_ACTIONBAR: "§c§l❤ §aMarriage §8» §fYou received §b%amount §fXP."
+  RELOAD_FINISHED: "§c§l❤ §aMarriage §8» §fReload §bsuccessful§f."
 #|--------------------------------------------------------------------------------------------------------------------|#

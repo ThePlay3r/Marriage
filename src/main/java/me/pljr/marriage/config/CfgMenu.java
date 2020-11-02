@@ -1,12 +1,9 @@
 package me.pljr.marriage.config;
 
-import me.pljr.marriage.Marriage;
 import me.pljr.pljrapi.managers.ConfigManager;
 import org.bukkit.inventory.ItemStack;
 
 public class CfgMenu {
-    private final static ConfigManager config = Marriage.getConfigManager();
-
     public static String title;
     public static ItemStack heart;
     public static ItemStack white;
@@ -21,7 +18,7 @@ public class CfgMenu {
     public static ItemStack sharedfoodinfo;
     public static ItemStack privatechatinfo;
 
-    public static void load(){
+    public static void load(ConfigManager config){
         CfgMenu.title = config.getString("menu.title");
         CfgMenu.heart = config.getSimpleItemStack("menu.heart");
         CfgMenu.white = config.getSimpleItemStack("menu.white");

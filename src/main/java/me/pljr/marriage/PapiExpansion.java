@@ -113,7 +113,7 @@ public class PapiExpansion extends PlaceholderExpansion {
         }
 
         UUID playerId = player.getUniqueId();
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
 
         // %marriage_gender%
         if(identifier.equals("gender")){
@@ -200,7 +200,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            return Marriage.getPlayerManager().getPlayerManager(partnerId).getGender().toString();
+            return Marriage.getPlayerManager().getCorePlayer(partnerId).getGender().toString();
         }
 
         // %marriage_partner_gender_symbol%
@@ -209,7 +209,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            Gender gender = Marriage.getPlayerManager().getPlayerManager(partnerId).getGender();
+            Gender gender = Marriage.getPlayerManager().getCorePlayer(partnerId).getGender();
             switch (gender){
                 case MALE: return CfgLang.lang.get(Lang.GENDER_MALE_SYMBOL);
                 case NONE: return CfgLang.lang.get(Lang.GENDER_NONE_SYMBOL);
@@ -222,7 +222,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            Gender gender = Marriage.getPlayerManager().getPlayerManager(partnerId).getGender();
+            Gender gender = Marriage.getPlayerManager().getCorePlayer(partnerId).getGender();
             switch (gender){
                 case MALE: return CfgLang.lang.get(Lang.GENDER_MALE_COLOR);
                 case NONE: return CfgLang.lang.get(Lang.GENDER_NONE_COLOR);
@@ -238,7 +238,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             }
             Player partner = Bukkit.getPlayer(partnerId);
             if (partner == null || !partner.isOnline()){
-                return FormatUtil.formatTime(Marriage.getPlayerManager().getPlayerManager(partnerId).getLastseen());
+                return FormatUtil.formatTime(Marriage.getPlayerManager().getCorePlayer(partnerId).getLastseen());
             }else{
                 return CfgLang.lang.get(Lang.ONLINE);
             }
@@ -250,7 +250,7 @@ public class PapiExpansion extends PlaceholderExpansion {
             if (partnerId == null){
                 return "";
             }
-            if (Marriage.getPlayerManager().getPlayerManager(partnerId).isPvp()){
+            if (Marriage.getPlayerManager().getCorePlayer(partnerId).isPvp()){
                 return CfgLang.lang.get(Lang.PVP_ENABLED);
             }
             return CfgLang.lang.get(Lang.PVP_DISABLED);

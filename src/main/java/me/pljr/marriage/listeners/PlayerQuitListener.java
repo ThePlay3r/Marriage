@@ -15,8 +15,8 @@ public class PlayerQuitListener implements Listener {
     public void onLeave(PlayerQuitEvent event){
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
         corePlayer.setLastseen(System.currentTimeMillis());
-        Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
+        Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
     }
 }

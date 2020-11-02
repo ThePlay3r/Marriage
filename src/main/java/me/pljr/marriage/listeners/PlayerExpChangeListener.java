@@ -17,7 +17,7 @@ public class PlayerExpChangeListener implements Listener {
     @EventHandler
     public void onChange(PlayerExpChangeEvent event){
         Player player = event.getPlayer();
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(player.getUniqueId());
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(player.getUniqueId());
         if (!corePlayer.isXp()) return;
         if (corePlayer.getPartner() != null){
             Player partner = Bukkit.getPlayer(corePlayer.getPartner());

@@ -70,15 +70,16 @@ public final class Marriage extends JavaPlugin {
         }
     }
 
-    private void setupConfig(){
+    public void setupConfig(){
         saveDefaultConfig();
+        reloadConfig();
         FileConfiguration config = getConfig();
         configManager = new ConfigManager(config, "§cMarriage:", "config.yml");
-        CfgDefaulthome.load();
-        CfgMenu.load();
-        CfgLang.load();
-        CfgSettings.load();
-        CfgSounds.load();
+        CfgDefaulthome.load(configManager);
+        CfgMenu.load(configManager);
+        CfgLang.load(configManager);
+        CfgSettings.load(configManager);
+        CfgSounds.load(configManager);
     }
 
     private void setupManagers(){
@@ -97,7 +98,6 @@ public final class Marriage extends JavaPlugin {
     private void loadListeners(){
         getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-        getServer().getPluginManager().registerEvents(new MarryMenu(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerExpChangeListener(), this);

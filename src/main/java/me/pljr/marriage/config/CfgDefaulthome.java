@@ -1,11 +1,8 @@
 package me.pljr.marriage.config;
 
-import me.pljr.marriage.Marriage;
 import me.pljr.pljrapi.managers.ConfigManager;
 
 public class CfgDefaulthome {
-    private final static ConfigManager config = Marriage.getConfigManager();
-
     public static String world;
     public static int x;
     public static int y;
@@ -13,7 +10,7 @@ public class CfgDefaulthome {
     public static int yaw;
     public static int pitch;
 
-    public static void load(){
+    public static void load(ConfigManager config){
         CfgDefaulthome.world = config.getString("defaulthome.world");
         CfgDefaulthome.x = config.getInt("defaulthome.x");
         CfgDefaulthome.y = config.getInt("defaulthome.y");

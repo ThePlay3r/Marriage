@@ -47,7 +47,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
         String playerName = player.getName();
         UUID playerId = player.getUniqueId();
         Location playerLoc = player.getLocation();
-        CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
         if (args.length == 1){
 
             // /marry food
@@ -64,7 +64,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                     sendMessage(player, CfgLang.lang.get(Lang.FOOD_ON));
                     corePlayer.setFood(true);
                 }
-                Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
+                Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
                 return true;
             }
 
@@ -82,7 +82,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                     sendMessage(player, CfgLang.lang.get(Lang.XP_ON));
                     corePlayer.setXp(true);
                 }
-                Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
+                Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
                 return true;
             }
 
@@ -163,7 +163,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                     sendMessage(player, CfgLang.lang.get(Lang.ONLINE).replace("%name", partnerName));
                     return true;
                 }
-                CorePlayer partnerManager = Marriage.getPlayerManager().getPlayerManager(corePlayer.getPartner());
+                CorePlayer partnerManager = Marriage.getPlayerManager().getCorePlayer(corePlayer.getPartner());
                 String lastseen = FormatUtil.formatTime((System.currentTimeMillis() - partnerManager.getLastseen()) / 1000);
                 sendMessage(player, CfgLang.lang.get(Lang.LASTSEEN).replace("%name", partnerName).replace("%time", lastseen));
                 return true;
@@ -192,7 +192,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                     sendMessage(player, CfgLang.lang.get(Lang.PVP_ON));
                 }
                 corePlayer.setPvp(pvp);
-                Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
+                Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
                 return true;
             }
 
@@ -249,7 +249,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
             if (!checkPlayer(player, requestName)) return false;
             Player request = Bukkit.getPlayer(requestName);
             UUID requestId = request.getUniqueId();
-            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(requestId);
+            CorePlayer requestManager = Marriage.getPlayerManager().getCorePlayer(requestId);
             if (corePlayer.getPartner() != null){
                 sendMessage(player, CfgLang.lang.get(Lang.HAVE_PARTNER));
                 return true;
@@ -336,7 +336,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                                 sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_MALE)));
                         }
                         corePlayer.setGender(gender);
-                        Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
+                        Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
                         return true;
                     }
                 }
@@ -350,7 +350,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                 if (!checkPerm(player, "marriage.partner")) return false;
                 String requestedInfoName = args[1];
                 OfflinePlayer requestedInfo = Bukkit.getOfflinePlayer(requestedInfoName);
-                CorePlayer requestedInfoManager = Marriage.getPlayerManager().getPlayerManager(requestedInfo.getUniqueId());
+                CorePlayer requestedInfoManager = Marriage.getPlayerManager().getCorePlayer(requestedInfo.getUniqueId());
                 if (requestedInfoManager.getPartner() == null){
                     sendMessage(player, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", requestedInfoName));
                 }else{

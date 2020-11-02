@@ -21,9 +21,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
 
         // /amarry help
         if (!(args.length > 0) || args[0].equalsIgnoreCase("help")){
-            if (sender instanceof Player){
-                if (!checkPerm(sender, "marriage.admin.help")) return false;
-            }
+            if (!checkPerm(sender, "marriage.admin.help")) return false;
             sendHelp(sender, CfgLang.adminHelp);
             return true;
         }
@@ -37,7 +35,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
             Player player = (Player) sender;
             UUID playerId = player.getUniqueId();
             if (!checkPerm(sender, "marriage.admin.spy")) return false;
-            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(playerId);
+            CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
             if (corePlayer.isSpy()){
                 sendMessage(player, CfgLang.lang.get(Lang.SPY_UNACTIVE));
                 corePlayer.setSpy(false);
@@ -45,15 +43,13 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sendMessage(player, CfgLang.lang.get(Lang.SPY_ACTIVE));
                 corePlayer.setSpy(true);
             }
-            Marriage.getPlayerManager().setPlayerManager(playerId, corePlayer);
+            Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
             return true;
         }
 
         // /amarry marry <playerName> <playerName>
         if (args[0].equalsIgnoreCase("marry")){
-            if (sender instanceof Player){
-                if (!checkPerm(sender, "marriage.admin.marry")) return false;
-            }
+            if (!checkPerm(sender, "marriage.admin.marry")) return false;
             if (!(args.length == 3)){
                 sendHelp(sender, CfgLang.adminHelp);
                 return false;
@@ -75,9 +71,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
 
         // /amarry unmarry <playerName>
         if (args[0].equalsIgnoreCase("unmarry")){
-            if (sender instanceof Player){
-                if (!checkPerm(sender, "marriage.admin.unmarry")) return false;
-            }
+            if (!checkPerm(sender, "marriage.admin.unmarry")) return false;
             if (!(args.length == 2)){
                 sendHelp(sender, CfgLang.adminHelp);
                 return false;
@@ -132,16 +126,14 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sendMessage(player, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getCorePlayer(player1Id);
             player.teleport(requestManager.getHome());
             return true;
         }
 
         // /amarry pvp <playerName>
         if (args[0].equalsIgnoreCase("pvp")){
-            if (sender instanceof Player){
-                if (!checkPerm(sender, "marriage.admin.pvp")) return false;
-            }
+            if (!checkPerm(sender, "marriage.admin.pvp")) return false;
             if (!(args.length == 2)){
                 sendHelp(sender, CfgLang.adminHelp);
                 return false;
@@ -152,7 +144,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getCorePlayer(player1Id);
             if (requestManager.isPvp()){
                 requestManager.setPvp(false);
                 sendMessage(sender, CfgLang.lang.get(Lang.PVP_OFF_OTHERS));
@@ -160,15 +152,13 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 requestManager.setPvp(true);
                 sendMessage(sender, CfgLang.lang.get(Lang.PVP_ON_OTHERS));
             }
-            Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
+            Marriage.getPlayerManager().setCorePlayer(player1Id, requestManager);
             return true;
         }
 
         // /amarry food <playerName>
         if (args[0].equalsIgnoreCase("food")){
-            if (sender instanceof Player){
-                if (!checkPerm(sender, "marriage.admin.food")) return false;
-            }
+            if (!checkPerm(sender, "marriage.admin.food")) return false;
             if (!(args.length == 2)){
                 sendHelp(sender, CfgLang.adminHelp);
                 return false;
@@ -179,7 +169,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getCorePlayer(player1Id);
             if (requestManager.isFood()){
                 requestManager.setFood(false);
                 sendMessage(sender, CfgLang.lang.get(Lang.FOOD_OFF_OTHERS));
@@ -187,15 +177,13 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 requestManager.setFood(true);
                 sendMessage(sender, CfgLang.lang.get(Lang.FOOD_ON_OTHERS));
             }
-            Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
+            Marriage.getPlayerManager().setCorePlayer(player1Id, requestManager);
             return true;
         }
 
         // /amarry xp <playerName>
         if (args[0].equalsIgnoreCase("xp")){
-            if (sender instanceof Player){
-                if (!checkPerm(sender, "marriage.admin.xp")) return false;
-            }
+            if (!checkPerm(sender, "marriage.admin.xp")) return false;
             if (!(args.length == 2)){
                 sendHelp(sender, CfgLang.adminHelp);
                 return false;
@@ -206,7 +194,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 sendMessage(sender, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", args[1]));
                 return false;
             }
-            CorePlayer requestManager = Marriage.getPlayerManager().getPlayerManager(player1Id);
+            CorePlayer requestManager = Marriage.getPlayerManager().getCorePlayer(player1Id);
             if (requestManager.isXp()){
                 requestManager.setXp(false);
                 sendMessage(sender, CfgLang.lang.get(Lang.XP_OFF_OTHERS));
@@ -214,15 +202,19 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
                 requestManager.setXp(true);
                 sendMessage(sender, CfgLang.lang.get(Lang.XP_ON_OTHERS));
             }
-            Marriage.getPlayerManager().setPlayerManager(player1Id, requestManager);
+            Marriage.getPlayerManager().setCorePlayer(player1Id, requestManager);
             return true;
         }
 
-        if (sender instanceof Player){
-            if (!checkPerm(sender, "marriage.admin.help")) return false;
-            sendHelp(sender, CfgLang.adminHelp);
+        // /amarry reload
+        if (args[0].equalsIgnoreCase("reload")){
+            if (!checkPerm(sender, "marriage.admin.xp")) return false;
+            Marriage.getInstance().setupConfig();
+            sendMessage(sender, CfgLang.lang.get(Lang.RELOAD_FINISHED));
             return true;
         }
+
+        if (!checkPerm(sender, "marriage.admin.help")) return false;
         sendHelp(sender, CfgLang.adminHelp);
         return true;
     }

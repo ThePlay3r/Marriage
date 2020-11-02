@@ -18,7 +18,7 @@ public class FoodLevelChangeListener implements Listener {
     public void onChange(FoodLevelChangeEvent event){
         if (event.getEntity() instanceof Player){
             Player player = (Player) event.getEntity();
-            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(player.getUniqueId());
+            CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(player.getUniqueId());
             if (!corePlayer.isFood()) return;
             if (corePlayer.getPartner() != null){
                 Player partner = Bukkit.getPlayer(corePlayer.getPartner());

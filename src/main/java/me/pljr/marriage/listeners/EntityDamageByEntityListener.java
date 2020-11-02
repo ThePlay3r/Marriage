@@ -13,7 +13,7 @@ public class EntityDamageByEntityListener implements Listener {
     public void onDamage(EntityDamageByEntityEvent event){
         if (event.getDamager() instanceof Player){
             if (event.getEntity() instanceof Player){
-                CorePlayer damagerManager = Marriage.getPlayerManager().getPlayerManager(event.getDamager().getUniqueId());
+                CorePlayer damagerManager = Marriage.getPlayerManager().getCorePlayer(event.getDamager().getUniqueId());
                 if (damagerManager.getPartner() == null) return;
                 if (damagerManager.getPartner().equals(event.getEntity().getUniqueId())){
                     if (!damagerManager.isPvp()){

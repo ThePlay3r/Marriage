@@ -72,5 +72,6 @@ public enum Lang {
     XP_ON_OTHERS,
     XP_OFF_OTHERS,
     FOOD_ACTIONBAR,
-    XP_ACTIONBAR
+    XP_ACTIONBAR,
+    RELOAD_FINISHED
 }

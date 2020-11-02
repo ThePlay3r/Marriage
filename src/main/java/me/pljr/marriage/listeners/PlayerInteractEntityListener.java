@@ -20,7 +20,7 @@ public class PlayerInteractEntityListener implements Listener {
         if (event.getRightClicked() instanceof Player){
             Player player1 = event.getPlayer();
             Player player2 = (Player) event.getRightClicked();
-            CorePlayer corePlayer = Marriage.getPlayerManager().getPlayerManager(player1.getUniqueId());
+            CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(player1.getUniqueId());
             if (corePlayer.getPartner() != null && corePlayer.getPartner().equals(player2.getUniqueId())){
                 if (!kissing.contains(player1)){
                     MarryUtil.kiss(player1, player2);
