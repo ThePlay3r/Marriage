@@ -330,10 +330,13 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                         switch (gender){
                             case FEMALE:
                                 sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_FEMALE)));
+                                break;
                             case NONE:
                                 sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_NONE)));
+                                break;
                             case MALE:
                                 sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_MALE)));
+                                break;
                         }
                         corePlayer.setGender(gender);
                         Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
