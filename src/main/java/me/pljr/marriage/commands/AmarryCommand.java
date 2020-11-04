@@ -208,7 +208,7 @@ public class AmarryCommand extends CommandUtil implements CommandExecutor {
 
         // /amarry reload
         if (args[0].equalsIgnoreCase("reload")){
-            if (!checkPerm(sender, "marriage.admin.xp")) return false;
+            if (!checkPerm(sender, "marriage.admin.reload")) return false;
             Marriage.getInstance().setupConfig();
             sendMessage(sender, CfgLang.lang.get(Lang.RELOAD_FINISHED));
             return true;

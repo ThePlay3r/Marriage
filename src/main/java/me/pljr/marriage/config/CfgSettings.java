@@ -15,19 +15,25 @@ public class CfgSettings {
     public static boolean togglefood;
     public static boolean togglexp;
     public static boolean menu;
+    public static boolean defaultPvP;
+    public static boolean defaultFood;
+    public static boolean defaultXP;
 
     public static void load(ConfigManager config){
-        CfgSettings.bungee = config.getBoolean("settings.bungee");
-        CfgSettings.particles = config.getBoolean("settings.particles");
-        CfgSettings.sounds = config.getBoolean("settings.sounds");
-        CfgSettings.costMarry = config.getInt("settings.cost-marry");
-        CfgSettings.costDivorce = config.getInt("settings.cost-divorce");
-        CfgSettings.cooldown = config.getInt("settings.cooldown");
-        CfgSettings.sharedFood = config.getBoolean("settings.shared-food");
-        CfgSettings.sharedXp = config.getBoolean("settings.shared-xp");
-        CfgSettings.togglepvp = config.getBoolean("settings.toggle-pvp");
-        CfgSettings.togglefood = config.getBoolean("settings.toggle-food");
-        CfgSettings.togglexp = config.getBoolean("settings.toggle-xp");
-        CfgSettings.menu = config.getBoolean("settings.menu");
+        bungee = config.getBoolean("settings.bungee");
+        particles = config.getBoolean("settings.particles");
+        sounds = config.getBoolean("settings.sounds");
+        costMarry = config.getInt("settings.cost-marry");
+        costDivorce = config.getInt("settings.cost-divorce");
+        cooldown = config.getInt("settings.cooldown");
+        sharedFood = config.getBoolean("settings.shared-food");
+        sharedXp = config.getBoolean("settings.shared-xp");
+        togglepvp = config.getBoolean("settings.toggle-pvp");
+        togglefood = config.getBoolean("settings.toggle-food");
+        togglexp = config.getBoolean("settings.toggle-xp");
+        menu = config.getBoolean("settings.menu");
+        defaultPvP = config.getBoolean("settings.default-pvp");
+        defaultFood = config.getBoolean("settings.default-food");
+        defaultXP = config.getBoolean("settings.default-xp");
     }
 }

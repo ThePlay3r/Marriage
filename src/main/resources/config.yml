@@ -39,6 +39,9 @@ settings:
   cost-marry: 7500 #-> How much should marrying someone cost?
   cost-divorce: 5000 #-> How much should divorcing someone cost?
   cooldown: 200 #-> How long should it take for marry request to get cancelled?
+  default-pvp: false #-> Default PvP value for new players.
+  default-food: true #-> Default food sharing value for new players.
+  default-xp: true #-> Default XP sharing value for new players.
 #|--------------------------------------------------------------------------------------------------------------------|#
 
 ######################
