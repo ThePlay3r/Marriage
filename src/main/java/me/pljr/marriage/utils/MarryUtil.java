@@ -29,26 +29,28 @@ public class MarryUtil {
     public static ConfigManager config = Marriage.getConfigManager();
 
     public static void chat(Player player, String message){
-        message = MiniMessageUtil.strip(message);
+        final String msg = MiniMessageUtil.strip(message);
         UUID playerId = player.getUniqueId();
         String playerName = player.getName();
         CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
         OfflinePlayer partner = Bukkit.getOfflinePlayer(corePlayer.getPartner());
-        String format = CfgLang.lang.get(Lang.CHAT_FORMAT).replace("%name", playerName).replace("%message", message);
+        String format = CfgLang.lang.get(Lang.CHAT_FORMAT).replace("%name", playerName).replace("%message", msg);
         if (CfgSettings.bungee){
             BungeeUtil.message(partner.getName(), format);
         }else{
             ChatUtil.sendMessage(partner, format);
         }
         ChatUtil.sendMessage(player, format);
-        for (Player p : Bukkit.getOnlinePlayers()){
-            if (p.hasPermission("marriage.admin.spy")){
-                CorePlayer pManager = Marriage.getPlayerManager().getCorePlayer(p.getUniqueId());
-                if (pManager.isSpy()){
-                    ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.CHAT_FORMAT_SPY).replace("%name", playerName).replace("%message", message));
+        Bukkit.getScheduler().runTaskAsynchronously(Marriage.getInstance(), ()->{
+            for (Player p : Bukkit.getOnlinePlayers()){
+                if (p.hasPermission("marriage.admin.spy")){
+                    CorePlayer pManager = Marriage.getPlayerManager().getCorePlayer(p.getUniqueId());
+                    if (pManager.isSpy()){
+                        ChatUtil.sendMessage(p, CfgLang.lang.get(Lang.CHAT_FORMAT_SPY).replace("%name", playerName).replace("%message", msg));
+                    }
                 }
             }
-        }
+        });
     }
 
     public static void marry(UUID player1, UUID player2){

@@ -54,13 +54,24 @@ public class QueryManager {
                 food = resultSet.getBoolean("food");
                 xp = resultSet.getBoolean("xp");
                 lastseen = resultSet.getLong("lastseen");
-                home = new Location(
-                        Bukkit.getWorld(resultSet.getString("home_world")),
-                        resultSet.getDouble("home_x"),
-                        resultSet.getDouble("home_y"),
-                        resultSet.getDouble("home_z"),
-                        resultSet.getFloat("home_yaw"),
-                        resultSet.getFloat("home_pitch"));
+                if (Bukkit.getWorld(resultSet.getString("home_world")) != null){
+                    home = new Location(
+                            Bukkit.getWorld(resultSet.getString("home_world")),
+                            resultSet.getDouble("home_x"),
+                            resultSet.getDouble("home_y"),
+                            resultSet.getDouble("home_z"),
+                            resultSet.getFloat("home_yaw"),
+                            resultSet.getFloat("home_pitch"));
+                }else {
+                    home = new Location(
+                            Bukkit.getWorld(CfgDefaulthome.world),
+                            CfgDefaulthome.x,
+                            CfgDefaulthome.y,
+                            CfgDefaulthome.z,
+                            CfgDefaulthome.yaw,
+                            CfgDefaulthome.pitch
+                    );
+                }
             }else{
                 partner = null;
                 pvp = CfgSettings.defaultPvP;
@@ -115,13 +126,24 @@ public class QueryManager {
                     food = resultSet.getBoolean("food");
                     xp = resultSet.getBoolean("xp");
                     lastseen = resultSet.getLong("lastseen");
-                    home = new Location(
-                            Bukkit.getWorld(resultSet.getString("home_world")),
-                            resultSet.getDouble("home_x"),
-                            resultSet.getDouble("home_y"),
-                            resultSet.getDouble("home_z"),
-                            resultSet.getFloat("home_yaw"),
-                            resultSet.getFloat("home_pitch"));
+                    if (Bukkit.getWorld(resultSet.getString("home_world")) != null){
+                        home = new Location(
+                                Bukkit.getWorld(resultSet.getString("home_world")),
+                                resultSet.getDouble("home_x"),
+                                resultSet.getDouble("home_y"),
+                                resultSet.getDouble("home_z"),
+                                resultSet.getFloat("home_yaw"),
+                                resultSet.getFloat("home_pitch"));
+                    }else {
+                        home = new Location(
+                                Bukkit.getWorld(CfgDefaulthome.world),
+                                CfgDefaulthome.x,
+                                CfgDefaulthome.y,
+                                CfgDefaulthome.z,
+                                CfgDefaulthome.yaw,
+                                CfgDefaulthome.pitch
+                        );
+                    }
                 }else{
                     partner = null;
                     pvp = CfgSettings.defaultPvP;
