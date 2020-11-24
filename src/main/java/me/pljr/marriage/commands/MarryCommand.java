@@ -131,7 +131,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                     fail(player);
                     return false;
                 }
-                player.teleport(corePlayer.getHome());
+                PlayerUtil.teleport(player, corePlayer.getHome(), true);
                 sendMessage(player, CfgLang.lang.get(Lang.TPHOME));
                 return true;
             }
@@ -207,7 +207,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                 String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(corePlayer.getPartner()));
                 if (!checkPlayer(player, partnerName)) return false;
                 Player partner = Bukkit.getPlayer(partnerName);
-                player.teleport(partner);
+                PlayerUtil.teleport(player, partner, true);
                 sendMessage(player, CfgLang.lang.get(Lang.TELEPORT_PLAYER).replace("%name", partnerName));
                 sendMessage(partner, CfgLang.lang.get(Lang.TELEPORT_PARTNER).replace("%name", playerName));
                 return true;
@@ -357,7 +357,7 @@ public class MarryCommand extends CommandUtil implements CommandExecutor {
                 if (requestedInfoManager.getPartner() == null){
                     sendMessage(player, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", requestedInfoName));
                 }else{
-                    player.sendMessage(CfgLang.lang.get(Lang.PARTNER).replace("%name", requestedInfoName).replace("%partner", PlayerUtil.getName(Bukkit.getOfflinePlayer(requestedInfoManager.getPartner()))));
+                    sendMessage(player, CfgLang.lang.get(Lang.PARTNER).replace("%name", requestedInfoName).replace("%partner", PlayerUtil.getName(Bukkit.getOfflinePlayer(requestedInfoManager.getPartner()))));
                 }
                 return true;
             }

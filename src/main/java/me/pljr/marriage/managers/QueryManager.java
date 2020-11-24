@@ -184,17 +184,30 @@ public class QueryManager {
             }else{
                 preparedStatement.setString(2, corePlayer.getPartner().toString());
             }
+            Location homeLoc;
+            if (corePlayer.getHome().getWorld() == null){
+                homeLoc = new Location(
+                        Bukkit.getWorld(CfgDefaulthome.world),
+                        CfgDefaulthome.x,
+                        CfgDefaulthome.y,
+                        CfgDefaulthome.z,
+                        CfgDefaulthome.yaw,
+                        CfgDefaulthome.pitch
+                );
+            }else{
+                homeLoc = corePlayer.getHome();
+            }
             preparedStatement.setString(3, corePlayer.getGender().toString());
             preparedStatement.setBoolean(4, corePlayer.isPvp());
             preparedStatement.setBoolean(5, corePlayer.isFood());
             preparedStatement.setBoolean(6, corePlayer.isXp());
             preparedStatement.setLong(7, corePlayer.getLastseen());
-            preparedStatement.setString(8, corePlayer.getHome().getWorld().getName());
-            preparedStatement.setDouble(9, corePlayer.getHome().getX());
-            preparedStatement.setDouble(10, corePlayer.getHome().getY());
-            preparedStatement.setDouble(11, corePlayer.getHome().getZ());
-            preparedStatement.setFloat(12, corePlayer.getHome().getYaw());
-            preparedStatement.setFloat(13, corePlayer.getHome().getPitch());
+            preparedStatement.setString(8, homeLoc.getWorld().getName());
+            preparedStatement.setDouble(9, homeLoc.getX());
+            preparedStatement.setDouble(10, homeLoc.getY());
+            preparedStatement.setDouble(11, homeLoc.getZ());
+            preparedStatement.setFloat(12, homeLoc.getYaw());
+            preparedStatement.setFloat(13, homeLoc.getPitch());
             preparedStatement.executeUpdate();
 
             dataSource.close(connection, preparedStatement, null);
@@ -218,17 +231,30 @@ public class QueryManager {
                }else{
                    preparedStatement.setString(2, corePlayer.getPartner().toString());
                }
+               Location homeLoc;
+               if (corePlayer.getHome().getWorld() == null){
+                   homeLoc = new Location(
+                           Bukkit.getWorld(CfgDefaulthome.world),
+                           CfgDefaulthome.x,
+                           CfgDefaulthome.y,
+                           CfgDefaulthome.z,
+                           CfgDefaulthome.yaw,
+                           CfgDefaulthome.pitch
+                   );
+               }else{
+                   homeLoc = corePlayer.getHome();
+               }
                preparedStatement.setString(3, corePlayer.getGender().toString());
                preparedStatement.setBoolean(4, corePlayer.isPvp());
                preparedStatement.setBoolean(5, corePlayer.isFood());
                preparedStatement.setBoolean(6, corePlayer.isXp());
                preparedStatement.setLong(7, corePlayer.getLastseen());
-               preparedStatement.setString(8, corePlayer.getHome().getWorld().getName());
-               preparedStatement.setDouble(9, corePlayer.getHome().getX());
-               preparedStatement.setDouble(10, corePlayer.getHome().getY());
-               preparedStatement.setDouble(11, corePlayer.getHome().getZ());
-               preparedStatement.setFloat(12, corePlayer.getHome().getYaw());
-               preparedStatement.setFloat(13, corePlayer.getHome().getPitch());
+               preparedStatement.setString(8, homeLoc.getWorld().getName());
+               preparedStatement.setDouble(9, homeLoc.getX());
+               preparedStatement.setDouble(10, homeLoc.getY());
+               preparedStatement.setDouble(11, homeLoc.getZ());
+               preparedStatement.setFloat(12, homeLoc.getYaw());
+               preparedStatement.setFloat(13, homeLoc.getPitch());
                preparedStatement.executeUpdate();
 
                dataSource.close(connection, preparedStatement, null);
