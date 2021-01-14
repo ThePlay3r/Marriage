@@ -1,39 +1,27 @@
 package me.pljr.marriage.config;
 
-import me.pljr.pljrapi.managers.ConfigManager;
+import me.pljr.pljrapispigot.managers.ConfigManager;
 
 public class CfgSettings {
-    public static boolean bungee;
-    public static boolean particles;
-    public static boolean sounds;
-    public static int costMarry;
-    public static int costDivorce;
-    public static int cooldown;
-    public static boolean sharedFood;
-    public static boolean sharedXp;
-    public static boolean togglepvp;
-    public static boolean togglefood;
-    public static boolean togglexp;
-    public static boolean menu;
-    public static boolean defaultPvP;
-    public static boolean defaultFood;
-    public static boolean defaultXP;
+    public static boolean BUNGEE;
+    public static boolean PARTICLES;
+    public static boolean SOUNDS;
+    public static boolean TOGGLE_XP;
+    public static boolean TOGGLE_PVP;
+    public static boolean TOGGLE_FOOD;
+    public static boolean MENU;
+    public static int COST_MARRY;
+    public static int COST_DIVORCE;
 
     public static void load(ConfigManager config){
-        bungee = config.getBoolean("settings.bungee");
-        particles = config.getBoolean("settings.particles");
-        sounds = config.getBoolean("settings.sounds");
-        costMarry = config.getInt("settings.cost-marry");
-        costDivorce = config.getInt("settings.cost-divorce");
-        cooldown = config.getInt("settings.cooldown");
-        sharedFood = config.getBoolean("settings.shared-food");
-        sharedXp = config.getBoolean("settings.shared-xp");
-        togglepvp = config.getBoolean("settings.toggle-pvp");
-        togglefood = config.getBoolean("settings.toggle-food");
-        togglexp = config.getBoolean("settings.toggle-xp");
-        menu = config.getBoolean("settings.menu");
-        defaultPvP = config.getBoolean("settings.default-pvp");
-        defaultFood = config.getBoolean("settings.default-food");
-        defaultXP = config.getBoolean("settings.default-xp");
+        BUNGEE = config.getBoolean("settings.bungee");
+        PARTICLES = config.getBoolean("settings.particles");
+        SOUNDS = config.getBoolean("settings.sounds");
+        TOGGLE_XP = config.getBoolean("settings.toggle-xp");
+        TOGGLE_PVP = config.getBoolean("settings.toggle-pvp");
+        TOGGLE_FOOD = config.getBoolean("settings.toggle-food");
+        MENU = config.getBoolean("settings.menu");
+        COST_MARRY = config.getInt("settings.cost-marry");
+        COST_DIVORCE = config.getInt("settings.cost-divorce");
     }
 }

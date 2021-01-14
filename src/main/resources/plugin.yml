@@ -4,7 +4,7 @@ main: me.pljr.marriage.Marriage
 api-version: 1.13
 authors: [9hx]
 description: Plugin for in-game Marriage.
-depend: [PLJRApi]
+depend: [PLJRApi-Spigot]
 softdepend: [PlaceholderAPI]
 
 commands:

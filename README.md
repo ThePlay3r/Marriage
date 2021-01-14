@@ -4,7 +4,7 @@
 ----  
   
 ## 🔧 Dependencies  
-- PLJRApi: https://github.com/ThePlay3r/PLJRApi
+- PLJRApi-Spigot: https://github.com/ThePlay3r/PLJRApi
 - PlaceholderAPI (Optional): https://www.spigotmc.org/resources/placeholderapi.6245/
   
 ## 📋 Features  

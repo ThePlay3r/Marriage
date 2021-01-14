@@ -1,120 +1,74 @@
 package me.pljr.marriage;
 
-import me.pljr.marriage.commands.AmarryCommand;
+import me.pljr.marriage.commands.AMarryCommand;
 import me.pljr.marriage.commands.MarryCommand;
 import me.pljr.marriage.config.*;
 import me.pljr.marriage.listeners.*;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.managers.QueryManager;
-import me.pljr.marriage.menus.MarryMenu;
-import me.pljr.pljrapi.PLJRApi;
-import me.pljr.pljrapi.database.DataSource;
-import me.pljr.pljrapi.managers.ConfigManager;
-import me.pljr.pljrapi.utils.SpigotUtil;
+import me.pljr.pljrapispigot.database.DataSource;
+import me.pljr.pljrapispigot.managers.ConfigManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Marriage extends JavaPlugin {
-    private static PlayerManager playerManager;
-    private static ConfigManager configManager;
     private static Marriage instance;
-    private static QueryManager query;
+
+    private static ConfigManager configManager;
+
+    private static PlayerManager playerManager;
+    private static QueryManager queryManager;
 
     @Override
     public void onEnable() {
         instance = this;
-        if (!setupPLJRApi()) return;
-        updateCheck();
         setupConfig();
-        setupManagers();
         setupDatabase();
-        loadListeners();
-        loadCommands();
-        setupPapi();
-        setupBungee();
-    }
-
-    private boolean setupPLJRApi(){
-        PLJRApi api = (PLJRApi) Bukkit.getServer().getPluginManager().getPlugin("PLJRApi");
-        if (api == null){
-            Bukkit.getConsoleSender().sendMessage("§cMarriage: PLJRApi not found, disabling plugin!");
-            getServer().getPluginManager().disablePlugin(this);
-            return false;
-        }else{
-            Bukkit.getConsoleSender().sendMessage("§aMarriage: Hooked into PLJRApi!");
-            return true;
-        }
-    }
-
-    private void updateCheck(){
-        Bukkit.getScheduler().runTaskAsynchronously(this, ()->{
-            boolean isUpToDate = SpigotUtil.upToDate(81807, this.getDescription().getVersion());
-            if (!isUpToDate){
-                Bukkit.getConsoleSender().sendMessage("");
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Marriage: Your current version is not up-to-date!");
-                Bukkit.getConsoleSender().sendMessage("");
-            }
-        });
-    }
-
-    private void setupBungee(){
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-    }
-
-    private void setupPapi(){
+        setupManagers();
+        setupListeners();
+        setupCommands();
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
-            new PapiExpansion(this).register();
+            new PapiExpansion(this, playerManager).register();
         }
     }
 
     public void setupConfig(){
         saveDefaultConfig();
-        reloadConfig();
-        FileConfiguration config = getConfig();
-        configManager = new ConfigManager(config, "§cMarriage:", "config.yml");
-        CfgDefaulthome.load(configManager);
-        CfgMenu.load(configManager);
-        CfgLang.load(configManager);
+        saveConfig();
+        configManager = new ConfigManager(this, "config.yml");
         CfgSettings.load(configManager);
-        CfgSounds.load(configManager);
-    }
-
-    private void setupManagers(){
-        playerManager = new PlayerManager();
+        Lang.load(new ConfigManager(this, "lang.yml"));
+        MenuItem.load(new ConfigManager(this, "menus.yml"));
+        SoundType.load(new ConfigManager(this, "sounds.yml"));
+        TitleType.load(new ConfigManager(this, "titles.yml"));
+        ActionBarType.load(new ConfigManager(this, "actionbars.yml"));
+        Gender.load(new ConfigManager(this, "genders.yml"));
     }
 
     private void setupDatabase(){
-        DataSource dataSource = PLJRApi.getDataSource();
-        query = new QueryManager(dataSource);
-        query.setupTables();
-        for (Player player : Bukkit.getOnlinePlayers()){
-            query.loadPlayer(player.getUniqueId());
-        }
+        DataSource dataSource = DataSource.getFromConfig(configManager);
+        queryManager = new QueryManager(this, dataSource);
     }
 
-    private void loadListeners(){
-        getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-        getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(), this);
-        getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerExpChangeListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
+    private void setupManagers(){
+        playerManager = new PlayerManager(queryManager);
     }
 
-    private void loadCommands(){
-        getCommand("marry").setExecutor(new MarryCommand());
-        getCommand("amarry").setExecutor(new AmarryCommand());
+    private void setupListeners(){
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new AsyncPlayerPreLoginListener(playerManager), this);
+        pluginManager.registerEvents(new PlayerQuitListener(playerManager), this);
+        pluginManager.registerEvents(new KissListeners(this, playerManager), this);
+        pluginManager.registerEvents(new PvPListeners(playerManager), this);
+        pluginManager.registerEvents(new SharingListeners(playerManager), this);
     }
 
-    public static QueryManager getQuery() {
-        return query;
+    private void setupCommands(){
+        new MarryCommand(this, playerManager).registerCommand(this);
+        new AMarryCommand(playerManager).registerCommand(this);
     }
-    public static ConfigManager getConfigManager() {
-        return configManager;
-    }
+
     public static Marriage getInstance() {
         return instance;
     }
@@ -125,8 +79,5 @@ public final class Marriage extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        for (Player player : Bukkit.getOnlinePlayers()){
-            query.savePlayerSync(player.getUniqueId());
-        }
     }
 }

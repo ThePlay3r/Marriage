@@ -1,385 +1,276 @@
 package me.pljr.marriage.commands;
 
-import me.pljr.marriage.Marriage;
-import me.pljr.marriage.config.CfgLang;
-import me.pljr.marriage.config.CfgSettings;
-import me.pljr.marriage.config.CfgSounds;
-import me.pljr.marriage.enums.Gender;
-import me.pljr.marriage.enums.Lang;
-import me.pljr.marriage.enums.Sounds;
+import me.pljr.marriage.config.*;
+import me.pljr.marriage.exceptions.HasPartnerException;
+import me.pljr.marriage.exceptions.NoHomeException;
+import me.pljr.marriage.exceptions.NoPartnerException;
+import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.menus.MarryMenu;
-import me.pljr.marriage.objects.CorePlayer;
-import me.pljr.marriage.utils.MarryUtil;
-import me.pljr.pljrapi.managers.TitleManager;
-import me.pljr.pljrapi.objects.PLJRTitle;
-import me.pljr.pljrapi.utils.*;
+import me.pljr.marriage.objects.MarriagePlayer;
+import me.pljr.marriage.utils.MarriageUtil;
+import me.pljr.pljrapispigot.builders.TitleBuilder;
+import me.pljr.pljrapispigot.exceptions.NoHeldItemException;
+import me.pljr.pljrapispigot.exceptions.PlayerOfflineException;
+import me.pljr.pljrapispigot.utils.ChatUtil;
+import me.pljr.pljrapispigot.utils.CommandUtil;
+import me.pljr.pljrapispigot.utils.FormatUtil;
+import me.pljr.pljrapispigot.utils.PlayerUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
-public class MarryCommand extends CommandUtil implements CommandExecutor {
-    private final boolean sounds = CfgSettings.sounds;
-    private final int costMarry = CfgSettings.costMarry;
-    private final int costDivorce = CfgSettings.costDivorce;
-    private final int cooldown = CfgSettings.cooldown;
-    private final boolean togglepvp = CfgSettings.togglepvp;
-    private final boolean togglefood = CfgSettings.togglefood;
-    private final boolean togglexp = CfgSettings.togglexp;
+public class MarryCommand extends CommandUtil {
+    private final Plugin plugin;
+    private final PlayerManager playerManager;
+
+    public MarryCommand(Plugin plugin, PlayerManager playerManager) {
+        super("marry", "marriage.use");
+        this.plugin = plugin;
+        this.playerManager = playerManager;
+    }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)){
-            sendMessage(sender, CfgLang.lang.get(Lang.NO_CONSOLE));
-            return false;
+    public void onPlayerCommand(Player player, String[] args) {
+        // /marry
+        if (args.length == 0){
+            if (CfgSettings.MENU){
+                new MarryMenu(player);
+            }else{
+                sendMessage(player, Lang.HELP.get());
+            }
+            return;
         }
-        Player player = (Player) sender;
-        if (!checkPerm(player, "marriage.use")) return false;
-        String playerName = player.getName();
-        UUID playerId = player.getUniqueId();
-        Location playerLoc = player.getLocation();
-        CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(playerId);
+
+        MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
+        String arg = args[0].toUpperCase();
+
         if (args.length == 1){
-
-            // /marry food
-            if (args[0].equalsIgnoreCase("food")){
-                if (!togglefood){
-                    sendHelp(sender, CfgLang.help);
-                    return false;
-                }
-                if (!checkPerm(player, "marriage.food")) return false;
-                if (corePlayer.isFood()){
-                    sendMessage(player, CfgLang.lang.get(Lang.FOOD_OFF));
-                    corePlayer.setFood(false);
-                }else{
-                    sendMessage(player, CfgLang.lang.get(Lang.FOOD_ON));
-                    corePlayer.setFood(true);
-                }
-                Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
-                return true;
-            }
-
-            // /marry xp
-            if (args[0].equalsIgnoreCase("xp")){
-                if (!togglexp){
-                    sendHelp(sender, CfgLang.help);
-                    return false;
-                }
-                if (!checkPerm(player, "marriage.xp")) return false;
-                if (corePlayer.isXp()){
-                    sendMessage(player, CfgLang.lang.get(Lang.XP_OFF));
-                    corePlayer.setXp(false);
-                }else{
-                    sendMessage(player, CfgLang.lang.get(Lang.XP_ON));
-                    corePlayer.setXp(true);
-                }
-                Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
-                return true;
-            }
-
-            // /marry help
-            if (args[0].equalsIgnoreCase("help")){
-                if (!checkPerm(player, "marriage.help")) return false;
-                sendHelp(sender, CfgLang.help);
-                return true;
-            }
-
-            // /marry give
-            if (args[0].equalsIgnoreCase("give")){
-                if (!checkPerm(player, "marriage.give")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(corePlayer.getPartner()));
-                if (!checkPlayer(player, partnerName)) return false;
-                Player partner = Bukkit.getPlayer(partnerName);
-                if (player.getInventory().getItemInHand() == null || player.getInventory().getItemInHand().getType() == Material.AIR){
-                    sendMessage(player, CfgLang.lang.get(Lang.ITEM_IN_HAND));
-                    fail(player);
-                    return false;
-                }
-                sendMessage(player, CfgLang.lang.get(Lang.GIFT_SEND).replace("%name", partnerName));
-                sendMessage(partner, CfgLang.lang.get(Lang.GIFT_RECEIVE).replace("%name", playerName));
-                ItemStack giveItem = player.getInventory().getItemInHand();
-                player.getInventory().setItemInHand(null);
-                player.updateInventory();
-                if (partner.getInventory().firstEmpty() == -1){
-                    partner.getWorld().dropItem(partner.getLocation(), giveItem);
-                }else{
-                    partner.getInventory().addItem(giveItem);
-                    partner.updateInventory();
-                }
-                return true;
-            }
-
-            // /marry home
-            if (args[0].equalsIgnoreCase("home")){
-                if (!checkPerm(player, "marriage.home")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                PlayerUtil.teleport(player, corePlayer.getHome(), true);
-                sendMessage(player, CfgLang.lang.get(Lang.TPHOME));
-                return true;
-            }
-
-            // /marry sethome
-            if (args[0].equalsIgnoreCase("sethome")){
-                if (!checkPerm(player, "marriage.sethome")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                MarryUtil.setHome(playerId, playerLoc, true);
-                sendMessage(player, CfgLang.lang.get(Lang.SETHOME_PLAYER));
-                return true;
-            }
-
-            // /marry seen
-            if (args[0].equalsIgnoreCase("seen")){
-                if (!checkPerm(player, "marriage.seen")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(corePlayer.getPartner()));
-                Player partner = Bukkit.getPlayer(partnerName);
-                if (partner != null && partner.isOnline()){
-                    sendMessage(player, CfgLang.lang.get(Lang.ONLINE).replace("%name", partnerName));
-                    return true;
-                }
-                CorePlayer partnerManager = Marriage.getPlayerManager().getCorePlayer(corePlayer.getPartner());
-                String lastseen = FormatUtil.formatTime((System.currentTimeMillis() - partnerManager.getLastseen()) / 1000);
-                sendMessage(player, CfgLang.lang.get(Lang.LASTSEEN).replace("%name", partnerName).replace("%time", lastseen));
-                return true;
-            }
-
-            // /marry list
-            if (args[0].equalsIgnoreCase("list")){
-                if (!checkPerm(player, "marriage.list")) return false;
-                MarryUtil.sendMarryList(player, 0);
-                return true;
-            }
-
-            // /marry pvp
-            if (args[0].equalsIgnoreCase("pvp")){
-                if (!togglepvp){
-                    sendHelp(sender, CfgLang.help);
-                    return false;
-                }
-                if (!checkPerm(player, "marriage.pvp")) return false;
-                boolean pvp = corePlayer.isPvp();
-                if (pvp){
-                    pvp = false;
-                    sendMessage(player, CfgLang.lang.get(Lang.PVP_OFF));
-                }else{
-                    pvp = true;
-                    sendMessage(player, CfgLang.lang.get(Lang.PVP_ON));
-                }
-                corePlayer.setPvp(pvp);
-                Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
-                return true;
-            }
-
-            // /marry tp
-            if (args[0].equalsIgnoreCase("tp")){
-                if (!checkPerm(player, "marriage.tp")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                String partnerName = PlayerUtil.getName(Bukkit.getOfflinePlayer(corePlayer.getPartner()));
-                if (!checkPlayer(player, partnerName)) return false;
-                Player partner = Bukkit.getPlayer(partnerName);
-                PlayerUtil.teleport(player, partner, true);
-                sendMessage(player, CfgLang.lang.get(Lang.TELEPORT_PLAYER).replace("%name", partnerName));
-                sendMessage(partner, CfgLang.lang.get(Lang.TELEPORT_PARTNER).replace("%name", playerName));
-                return true;
-            }
-
-            // /marry divorce
-            if (args[0].equalsIgnoreCase("divorce")){
-                if (!checkPerm(player, "marriage.divorce")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                if (VaultUtil.getBalance(player) < costDivorce){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_MONEY).replace("%cost", costDivorce+""));
-                    return false;
-                }
-                VaultUtil.withdraw(player, costDivorce);
-                MarryUtil.divorce(playerId);
-                TitleManager.send(player, new PLJRTitle(CfgLang.lang.get(Lang.DIVORCE_PLAYER_TITLE), CfgLang.lang.get(Lang.DIVORCE_PLAYER_SUBTITLE), 10, 20*3, 10));
-                if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.DIVORCE), 10, 1);
-                return true;
-            }
-
-            /*
-
-            Marrying
-
-             */
-            String requestName = args[0];
-            if (requestName.equalsIgnoreCase(playerName)){
-                if (CfgSettings.menu){
-                    MarryMenu.open(player);
-                }else{
-                    sendHelp(sender, CfgLang.help);
-                }
-                return false;
-            }
-            if (!checkPlayer(player, requestName)) return false;
-            Player request = Bukkit.getPlayer(requestName);
-            UUID requestId = request.getUniqueId();
-            CorePlayer requestManager = Marriage.getPlayerManager().getCorePlayer(requestId);
-            if (corePlayer.getPartner() != null){
-                sendMessage(player, CfgLang.lang.get(Lang.HAVE_PARTNER));
-                return true;
-            }
-            if (requestManager.getPartner() != null){
-                sendMessage(player, CfgLang.lang.get(Lang.HAVE_PARTNER_PLAYER).replace("%name", requestName));
-                fail(player);
-                return false;
-            }
-            if (Marriage.getPlayerManager().getRequests().containsKey(playerId)){
-                sendMessage(player, CfgLang.lang.get(Lang.REQUEST_PENDING));
-                return true;
-            }
-            if (VaultUtil.getBalance(player) < costMarry){
-                sendMessage(player, CfgLang.lang.get(Lang.NO_MONEY).replace("%cost", costMarry+""));
-                return false;
-            }
-            if (Marriage.getPlayerManager().getRequests().containsKey(requestId)){
-                if (!Marriage.getPlayerManager().getRequests().get(requestId).equals(playerId)){
-                    sendMessage(player, CfgLang.lang.get(Lang.REQUEST_PENDING_PLAYER).replace("%name", requestName));
-                    fail(player);
-                    return false;
-                }
-
-                // Successful marry >
-                MarryUtil.marry(playerId, requestId);
-                TitleManager.send(player, new PLJRTitle(CfgLang.lang.get(Lang.MARRY_ACCEPT_PLAYER1_TITLE),
-                        CfgLang.lang.get(Lang.MARRY_ACCEPT_PLAYER1_SUBTITLE).replace("%name", requestName),
-                        10, 20*3, 10));
-                TitleManager.send(player, new PLJRTitle(CfgLang.lang.get(Lang.MARRY_ACCEPT_PLAYER2_TITLE),
-                        CfgLang.lang.get(Lang.MARRY_ACCEPT_PLAYER2_SUBTITLE).replace("%name", playerName),
-                        10, 20*3, 10));
-                if (sounds) player.playSound(playerLoc, CfgSounds.sounds.get(Sounds.MARRY_ACCEPT), 10, 1);
-                if (sounds) request.playSound(playerLoc, CfgSounds.sounds.get(Sounds.MARRY_ACCEPT), 10, 1);
-                VaultUtil.withdraw(player, costMarry);
-                VaultUtil.withdraw(request, costMarry);
-                Marriage.getPlayerManager().getRequests().remove(requestId);
-                Marriage.getPlayerManager().getRequests().remove(playerId);
-                return true;
-            }
-            sendMessage(player, CfgLang.lang.get(Lang.REQUEST_SEND).replace("%name", requestName));
-            sendMessage(request, CfgLang.lang.get(Lang.REQUEST_RECEIVED).replace("%name", playerName));
-            if (sounds) request.playSound(request.getLocation(), CfgSounds.sounds.get(Sounds.NOTIFY), 10, 1);
-            Marriage.getPlayerManager().getRequests().put(playerId, requestId);
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Marriage.getInstance(), () ->{
-                if (Marriage.getPlayerManager().getRequests().containsKey(playerId)){
-                    if (player.isOnline()){
-                        sendMessage(player, CfgLang.lang.get(Lang.REQUEST_EXPIRED_SENDER).replace("%name", requestName));
+            switch (arg) {
+                case "LIST":
+                    if (!checkPerm(player, "marriage.list")) return;
+                    sendMessage(player, Lang.LIST_HEADER.get());
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
+                       for (Player onlinePlayer : Bukkit.getOnlinePlayers()){
+                           MarriagePlayer marriageOnlinePlayer = playerManager.getPlayer(onlinePlayer);
+                           UUID partnerId = marriageOnlinePlayer.getPartnerID();
+                           if (partnerId == null) continue;
+                           String onlinePlayerName = onlinePlayer.getName();
+                           String onlinePlayerPartnerName = PlayerUtil.getName(partnerId);
+                           MarriagePlayer marriageOnlinePlayerPartner = playerManager.getPlayer(partnerId);
+                           sendMessage(player, Lang.LIST_FORMAT.get()
+                                   .replace("{partner}", marriageOnlinePlayerPartner.getGender().getColor() + onlinePlayerPartnerName)
+                                   .replace("{player}", marriageOnlinePlayer.getGender().getColor() + onlinePlayerName));
+                       }
+                    });
+                    break;
+                case "HELP":
+                    if (!checkPerm(player, "marriage.help")) return;
+                    sendMessage(player, Lang.HELP.get());
+                    break;
+                case "GIVE":
+                    if (!checkPerm(player, "marriage.give")) return;
+                    try {
+                        MarriageUtil.gift(marriagePlayer);
+                    } catch (NoPartnerException e) {
+                        sendMessage(player, Lang.NO_PARTNER.get());
+                        return;
+                    } catch (NoHeldItemException e) {
+                        sendMessage(player, Lang.NO_HELD_ITEM.get());
+                        return;
+                    } catch (PlayerOfflineException e) {
+                        sendMessage(player, Lang.PARTNER_OFFLINE.get());
+                        return;
                     }
-                    if (request.isOnline()){
-                        sendMessage(request, CfgLang.lang.get(Lang.REQUEST_EXPIRED_RECEIVER).replace("%name", playerName));
+                    Player givePartner = Bukkit.getPlayer(marriagePlayer.getPartnerID());
+                    sendMessage(player, Lang.GIFT.get());
+                    sendMessage(givePartner, Lang.GIFT_PARTNER.get());
+                    break;
+                case "HOME":
+                    if (!checkPerm(player, "marriage.home")) return;
+                    try {
+                        MarriageUtil.home(player, marriagePlayer);
+                    } catch (NoHomeException e) {
+                        sendMessage(player, Lang.NO_HOME.get());
+                        return;
                     }
-                    Marriage.getPlayerManager().getRequests().remove(playerId);
-                }
-            }, cooldown);
-            return true;
-        }
-        else if (args.length >= 2){
+                    sendMessage(player, Lang.TP_HOME.get());
+                    break;
+                case "SETHOME":
+                    if (!checkPerm(player, "marriage.sethome")) return;
+                    try {
+                        MarriageUtil.setHome(player, marriagePlayer);
+                    } catch (NoPartnerException e) {
+                        sendMessage(player, Lang.NO_PARTNER.get());
+                        return;
+                    }
+                    UUID homePartnerId = marriagePlayer.getPartnerID();
+                    if (PlayerUtil.isPlayer(homePartnerId)) {
+                        Player homePartner = Bukkit.getPlayer(homePartnerId);
+                        sendMessage(homePartner, Lang.SET_HOME_PARTNER.get());
+                    }
+                    sendMessage(player, Lang.SET_HOME.get());
+                    break;
+                case "SEEN":
+                    if (!checkPerm(player, "marriage.seen")) return;
+                    try {
+                        sendMessage(player, Lang.LAST_SEEN.get()
+                                .replace("{time}", FormatUtil.formatTime(MarriageUtil.lastSeen(marriagePlayer))));
+                    } catch (NoPartnerException e) {
+                        sendMessage(player, Lang.NO_PARTNER.get());
+                    }
+                    break;
+                case "PVP":
+                    if (!checkPerm(player, "marriage.pvp")) return;
+                    marriagePlayer.setPvp(!marriagePlayer.isPvp());
+                    if (marriagePlayer.isPvp()) {
+                        sendMessage(player, Lang.PVP_TOGGLE.get().replace("{state}", Lang.ACTIVE.get()));
+                    } else {
+                        sendMessage(player, Lang.PVP_TOGGLE.get().replace("{state}", Lang.INACTIVE.get()));
+                    }
+                    playerManager.setPlayer(player, marriagePlayer);
+                    break;
+                case "TP":
+                    if (!checkPerm(player, "marriage.tp")) return;
+                    try {
+                        MarriageUtil.teleport(marriagePlayer);
+                    } catch (NoPartnerException e) {
+                        sendMessage(player, Lang.NO_PARTNER.get());
+                        return;
+                    } catch (PlayerOfflineException e) {
+                        sendMessage(player, Lang.PARTNER_OFFLINE.get());
+                        return;
+                    }
+                    Player tpPartner = Bukkit.getPlayer(marriagePlayer.getUniqueId());
+                    sendMessage(player, Lang.TP.get().replace("{name}", tpPartner.getName()));
+                    sendMessage(tpPartner, Lang.TP_PARTNER.get().replace("{name}", player.getName()));
+                    break;
+                case "DIVORCE":
+                    if (!checkPerm(player, "marriage.divorce")) return;
+                    if (!checkBalance(player, CfgSettings.COST_DIVORCE)) return;
+                    UUID divorcePartnerId = marriagePlayer.getPartnerID();
+                    try {
+                        MarriageUtil.divorce(marriagePlayer);
+                    } catch (NoPartnerException e) {
+                        sendMessage(player, Lang.NO_PARTNER.get());
+                        return;
+                    }
+                    Player divorcePartner = Bukkit.getPlayer(divorcePartnerId);
+                    ChatUtil.broadcast(Lang.UNMARRY_BROADCAST.get()
+                            .replace("{partner}", divorcePartner.getName())
+                            .replace("{player}", player.getName()), "", CfgSettings.BUNGEE);
+                    if (divorcePartnerId != null) {
+                        SoundType.DIVORCE.get().play(divorcePartner);
+                        TitleType.DIVORCE_PARTNER.get().send(divorcePartner);
+                    }
+                    SoundType.DIVORCE.get().play(player);
+                    TitleType.DIVORCE_PLAYER.get().send(player);
+                    break;
+                case "FOOD":
+                    if (!checkPerm(player, "marriage.food")) return;
+                    if (!CfgSettings.TOGGLE_FOOD){
+                        sendMessage(player, Lang.DISABLED.get());
+                        return;
+                    }
+                    marriagePlayer.setSharedFood(!marriagePlayer.isSharedFood());
+                    if (marriagePlayer.isSharedFood()) {
+                        sendMessage(player, Lang.FOOD_TOGGLE.get().replace("{state}", Lang.ACTIVE.get()));
+                    } else {
+                        sendMessage(player, Lang.FOOD_TOGGLE.get().replace("{state}", Lang.INACTIVE.get()));
+                    }
+                    playerManager.setPlayer(player, marriagePlayer);
+                    break;
+                case "XP":
+                    if (!checkPerm(player, "marriage.xp")) return;
+                    if (!CfgSettings.TOGGLE_XP){
+                        sendMessage(player, Lang.DISABLED.get());
+                        return;
+                    }
+                    marriagePlayer.setSharedXP(!marriagePlayer.isSharedXP());
+                    if (marriagePlayer.isSharedXP()) {
+                        sendMessage(player, Lang.XP_TOGGLE.get().replace("{state}", Lang.ACTIVE.get()));
+                    } else {
+                        sendMessage(player, Lang.XP_TOGGLE.get().replace("{state}", Lang.INACTIVE.get()));
+                    }
+                    playerManager.setPlayer(player, marriagePlayer);
+                    break;
+                default:
+                    if (!checkPlayer(player, args[0])) return;
+                    if (!checkBalance(player, CfgSettings.COST_MARRY)) return;
+                    String playerName = player.getName();
 
-            // /marry list <int>
-            if (args[0].equalsIgnoreCase("list")){
-                if (!checkPerm(player, "marriage.list")) return false;
-                if (!NumberUtil.isInt(args[1])){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_NUMBER).replace("%arg", args[1]));
-                    fail(player);
-                    return false;
-                }
-                MarryUtil.sendMarryList(player, Integer.parseInt(args[1]));
-                return true;
-            }
-
-            // /marry gender <gender>
-            if (args[0].equalsIgnoreCase("gender")){
-                if (!checkPerm(player, "marriage.gender")) return false;
-                String genderType = args[1].toUpperCase();
-                for (Gender gender : Gender.values()){
-                    if (gender.toString().equals(genderType)){
-                        switch (gender){
-                            case FEMALE:
-                                sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_FEMALE)));
-                                break;
-                            case NONE:
-                                sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_NONE)));
-                                break;
-                            case MALE:
-                                sendMessage(player, CfgLang.lang.get(Lang.GENDER_SET).replace("%gender", CfgLang.lang.get(Lang.GENDER_MALE)));
-                                break;
+                    Player marryPartner = Bukkit.getPlayer(args[0]);
+                    String marryPartnerName = marryPartner.getName();
+                    UUID marryPartnerId = marryPartner.getUniqueId();
+                    MarriagePlayer marriagePartner = playerManager.getPlayer(marryPartnerId);
+                    if (marriagePlayer.getRequests().contains(marryPartnerId)) {
+                        // Accepting a request
+                        try {
+                            MarriageUtil.marry(marriagePlayer, marriagePartner);
+                        } catch (HasPartnerException e) {
+                            sendMessage(player, Lang.HAS_PARTNER.get().replace("{name}", marryPartnerName));
+                            return;
                         }
-                        corePlayer.setGender(gender);
-                        Marriage.getPlayerManager().setCorePlayer(playerId, corePlayer);
-                        return true;
+                        new TitleBuilder(TitleType.MARRY_PLAYER.get())
+                                .replaceSubtitle("{name}", marryPartnerName)
+                                .create().send(player);
+                        new TitleBuilder(TitleType.MARRY_PARTNER.get())
+                                .replaceSubtitle("{name}", playerName)
+                                .create().send(marryPartner);
+                        SoundType.MARRY_ACCEPT.get().play(player);
+                        SoundType.MARRY_ACCEPT.get().play(marryPartner);
+                        ChatUtil.broadcast(Lang.MARRY_BROADCAST.get()
+                                        .replace("{partner}", marryPartnerName)
+                                        .replace("{player}", playerName),
+                                "", CfgSettings.BUNGEE);
+                    } else {
+                        // Sending a request
+                        try {
+                            MarriageUtil.request(marriagePlayer, marriagePartner);
+                        } catch (HasPartnerException e) {
+                            if (player.getUniqueId().equals(e.getSource())) {
+                                sendMessage(player, Lang.HAVE_PARTNER.get());
+                                return;
+                            } else if (marryPartnerId.equals(e.getSource())) {
+                                sendMessage(player, Lang.HAS_PARTNER.get().replace("{name}", marryPartnerName));
+                                return;
+                            }
+                        }
+                        sendMessage(player, Lang.MARRY_REQUEST.get().replace("{name}", marryPartnerName));
+                        sendMessage(marryPartner, Lang.MARRY_REQUEST_PARTNER.get().replace("{name}", playerName));
+                        SoundType.NOTIFY.get().play(marryPartner);
+                    }
+                    break;
+            }
+        }
+
+        else if (args.length == 2){
+            if (arg.equals("C")) {
+                if (!checkPerm(player, "marriage.chat")) return;
+                try {
+                    MarriageUtil.chat(marriagePlayer,
+                            StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " "),
+                            Lang.CHAT_FORMAT.get());
+                } catch (NoPartnerException e) {
+                    sendMessage(player, Lang.NO_PARTNER.get());
+                }
+            } else if (arg.equals("GENDER")){
+                if (!checkPerm(player, "marriage.gender")) return;
+                for (Gender gender : Gender.values()){
+                    if (args[1].equalsIgnoreCase(gender.getName())){
+                        marriagePlayer.setGender(gender);
+                        sendMessage(player, Lang.GENDER_CHANGE.get().replace("{gender}", gender.getColor() + gender.getName()));
+                        playerManager.setPlayer(player, marriagePlayer);
+                        return;
                     }
                 }
-                sendMessage(player, CfgLang.lang.get(Lang.NO_GENDER).replace("%gender", genderType));
-                fail(player);
-                return false;
+                sendMessage(player, Lang.GENDER_CHANGE_ERROR.get().replace("{gender}", args[1]));
             }
-
-            // /marry partner <playerName>
-            if (args[0].equalsIgnoreCase("partner")){
-                if (!checkPerm(player, "marriage.partner")) return false;
-                String requestedInfoName = args[1];
-                OfflinePlayer requestedInfo = Bukkit.getOfflinePlayer(requestedInfoName);
-                CorePlayer requestedInfoManager = Marriage.getPlayerManager().getCorePlayer(requestedInfo.getUniqueId());
-                if (requestedInfoManager.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.PARTNER_NO_PARTNER).replace("%name", requestedInfoName));
-                }else{
-                    sendMessage(player, CfgLang.lang.get(Lang.PARTNER).replace("%name", requestedInfoName).replace("%partner", PlayerUtil.getName(Bukkit.getOfflinePlayer(requestedInfoManager.getPartner()))));
-                }
-                return true;
-            }
-
-            // /marry c <string>
-            if (args[0].equalsIgnoreCase("c")){
-                if (!checkPerm(player, "marriage.chat")) return false;
-                if (corePlayer.getPartner() == null){
-                    sendMessage(player, CfgLang.lang.get(Lang.NO_PARTNER));
-                    fail(player);
-                    return false;
-                }
-                MarryUtil.chat(player, FormatUtil.colorString(StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ")));
-                return true;
-            }
-
         }
-        if (CfgSettings.menu){
-            MarryMenu.open(player);
-        }else{
-            sendHelp(sender, CfgLang.help);
-        }
-        return true;
+
+        else sendMessage(player, Lang.HELP.get());
     }
 }

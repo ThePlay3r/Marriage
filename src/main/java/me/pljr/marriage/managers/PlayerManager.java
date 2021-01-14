@@ -1,34 +1,41 @@
 package me.pljr.marriage.managers;
 
-import me.pljr.marriage.Marriage;
-import me.pljr.marriage.objects.CorePlayer;
+import me.pljr.marriage.objects.MarriagePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerManager {
-    private final HashMap<UUID, CorePlayer> players = new HashMap<>();
-    private final HashMap<UUID, UUID> requests = new HashMap<>();
+    private final HashMap<UUID, MarriagePlayer> players;
+    private final QueryManager query;
 
-    public CorePlayer getCorePlayer(UUID uuid){
-        if (players.containsKey(uuid)){
-            return players.get(uuid);
-        }
-        Marriage.getQuery().loadPlayerSync(uuid);
-        return getCorePlayer(uuid);
+    public PlayerManager(QueryManager query){
+        this.players = new HashMap<>();
+        this.query = query;
     }
 
-    public void setCorePlayer(UUID uuid, CorePlayer corePlayer){
-        players.put(uuid, corePlayer);
+    public MarriagePlayer getPlayer(Player player){
+        return getPlayer(player.getUniqueId());
+    }
+
+    public MarriagePlayer getPlayer(UUID uuid){
+        if (!players.containsKey(uuid)){
+            setPlayer(uuid, query.loadPlayer(uuid));
+        }
+        return players.get(uuid);
+    }
+
+    public void setPlayer(Player player, MarriagePlayer marriagePlayer){
+        setPlayer(player.getUniqueId(), marriagePlayer);
+    }
+
+    public void setPlayer(UUID uuid, MarriagePlayer marriagePlayer){
+        this.players.put(uuid, marriagePlayer);
         savePlayer(uuid);
     }
 
     public void savePlayer(UUID uuid){
-        if (!players.containsKey(uuid)) return;
-        Marriage.getQuery().savePlayer(uuid);
-    }
-
-    public HashMap<UUID, UUID> getRequests() {
-        return requests;
+        query.savePlayerAsync(getPlayer(uuid));
     }
 }

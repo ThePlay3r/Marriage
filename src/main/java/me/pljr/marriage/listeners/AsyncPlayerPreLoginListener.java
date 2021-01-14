@@ -1,16 +1,19 @@
 package me.pljr.marriage.listeners;
 
-import me.pljr.marriage.Marriage;
-import me.pljr.marriage.managers.QueryManager;
+import me.pljr.marriage.managers.PlayerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 public class AsyncPlayerPreLoginListener implements Listener {
-    private final QueryManager query = Marriage.getQuery();
+    private final PlayerManager playerManager;
+
+    public AsyncPlayerPreLoginListener(PlayerManager playerManager){
+        this.playerManager = playerManager;
+    }
 
     @EventHandler
-    public void onJoin(AsyncPlayerPreLoginEvent event){
-        query.loadPlayerSync(event.getUniqueId());
+    public void onPlayerJoin(AsyncPlayerPreLoginEvent event){
+        playerManager.getPlayer(event.getUniqueId());
     }
 }

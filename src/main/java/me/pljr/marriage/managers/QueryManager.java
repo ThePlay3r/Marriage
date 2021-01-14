@@ -1,316 +1,160 @@
 package me.pljr.marriage.managers;
 
-import me.pljr.marriage.Marriage;
-import me.pljr.marriage.config.CfgDefaulthome;
-import me.pljr.marriage.config.CfgSettings;
-import me.pljr.marriage.enums.Gender;
-import me.pljr.marriage.objects.CorePlayer;
-import me.pljr.pljrapi.database.DataSource;
+import me.pljr.marriage.config.Gender;
+import me.pljr.marriage.objects.MarriagePlayer;
+import me.pljr.pljrapispigot.database.DataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class QueryManager {
-    private final Marriage marriage = Marriage.getInstance();
+    private final Plugin plugin;
     private final DataSource dataSource;
 
-    public QueryManager(DataSource dataSource) {
+    public QueryManager(Plugin plugin, DataSource dataSource){
+        this.plugin = plugin;
         this.dataSource = dataSource;
-    }
 
-    public void loadPlayerSync(UUID uuid){
-        try {
-            UUID partner;
-            Gender gender;
-            boolean pvp;
-            boolean food;
-            boolean xp;
-            Location home;
-            long lastseen;
-
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM marriage_players WHERE uuid=?"
-            );
-            preparedStatement.setString(1, uuid.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
-                String partnerUUID = resultSet.getString("partner");
-                if (partnerUUID == null){
-                    partner = null;
-                }else{
-                    partner = UUID.fromString(partnerUUID);
-                }
-                gender = Gender.valueOf(resultSet.getString("gender"));
-                pvp = resultSet.getBoolean("pvp");
-                food = resultSet.getBoolean("food");
-                xp = resultSet.getBoolean("xp");
-                lastseen = resultSet.getLong("lastseen");
-                if (Bukkit.getWorld(resultSet.getString("home_world")) != null){
-                    home = new Location(
-                            Bukkit.getWorld(resultSet.getString("home_world")),
-                            resultSet.getDouble("home_x"),
-                            resultSet.getDouble("home_y"),
-                            resultSet.getDouble("home_z"),
-                            resultSet.getFloat("home_yaw"),
-                            resultSet.getFloat("home_pitch"));
-                }else {
-                    home = new Location(
-                            Bukkit.getWorld(CfgDefaulthome.world),
-                            CfgDefaulthome.x,
-                            CfgDefaulthome.y,
-                            CfgDefaulthome.z,
-                            CfgDefaulthome.yaw,
-                            CfgDefaulthome.pitch
-                    );
-                }
-            }else{
-                partner = null;
-                pvp = CfgSettings.defaultPvP;
-                food = CfgSettings.defaultFood;
-                xp = CfgSettings.defaultXP;
-                home = new Location(
-                        Bukkit.getWorld(CfgDefaulthome.world),
-                        CfgDefaulthome.x,
-                        CfgDefaulthome.y,
-                        CfgDefaulthome.z,
-                        CfgDefaulthome.yaw,
-                        CfgDefaulthome.pitch
-                );
-                lastseen = System.currentTimeMillis();
-                gender = Gender.NONE;
-            }
-            CorePlayer corePlayer = new CorePlayer(gender, partner, pvp, lastseen, home, false, food, xp);
-            Marriage.getPlayerManager().setCorePlayer(uuid, corePlayer);
-
-            dataSource.close(connection, preparedStatement, resultSet);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void loadPlayer(UUID uuid){
-        Bukkit.getScheduler().runTaskAsynchronously(Marriage.getInstance(), ()->{
-            try {
-                UUID partner;
-                Gender gender;
-                boolean pvp;
-                boolean food;
-                boolean xp;
-                Location home;
-                long lastseen;
-
-                Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                        "SELECT * FROM marriage_players WHERE uuid=?"
-                );
-                preparedStatement.setString(1, uuid.toString());
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()){
-                    String partnerUUID = resultSet.getString("partner");
-                    if (partnerUUID == null){
-                        partner = null;
-                    }else{
-                        partner = UUID.fromString(partnerUUID);
-                    }
-                    gender = Gender.valueOf(resultSet.getString("gender"));
-                    pvp = resultSet.getBoolean("pvp");
-                    food = resultSet.getBoolean("food");
-                    xp = resultSet.getBoolean("xp");
-                    lastseen = resultSet.getLong("lastseen");
-                    if (Bukkit.getWorld(resultSet.getString("home_world")) != null){
-                        home = new Location(
-                                Bukkit.getWorld(resultSet.getString("home_world")),
-                                resultSet.getDouble("home_x"),
-                                resultSet.getDouble("home_y"),
-                                resultSet.getDouble("home_z"),
-                                resultSet.getFloat("home_yaw"),
-                                resultSet.getFloat("home_pitch"));
-                    }else {
-                        home = new Location(
-                                Bukkit.getWorld(CfgDefaulthome.world),
-                                CfgDefaulthome.x,
-                                CfgDefaulthome.y,
-                                CfgDefaulthome.z,
-                                CfgDefaulthome.yaw,
-                                CfgDefaulthome.pitch
-                        );
-                    }
-                }else{
-                    partner = null;
-                    pvp = CfgSettings.defaultPvP;
-                    food = CfgSettings.defaultFood;
-                    xp = CfgSettings.defaultXP;
-                    home = new Location(
-                            Bukkit.getWorld(CfgDefaulthome.world),
-                            CfgDefaulthome.x,
-                            CfgDefaulthome.y,
-                            CfgDefaulthome.z,
-                            CfgDefaulthome.yaw,
-                            CfgDefaulthome.pitch
-                    );
-                    lastseen = System.currentTimeMillis();
-                    gender = Gender.NONE;
-                }
-                CorePlayer corePlayer = new CorePlayer(gender, partner, pvp, lastseen, home, false, food, xp);
-                Marriage.getPlayerManager().setCorePlayer(uuid, corePlayer);
-
-                dataSource.close(connection, preparedStatement, resultSet);
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void savePlayerSync(UUID uuid){
-        try {
-            CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(uuid);
-
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
-            );
-            preparedStatement.setString(1, uuid.toString());
-            if (corePlayer.getPartner() == null){
-                preparedStatement.setString(2, null);
-            }else{
-                preparedStatement.setString(2, corePlayer.getPartner().toString());
-            }
-            Location homeLoc;
-            if (corePlayer.getHome().getWorld() == null){
-                homeLoc = new Location(
-                        Bukkit.getWorld(CfgDefaulthome.world),
-                        CfgDefaulthome.x,
-                        CfgDefaulthome.y,
-                        CfgDefaulthome.z,
-                        CfgDefaulthome.yaw,
-                        CfgDefaulthome.pitch
-                );
-            }else{
-                homeLoc = corePlayer.getHome();
-            }
-            preparedStatement.setString(3, corePlayer.getGender().toString());
-            preparedStatement.setBoolean(4, corePlayer.isPvp());
-            preparedStatement.setBoolean(5, corePlayer.isFood());
-            preparedStatement.setBoolean(6, corePlayer.isXp());
-            preparedStatement.setLong(7, corePlayer.getLastseen());
-            preparedStatement.setString(8, homeLoc.getWorld().getName());
-            preparedStatement.setDouble(9, homeLoc.getX());
-            preparedStatement.setDouble(10, homeLoc.getY());
-            preparedStatement.setDouble(11, homeLoc.getZ());
-            preparedStatement.setFloat(12, homeLoc.getYaw());
-            preparedStatement.setFloat(13, homeLoc.getPitch());
-            preparedStatement.executeUpdate();
-
-            dataSource.close(connection, preparedStatement, null);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void savePlayer(UUID uuid){
-        Bukkit.getScheduler().runTaskAsynchronously(marriage, () ->{
-           try {
-               CorePlayer corePlayer = Marriage.getPlayerManager().getCorePlayer(uuid);
-
-               Connection connection = dataSource.getConnection();
-               PreparedStatement preparedStatement = connection.prepareStatement(
-                       "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
-               );
-               preparedStatement.setString(1, uuid.toString());
-               if (corePlayer.getPartner() == null){
-                   preparedStatement.setString(2, null);
-               }else{
-                   preparedStatement.setString(2, corePlayer.getPartner().toString());
-               }
-               Location homeLoc;
-               if (corePlayer.getHome().getWorld() == null){
-                   homeLoc = new Location(
-                           Bukkit.getWorld(CfgDefaulthome.world),
-                           CfgDefaulthome.x,
-                           CfgDefaulthome.y,
-                           CfgDefaulthome.z,
-                           CfgDefaulthome.yaw,
-                           CfgDefaulthome.pitch
-                   );
-               }else{
-                   homeLoc = corePlayer.getHome();
-               }
-               preparedStatement.setString(3, corePlayer.getGender().toString());
-               preparedStatement.setBoolean(4, corePlayer.isPvp());
-               preparedStatement.setBoolean(5, corePlayer.isFood());
-               preparedStatement.setBoolean(6, corePlayer.isXp());
-               preparedStatement.setLong(7, corePlayer.getLastseen());
-               preparedStatement.setString(8, homeLoc.getWorld().getName());
-               preparedStatement.setDouble(9, homeLoc.getX());
-               preparedStatement.setDouble(10, homeLoc.getY());
-               preparedStatement.setDouble(11, homeLoc.getZ());
-               preparedStatement.setFloat(12, homeLoc.getYaw());
-               preparedStatement.setFloat(13, homeLoc.getPitch());
-               preparedStatement.executeUpdate();
-
-               dataSource.close(connection, preparedStatement, null);
-           }catch (SQLException e){
-               e.printStackTrace();
-           }
-        });
-    }
-
-    public LinkedHashMap<UUID, UUID> getMarryListSync(){
-        LinkedHashMap<UUID, UUID> marryList = new LinkedHashMap<>();
         try {
             Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM marriage_players"
-            );
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<UUID> added = new ArrayList<>();
-            while (resultSet.next()){
-                if (added.contains(UUID.fromString(resultSet.getString("uuid")))) continue;
-                if (resultSet.getString("partner") == null) continue;
-                UUID player1id = UUID.fromString(resultSet.getString("uuid"));
-                UUID player2id = UUID.fromString(resultSet.getString("partner"));
-                marryList.put(player1id, player2id);
-                added.add(player1id);
-                added.add(player2id);
-            }
-            dataSource.close(connection, preparedStatement, resultSet);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return marryList;
-    }
-
-    public void setupTables() {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
+            PreparedStatement statement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS marriage_players (" +
                             "uuid char(36) NOT NULL PRIMARY KEY," +
-                            "partner char(36)," +
-                            "gender varchar(255) NOT NULL," +
+                            "partnerID char(36)," +
+                            "gender VARCHAR(255) NOT NULL," +
                             "pvp tinyint(1) NOT NULL," +
-                            "food tinyint(1) NOT NULL," +
-                            "xp tinyint(1) NOT NULL," +
-                            "lastseen bigint(20) NOT NULL," +
-                            "home_world varchar(255) NOT NULL," +
-                            "home_x double NOT NULL," +
-                            "home_y double NOT NULL," +
-                            "home_z double NOT NULL," +
-                            "home_yaw float NOT NULL," +
-                            "home_pitch float NOT NULL);"
+                            "sharedFood tinyint(1) NOT NULL," +
+                            "sharedXP tinyint(1) NOT NULL," +
+                            "lastSeen bigint(20) NOT NULL," +
+                            "home_world varchar(255)," +
+                            "home_x double," +
+                            "home_y double," +
+                            "home_z double," +
+                            "home_yaw float," +
+                            "home_pitch float);"
             );
-            preparedStatement.executeUpdate();
-            dataSource.close(connection, preparedStatement, null);
-        } catch (SQLException e) {
+            statement.executeUpdate();
+            dataSource.close(connection, statement, null);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void loadPlayerAsync(UUID uuid, Consumer<MarriagePlayer> consumer){
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> consumer.accept(loadPlayer(uuid)));
+    }
+
+    public MarriagePlayer loadPlayer(UUID uuid){
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM marriage_players WHERE uuid='" + uuid + "'"
+            );
+            ResultSet results = statement.executeQuery();
+            if (!results.next()){
+                dataSource.close(connection, statement, null);
+                return new MarriagePlayer(uuid);
+            }
+
+            Gender gender = Gender.valueOf(results.getString("gender"));
+            UUID partnerID;
+            if (results.getString("partnerID") == null){
+                partnerID = null;
+            }else{
+                partnerID = UUID.fromString(results.getString("partnerID"));
+            }
+            boolean pvp = results.getBoolean("pvp");
+            long lastSeen = results.getLong("lastSeen");
+            Location home;
+            String worldName = results.getString("home_world");
+            if (worldName == null){
+                home = null;
+            }else{
+                World world = Bukkit.getWorld(worldName);
+                if (world == null) home = null;
+                else {
+                    home = new Location(
+                            world,
+                            results.getDouble("home_x"),
+                            results.getDouble("home_y"),
+                            results.getDouble("home_z"),
+                            results.getFloat("home_yaw"),
+                            results.getFloat("home_pitch")
+                    );
+                }
+            }
+            boolean sharedFood = results.getBoolean("sharedFood");
+            boolean sharedXP = results.getBoolean("sharedXP");
+
+            dataSource.close(connection, statement, results);
+            return new MarriagePlayer(uuid, gender, partnerID, pvp, lastSeen, home, false, sharedFood, sharedXP);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return new MarriagePlayer(uuid);
+    }
+
+    public void savePlayerAsync(MarriagePlayer player){
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> savePlayer(player));
+    }
+
+    public void savePlayer(MarriagePlayer player){
+        try {
+            UUID uuid = player.getUniqueId();
+            Gender gender = player.getGender();
+            UUID partnerID = player.getPartnerID();
+            boolean pvp = player.isPvp();
+            long lastSeen = player.getLastSeen();
+            Location home = player.getHome();
+            String homeName = null;
+            double homeX = 0;
+            double homeY = 0;
+            double homeZ = 0;
+            float homeYaw = 0;
+            float homePitch = 0;
+            if (home != null){
+                homeName = home.getWorld().getName();
+                homeX = home.getX();
+                homeY = home.getY();
+                homeZ = home.getZ();
+                homeYaw = home.getYaw();
+                homePitch = home.getPitch();
+            }
+            boolean sharedFood = player.isSharedFood();
+            boolean sharedXP = player.isSharedXP();
+
+            Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(
+                    "REPLACE INTO marriage_players VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            );
+            statement.setString(1, uuid.toString());
+            if (partnerID == null){
+                statement.setString(2, null);
+            }else{
+                statement.setString(2, partnerID.toString());
+            }
+            statement.setString(3, gender.toString());
+            statement.setBoolean(4, pvp);
+            statement.setBoolean(5, sharedFood);
+            statement.setBoolean(6, sharedXP);
+            statement.setLong(7, lastSeen);
+            statement.setString(8, homeName);
+            statement.setDouble(9, homeX);
+            statement.setDouble(10, homeY);
+            statement.setDouble(11, homeZ);
+            statement.setFloat(12, homeYaw);
+            statement.setFloat(13, homePitch);
+            statement.executeUpdate();
+            dataSource.close(connection, statement, null);
+        }catch (SQLException e){
             e.printStackTrace();
         }
     }
