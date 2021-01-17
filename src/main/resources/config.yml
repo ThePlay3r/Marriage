@@ -5,7 +5,7 @@
 # Author: https://www.mc-market.org/members/89497/
 # Description: Plugin for in-game Marriage.
 # Dependencies:
-#   -> PLJRApi
+#   -> PLJRApi-Spigot
 #   -> PlaceholderAPI<Optional> (https://www.spigotmc.org/resources/placeholderapi.6245/)
 #|--------------------------------------------------------------------------------------------------------------------|#
 
