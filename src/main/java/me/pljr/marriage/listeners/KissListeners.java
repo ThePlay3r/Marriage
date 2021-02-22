@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KissListeners implements Listener {
+public class  KissListeners implements Listener {
     private final Plugin plugin;
     private final PlayerManager playerManager;
     private final List<Player> kissing;
@@ -33,7 +33,8 @@ public class KissListeners implements Listener {
         MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
         if (marriagePlayer.getPartnerID() == null) return;
         Player target = (Player) event.getRightClicked();
-        if (marriagePlayer.getPartnerID() != target.getUniqueId()) return;
+        // Converted to String, because comparing as UUIDs doesn't work, why should it, right? RIGHT?! ¯\_(ツ)_/¯
+        if (!marriagePlayer.getPartnerID().toString().equals(target.getUniqueId().toString())) return;
         if (kissing.contains(player) || kissing.contains(target)) return;
         kissing.add(player);
         kissing.add(target);
