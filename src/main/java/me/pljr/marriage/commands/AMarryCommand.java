@@ -1,13 +1,18 @@
 package me.pljr.marriage.commands;
 
 import me.pljr.marriage.Marriage;
+import me.pljr.marriage.config.CfgSettings;
 import me.pljr.marriage.config.Lang;
+import me.pljr.marriage.config.SoundType;
+import me.pljr.marriage.config.TitleType;
 import me.pljr.marriage.exceptions.HasPartnerException;
 import me.pljr.marriage.exceptions.NoHomeException;
 import me.pljr.marriage.exceptions.NoPartnerException;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.MarriagePlayer;
 import me.pljr.marriage.utils.MarriageUtil;
+import me.pljr.pljrapispigot.builders.TitleBuilder;
+import me.pljr.pljrapispigot.utils.ChatUtil;
 import me.pljr.pljrapispigot.utils.CommandUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -66,7 +71,19 @@ public class AMarryCommand extends CommandUtil {
                         MarriageUtil.divorce(marriageUnmarryTarget);
                     } catch (NoPartnerException e) {
                         sendMessage(player, Lang.NO_PARTNER_PLAYER.get().replace("{name}", unmarryTarget.getName()));
+                        return;
                     }
+                    UUID divorcePartnerId = marriageUnmarryTarget.getPartnerID();
+                    Player divorcePartner = Bukkit.getPlayer(divorcePartnerId);
+                    ChatUtil.broadcast(Lang.UNMARRY_BROADCAST.get()
+                            .replace("{partner}", divorcePartner.getName())
+                            .replace("{player}", unmarryTarget.getName()), "", CfgSettings.BUNGEE);
+                    if (divorcePartnerId != null) {
+                        SoundType.DIVORCE.get().play(divorcePartner);
+                        TitleType.DIVORCE_PARTNER.get().send(divorcePartner);
+                    }
+                    SoundType.DIVORCE.get().play(unmarryTarget);
+                    TitleType.DIVORCE_PLAYER.get().send(unmarryTarget);
                     break;
                 case "SETHOME": {
                     if (!checkPerm(player, "marriage.admin.sethome")) return;
@@ -177,7 +194,22 @@ public class AMarryCommand extends CommandUtil {
                     } else {
                         sendMessage(player, Lang.HAS_PARTNER.get().replace("{name}", marryTargetTwo.getName()));
                     }
+                    return;
                 }
+                String marryTargetOneName = marryTargetOne.getName();
+                String marryTargetTwoName = marryTargetTwo.getName();
+                new TitleBuilder(TitleType.MARRY_PLAYER.get())
+                        .replaceSubtitle("{name}", marryTargetTwoName)
+                        .create().send(marryTargetOne);
+                new TitleBuilder(TitleType.MARRY_PARTNER.get())
+                        .replaceSubtitle("{name}", marryTargetOneName)
+                        .create().send(marryTargetTwo);
+                SoundType.MARRY_ACCEPT.get().play(marryTargetOne);
+                SoundType.MARRY_ACCEPT.get().play(marryTargetTwo);
+                ChatUtil.broadcast(Lang.MARRY_BROADCAST.get()
+                                .replace("{partner}", marryTargetTwoName)
+                                .replace("{player}", marryTargetOneName),
+                        "", CfgSettings.BUNGEE);
             }
         }
     }
