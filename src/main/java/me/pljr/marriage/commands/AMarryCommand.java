@@ -25,6 +25,10 @@ public class AMarryCommand extends CommandUtil {
     @Override
     public void onPlayerCommand(Player player, String[] args) {
         MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
+        if (args.length < 1) {
+            sendMessage(player, Lang.ADMIN_HELP.get());
+            return;
+        }
         final String arg = args[0].toUpperCase();
 
         if (args.length == 1){
