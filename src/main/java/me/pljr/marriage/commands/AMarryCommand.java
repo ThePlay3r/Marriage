@@ -35,12 +35,13 @@ public class AMarryCommand extends CommandUtil {
                     break;
                 case "SPY":
                     if (!checkPerm(player, "marriage.admin.spy")) return;
-                    marriagePlayer.setSpy(marriagePlayer.isSpy());
+                    marriagePlayer.setSpy(!marriagePlayer.isSpy());
                     if (marriagePlayer.isSpy()) {
                         sendMessage(player, Lang.SPY_TOGGLE.get().replace("{state}", Lang.ACTIVE.get()));
                     } else {
                         sendMessage(player, Lang.SPY_TOGGLE.get().replace("{state}", Lang.INACTIVE.get()));
                     }
+                    playerManager.setPlayer(player, marriagePlayer);
                     break;
                 case "RELOAD":
                     if (!checkPerm(player, "marriage.admin.reload")) return;

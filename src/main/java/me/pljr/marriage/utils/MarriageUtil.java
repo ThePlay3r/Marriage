@@ -112,11 +112,12 @@ public class MarriageUtil {
         }
         Bukkit.getScheduler().runTaskAsynchronously(Marriage.getInstance(), ()->{
             for (Player player : Bukkit.getOnlinePlayers()){
-                if (player.hasPermission("marriage.admin.spy")){
-                    ChatUtil.sendMessage(player, Lang.CHAT_SPY.get()
-                            .replace("{message}", message)
-                            .replace("{name}", playerName));
-                }
+                if (!player.hasPermission("marriage.admin.spy")) continue;
+                MarriagePlayer marriageAdmin = playerManager.getPlayer(player);
+                if (!marriageAdmin.isSpy()) continue;
+                ChatUtil.sendMessage(player, Lang.CHAT_SPY.get()
+                        .replace("{message}", message)
+                        .replace("{name}", playerName));
             }
         });
     }
