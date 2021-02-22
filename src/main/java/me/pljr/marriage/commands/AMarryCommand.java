@@ -67,13 +67,13 @@ public class AMarryCommand extends CommandUtil {
                     if (!checkPlayer(player, args[1])) return;
                     Player unmarryTarget = Bukkit.getPlayer(args[1]);
                     MarriagePlayer marriageUnmarryTarget = playerManager.getPlayer(unmarryTarget);
+                    UUID divorcePartnerId = marriageUnmarryTarget.getPartnerID();
                     try {
                         MarriageUtil.divorce(marriageUnmarryTarget);
                     } catch (NoPartnerException e) {
                         sendMessage(player, Lang.NO_PARTNER_PLAYER.get().replace("{name}", unmarryTarget.getName()));
                         return;
                     }
-                    UUID divorcePartnerId = marriageUnmarryTarget.getPartnerID();
                     Player divorcePartner = Bukkit.getPlayer(divorcePartnerId);
                     ChatUtil.broadcast(Lang.UNMARRY_BROADCAST.get()
                             .replace("{partner}", divorcePartner.getName())

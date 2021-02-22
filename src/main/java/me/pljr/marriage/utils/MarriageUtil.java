@@ -146,7 +146,7 @@ public class MarriageUtil {
         if (giftItem == null) throw new NoHeldItemException(player);
 
         Player partner = Bukkit.getPlayer(partnerId);
-        player.getInventory().remove(giftItem);
+        player.setItemInHand(null);
         player.updateInventory();
         PlayerUtil.give(partner, giftItem);
     }
