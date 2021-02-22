@@ -247,7 +247,7 @@ public class MarryCommand extends CommandUtil {
             }
         }
 
-        else if (args.length == 2){
+        else if (args.length > 2){
             if (arg.equals("C")) {
                 if (!checkPerm(player, "marriage.chat")) return;
                 try {
