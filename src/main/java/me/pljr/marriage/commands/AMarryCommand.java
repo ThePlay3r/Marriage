@@ -98,7 +98,7 @@ public class AMarryCommand extends CommandUtil {
                     sendMessage(player, Lang.TP_HOME_ADMIN.get().replace("{name}", targetName));
                     break;
                 }
-                case "PVP": {
+                case "XP": {
                     if (!checkPerm(player, "marriage.admin.pvp")) return;
                     if (!checkPlayer(player, args[1])) return;
                     Player target = Bukkit.getPlayer(args[1]);
@@ -136,7 +136,7 @@ public class AMarryCommand extends CommandUtil {
                     playerManager.setPlayer(player, marriagePlayer);
                     break;
                 }
-                case "XP": {
+                case "PVP": {
                     if (!checkPerm(player, "marriage.admin.xp")) return;
                     if (!checkPlayer(player, args[1])) return;
                     Player target = Bukkit.getPlayer(args[1]);
