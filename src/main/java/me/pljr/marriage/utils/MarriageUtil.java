@@ -100,7 +100,7 @@ public class MarriageUtil {
         format = format
                 .replace("{name}", playerName)
                 .replace("{message}", message);
-        if (CfgSettings.BUNGEE){
+        if (CfgSettings.isBUNGEE()){
             String partnerName = PlayerUtil.getName(marriagePlayer.getPartnerID());
             BungeeUtil.message(playerName, format);
             BungeeUtil.message(partnerName, format);

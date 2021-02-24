@@ -1,17 +1,27 @@
 package me.pljr.marriage.config;
 
+import lombok.Getter;
 import me.pljr.pljrapispigot.managers.ConfigManager;
 
 public class CfgSettings {
-    public static boolean BUNGEE;
-    public static boolean PARTICLES;
-    public static boolean SOUNDS;
-    public static boolean TOGGLE_XP;
-    public static boolean TOGGLE_PVP;
-    public static boolean TOGGLE_FOOD;
-    public static boolean MENU;
-    public static int COST_MARRY;
-    public static int COST_DIVORCE;
+    @Getter
+    private static boolean BUNGEE = false;
+    @Getter
+    private static boolean PARTICLES = true;
+    @Getter
+    private static boolean SOUNDS = true;
+    @Getter
+    private static boolean TOGGLE_XP = true;
+    @Getter
+    private static boolean TOGGLE_PVP = true;
+    @Getter
+    private static boolean TOGGLE_FOOD = true;
+    @Getter
+    private static boolean MENU = true;
+    @Getter
+    private static int COST_MARRY = 7500;
+    @Getter
+    private static int COST_DIVORCE = 5000;
 
     public static void load(ConfigManager config){
         BUNGEE = config.getBoolean("settings.bungee");

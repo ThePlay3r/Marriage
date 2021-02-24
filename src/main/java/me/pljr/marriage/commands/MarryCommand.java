@@ -37,7 +37,7 @@ public class MarryCommand extends CommandUtil {
     public void onPlayerCommand(Player player, String[] args) {
         // /marry
         if (args.length == 0){
-            if (CfgSettings.MENU){
+            if (CfgSettings.isMENU()){
                 new MarryMenu(player);
             }else{
                 sendMessage(player, Lang.HELP.get());
@@ -150,7 +150,7 @@ public class MarryCommand extends CommandUtil {
                     break;
                 case "DIVORCE":
                     if (!checkPerm(player, "marriage.divorce")) return;
-                    if (!checkBalance(player, CfgSettings.COST_DIVORCE)) return;
+                    if (!checkBalance(player, CfgSettings.getCOST_DIVORCE())) return;
                     UUID divorcePartnerId = marriagePlayer.getPartnerID();
                     try {
                         MarriageUtil.divorce(marriagePlayer);
@@ -161,7 +161,7 @@ public class MarryCommand extends CommandUtil {
                     Player divorcePartner = Bukkit.getPlayer(divorcePartnerId);
                     ChatUtil.broadcast(Lang.UNMARRY_BROADCAST.get()
                             .replace("{partner}", divorcePartner.getName())
-                            .replace("{player}", player.getName()), "", CfgSettings.BUNGEE);
+                            .replace("{player}", player.getName()), "", CfgSettings.isBUNGEE());
                     if (divorcePartnerId != null) {
                         SoundType.DIVORCE.get().play(divorcePartner);
                         TitleType.DIVORCE_PARTNER.get().send(divorcePartner);
@@ -171,7 +171,7 @@ public class MarryCommand extends CommandUtil {
                     break;
                 case "FOOD":
                     if (!checkPerm(player, "marriage.food")) return;
-                    if (!CfgSettings.TOGGLE_FOOD){
+                    if (!CfgSettings.isTOGGLE_FOOD()){
                         sendMessage(player, Lang.DISABLED.get());
                         return;
                     }
@@ -185,7 +185,7 @@ public class MarryCommand extends CommandUtil {
                     break;
                 case "XP":
                     if (!checkPerm(player, "marriage.xp")) return;
-                    if (!CfgSettings.TOGGLE_XP){
+                    if (!CfgSettings.isTOGGLE_XP()){
                         sendMessage(player, Lang.DISABLED.get());
                         return;
                     }
@@ -199,7 +199,7 @@ public class MarryCommand extends CommandUtil {
                     break;
                 default:
                     if (!checkPlayer(player, args[0])) return;
-                    if (!checkBalance(player, CfgSettings.COST_MARRY)) return;
+                    if (!checkBalance(player, CfgSettings.getCOST_MARRY())) return;
                     String playerName = player.getName();
 
                     Player marryPartner = Bukkit.getPlayer(args[0]);
@@ -225,7 +225,7 @@ public class MarryCommand extends CommandUtil {
                         ChatUtil.broadcast(Lang.MARRY_BROADCAST.get()
                                         .replace("{partner}", marryPartnerName)
                                         .replace("{player}", playerName),
-                                "", CfgSettings.BUNGEE);
+                                "", CfgSettings.isBUNGEE());
                     } else {
                         // Sending a request
                         try {
@@ -247,27 +247,32 @@ public class MarryCommand extends CommandUtil {
             }
         }
 
-        else if (args.length > 2){
-            if (arg.equals("C")) {
-                if (!checkPerm(player, "marriage.chat")) return;
-                try {
-                    MarriageUtil.chat(marriagePlayer,
-                            StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " "),
-                            Lang.CHAT_FORMAT.get());
-                } catch (NoPartnerException e) {
-                    sendMessage(player, Lang.NO_PARTNER.get());
-                }
-            } else if (arg.equals("GENDER")){
-                if (!checkPerm(player, "marriage.gender")) return;
-                for (Gender gender : Gender.values()){
-                    if (args[1].equalsIgnoreCase(gender.getName())){
-                        marriagePlayer.setGender(gender);
-                        sendMessage(player, Lang.GENDER_CHANGE.get().replace("{gender}", gender.getColor() + gender.getName()));
-                        playerManager.setPlayer(player, marriagePlayer);
-                        return;
+        else if (args.length >= 2){
+            switch (arg.toUpperCase()){
+                case "GENDER": {
+                    if (!checkPerm(player, "marriage.gender")) return;
+                    for (Gender gender : Gender.values()){
+                        if (args[1].equalsIgnoreCase(gender.getName())){
+                            marriagePlayer.setGender(gender);
+                            sendMessage(player, Lang.GENDER_CHANGE.get().replace("{gender}", gender.getColor() + gender.getName()));
+                            playerManager.setPlayer(player, marriagePlayer);
+                            return;
+                        }
                     }
+                    sendMessage(player, Lang.GENDER_CHANGE_ERROR.get().replace("{gender}", args[1]));
+                    break;
                 }
-                sendMessage(player, Lang.GENDER_CHANGE_ERROR.get().replace("{gender}", args[1]));
+                case "C": {
+                    if (!checkPerm(player, "marriage.chat")) return;
+                    try {
+                        MarriageUtil.chat(marriagePlayer,
+                                StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " "),
+                                Lang.CHAT_FORMAT.get());
+                    } catch (NoPartnerException e) {
+                        sendMessage(player, Lang.NO_PARTNER.get());
+                    }
+                    break;
+                }
             }
         }
 

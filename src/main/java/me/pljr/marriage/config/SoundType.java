@@ -33,7 +33,7 @@ public enum SoundType {
     }
 
     public PLJRSound get(){
-        if (CfgSettings.SOUNDS) return soundTypes.get(this);
+        if (CfgSettings.isSOUNDS()) return soundTypes.get(this);
         return new SoundBuilder(soundTypes.get(this)).withVolume(0).create();
     }
 

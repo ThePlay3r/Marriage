@@ -77,7 +77,7 @@ public class AMarryCommand extends CommandUtil {
                     Player divorcePartner = Bukkit.getPlayer(divorcePartnerId);
                     ChatUtil.broadcast(Lang.UNMARRY_BROADCAST.get()
                             .replace("{partner}", divorcePartner.getName())
-                            .replace("{player}", unmarryTarget.getName()), "", CfgSettings.BUNGEE);
+                            .replace("{player}", unmarryTarget.getName()), "", CfgSettings.isBUNGEE());
                     if (divorcePartnerId != null) {
                         SoundType.DIVORCE.get().play(divorcePartner);
                         TitleType.DIVORCE_PARTNER.get().send(divorcePartner);
@@ -209,7 +209,7 @@ public class AMarryCommand extends CommandUtil {
                 ChatUtil.broadcast(Lang.MARRY_BROADCAST.get()
                                 .replace("{partner}", marryTargetTwoName)
                                 .replace("{player}", marryTargetOneName),
-                        "", CfgSettings.BUNGEE);
+                        "", CfgSettings.isBUNGEE());
             }
         }
     }

@@ -38,7 +38,7 @@ public class  KissListeners implements Listener {
         if (kissing.contains(player) || kissing.contains(target)) return;
         kissing.add(player);
         kissing.add(target);
-        if (CfgSettings.PARTICLES){
+        if (CfgSettings.isPARTICLES()){
             ParticleEffect.HEART.display(player.getLocation().clone().add(0,1,0),
                     0.3f, 0.3f, 0.3f, 1, 4, null);
             ParticleEffect.HEART.display(target.getLocation().clone().add(0,1,0),
