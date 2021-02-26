@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerManager {
+
     private final HashMap<UUID, MarriagePlayer> players;
     private final QueryManager query;
 

@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.UUID;
 
 public class PlayerQuitListener implements Listener {
+
     private final PlayerManager playerManager;
 
     public PlayerQuitListener(PlayerManager playerManager){

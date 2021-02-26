@@ -27,7 +27,7 @@ public enum ActionBarType {
         FileConfiguration fileConfig = config.getConfig();
         for (ActionBarType actionBarType : values()){
             if (!fileConfig.isSet(actionBarType.toString())){
-                config.setPLJRActionBar(actionBarType.toString(), actionBarType.getDefault());
+                config.setPLJRActionBar(actionBarType.toString(), actionBarType.defaultValue);
             }
             actionBars.put(actionBarType, config.getPLJRActionBar(actionBarType.toString()));
         }
@@ -35,10 +35,6 @@ public enum ActionBarType {
     }
 
     public PLJRActionBar get(){
-        return actionBars.get(this);
-    }
-
-    public PLJRActionBar getDefault(){
-        return this.defaultValue;
+        return actionBars.getOrDefault(this, defaultValue);
     }
 }

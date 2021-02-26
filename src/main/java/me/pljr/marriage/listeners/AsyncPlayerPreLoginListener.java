@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 public class AsyncPlayerPreLoginListener implements Listener {
+
     private final PlayerManager playerManager;
 
     public AsyncPlayerPreLoginListener(PlayerManager playerManager){

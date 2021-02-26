@@ -13,6 +13,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 
 public class SharingListeners implements Listener {
+
     private final PlayerManager playerManager;
 
     public SharingListeners(PlayerManager playerManager){

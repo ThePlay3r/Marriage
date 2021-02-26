@@ -1,9 +1,7 @@
 package me.pljr.marriage.menus;
 
-import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.Lang;
 import me.pljr.marriage.config.MenuItem;
-import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.MarriagePlayer;
 import me.pljr.pljrapispigot.builders.GUIBuilder;
 import me.pljr.pljrapispigot.builders.ItemBuilder;
@@ -16,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class MarryMenu {
 
-    public MarryMenu(Player player){
-        PlayerManager playerManager = Marriage.getPlayerManager();
-        MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
+    public MarryMenu(MarriagePlayer marriagePlayer){
+        Player player = Bukkit.getPlayer(marriagePlayer.getUniqueId());
+        if (player == null) return;
 
         GUIBuilder builder = new GUIBuilder(Lang.MARRY_MENU_TITLE.get(), 6);
         for (int i = 0; i<45;i++){

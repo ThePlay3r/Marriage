@@ -1,12 +1,16 @@
 package me.pljr.marriage.objects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.pljr.marriage.config.Gender;
+import me.pljr.marriage.managers.PlayerManager;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Setter @Getter
 public class MarriagePlayer {
     private final UUID uniqueId;
     private Gender gender;
@@ -45,74 +49,6 @@ public class MarriagePlayer {
         this.requests = new ArrayList<>();
     }
 
-    public UUID getUniqueId() {
-        return uniqueId;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public UUID getPartnerID() {
-        return partnerID;
-    }
-
-    public void setPartnerID(UUID partnerID) {
-        this.partnerID = partnerID;
-    }
-
-    public boolean isPvp() {
-        return pvp;
-    }
-
-    public void setPvp(boolean pvp) {
-        this.pvp = pvp;
-    }
-
-    public long getLastSeen() {
-        return lastSeen;
-    }
-
-    public void setLastSeen(long lastSeen) {
-        this.lastSeen = lastSeen;
-    }
-
-    public Location getHome() {
-        return home;
-    }
-
-    public void setHome(Location home) {
-        this.home = home;
-    }
-
-    public boolean isSpy() {
-        return spy;
-    }
-
-    public void setSpy(boolean spy) {
-        this.spy = spy;
-    }
-
-    public boolean isSharedFood() {
-        return sharedFood;
-    }
-
-    public void setSharedFood(boolean sharedFood) {
-        this.sharedFood = sharedFood;
-    }
-
-    public boolean isSharedXP() {
-        return sharedXP;
-    }
-
-    public void setSharedXP(boolean sharedXP) {
-        this.sharedXP = sharedXP;
-    }
-
     public void addRequest(UUID uuid){
         if (this.requests.contains(uuid)) return;
         this.requests.add(uuid);
@@ -124,9 +60,5 @@ public class MarriagePlayer {
 
     public void clearRequests(){
         this.requests.clear();
-    }
-
-    public List<UUID> getRequests() {
-        return requests;
     }
 }

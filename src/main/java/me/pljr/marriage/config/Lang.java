@@ -95,7 +95,7 @@ public enum Lang {
         FileConfiguration fileConfig = config.getConfig();
         for (Lang lang : values()){
             if (!fileConfig.isSet(lang.toString())){
-                fileConfig.set(lang.toString(), lang.getDefault());
+                fileConfig.set(lang.toString(), lang.defaultValue);
             }
             Lang.lang.put(lang, config.getString(lang.toString()));
         }
@@ -103,10 +103,6 @@ public enum Lang {
     }
 
     public String get(){
-        return lang.get(this);
-    }
-
-    public String getDefault(){
-        return defaultValue;
+        return lang.getOrDefault(this, defaultValue);
     }
 }

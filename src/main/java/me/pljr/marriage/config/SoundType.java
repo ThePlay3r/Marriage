@@ -25,19 +25,14 @@ public enum SoundType {
         FileConfiguration fileConfig = config.getConfig();
         for (SoundType soundType : values()){
             if (!fileConfig.isSet(soundType.toString())){
-                config.setPLJRSound(soundType.toString(), new SoundBuilder(soundType.getDefault()).create());
+                config.setPLJRSound(soundType.toString(), new SoundBuilder(soundType.defaultValue).create());
+            }else{
+                soundTypes.put(soundType, config.getPLJRSound(soundType.toString()));
             }
-            soundTypes.put(soundType, config.getPLJRSound(soundType.toString()));
         }
         config.save();
     }
 
     public PLJRSound get(){
-        if (CfgSettings.isSOUNDS()) return soundTypes.get(this);
-        return new SoundBuilder(soundTypes.get(this)).withVolume(0).create();
-    }
-
-    public PLJRSound getDefault(){
-        return defaultValue;
-    }
-}
+        return soundTypes.getOrDefault(this, defaultValue);
+    }}

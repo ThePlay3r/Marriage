@@ -35,7 +35,7 @@ public enum MenuItem {
         FileConfiguration fileConfig = config.getConfig();
         for (MenuItem menuItem : values()){
             if (!fileConfig.isSet(menuItem.toString())){
-                config.setSimpleItemStack(menuItem.toString(), menuItem.getDefault());
+                config.setSimpleItemStack(menuItem.toString(), menuItem.defaultValue);
             }
             menuItems.put(menuItem, config.getSimpleItemStack(menuItem.toString()));
         }
@@ -43,10 +43,6 @@ public enum MenuItem {
     }
 
     public ItemStack get(){
-        return menuItems.get(this);
-    }
-
-    public ItemStack getDefault(){
-        return defaultValue;
+        return menuItems.getOrDefault(this, defaultValue);
     }
 }

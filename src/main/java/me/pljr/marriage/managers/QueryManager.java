@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class QueryManager {
+
     private final Plugin plugin;
     private final DataSource dataSource;
 

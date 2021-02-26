@@ -16,13 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class  KissListeners implements Listener {
+
     private final Plugin plugin;
     private final PlayerManager playerManager;
+    private final CfgSettings settings;
+
     private final List<Player> kissing;
 
-    public KissListeners(Plugin plugin, PlayerManager playerManager){
+
+    public KissListeners(Plugin plugin, PlayerManager playerManager, CfgSettings settings){
         this.plugin = plugin;
         this.playerManager = playerManager;
+        this.settings = settings;
+
         this.kissing = new ArrayList<>();
     }
 
@@ -38,7 +44,7 @@ public class  KissListeners implements Listener {
         if (kissing.contains(player) || kissing.contains(target)) return;
         kissing.add(player);
         kissing.add(target);
-        if (CfgSettings.isPARTICLES()){
+        if (settings.isParticles()){
             ParticleEffect.HEART.display(player.getLocation().clone().add(0,1,0),
                     0.3f, 0.3f, 0.3f, 1, 4, null);
             ParticleEffect.HEART.display(target.getLocation().clone().add(0,1,0),

@@ -24,18 +24,15 @@ public enum TitleType {
         FileConfiguration fileConfig = config.getConfig();
         for (TitleType titleType : values()){
             if (!fileConfig.isSet(titleType.toString())){
-                config.setPLJRTitle(titleType.toString(), titleType.getDefault());
+                config.setPLJRTitle(titleType.toString(), titleType.defaultValue);
+            }else{
+                titleTypes.put(titleType, config.getPLJRTitle(titleType.toString()));
             }
-            titleTypes.put(titleType, config.getPLJRTitle(titleType.toString()));
         }
         config.save();
     }
 
     public PLJRTitle get(){
-        return titleTypes.get(this);
-    }
-
-    public PLJRTitle getDefault(){
-        return this.defaultValue;
+        return titleTypes.getOrDefault(this, defaultValue);
     }
 }

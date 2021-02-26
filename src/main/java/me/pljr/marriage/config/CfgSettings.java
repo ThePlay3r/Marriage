@@ -3,35 +3,27 @@ package me.pljr.marriage.config;
 import lombok.Getter;
 import me.pljr.pljrapispigot.managers.ConfigManager;
 
+@Getter
 public class CfgSettings {
-    @Getter
-    private static boolean BUNGEE = false;
-    @Getter
-    private static boolean PARTICLES = true;
-    @Getter
-    private static boolean SOUNDS = true;
-    @Getter
-    private static boolean TOGGLE_XP = true;
-    @Getter
-    private static boolean TOGGLE_PVP = true;
-    @Getter
-    private static boolean TOGGLE_FOOD = true;
-    @Getter
-    private static boolean MENU = true;
-    @Getter
-    private static int COST_MARRY = 7500;
-    @Getter
-    private static int COST_DIVORCE = 5000;
+    private final boolean bungee;
+    private final boolean particles;
+    private final boolean sounds;
+    private final boolean toggleXP;
+    private final boolean togglePVP;
+    private final boolean toggleFood;
+    private final boolean menu;
+    private final int costMarry;
+    private final int costDivorce;
 
-    public static void load(ConfigManager config){
-        BUNGEE = config.getBoolean("settings.bungee");
-        PARTICLES = config.getBoolean("settings.particles");
-        SOUNDS = config.getBoolean("settings.sounds");
-        TOGGLE_XP = config.getBoolean("settings.toggle-xp");
-        TOGGLE_PVP = config.getBoolean("settings.toggle-pvp");
-        TOGGLE_FOOD = config.getBoolean("settings.toggle-food");
-        MENU = config.getBoolean("settings.menu");
-        COST_MARRY = config.getInt("settings.cost-marry");
-        COST_DIVORCE = config.getInt("settings.cost-divorce");
+    public CfgSettings(ConfigManager config){
+        bungee = config.getBoolean("settings.bungee");
+        particles = config.getBoolean("settings.particles");
+        sounds = config.getBoolean("settings.sounds");
+        toggleXP = config.getBoolean("settings.toggle-xp");
+        togglePVP = config.getBoolean("settings.toggle-pvp");
+        toggleFood = config.getBoolean("settings.toggle-food");
+        menu = config.getBoolean("settings.menu");
+        costMarry = config.getInt("settings.cost-marry");
+        costDivorce = config.getInt("settings.cost-divorce");
     }
 }

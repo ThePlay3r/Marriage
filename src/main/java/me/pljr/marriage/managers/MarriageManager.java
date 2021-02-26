@@ -1,28 +1,32 @@
-package me.pljr.marriage.utils;
+package me.pljr.marriage.managers;
 
-import me.pljr.marriage.Marriage;
-import me.pljr.marriage.config.CfgSettings;
 import me.pljr.marriage.config.Lang;
 import me.pljr.marriage.exceptions.HasPartnerException;
 import me.pljr.marriage.exceptions.NoHomeException;
 import me.pljr.marriage.exceptions.NoPartnerException;
-import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.MarriagePlayer;
 import me.pljr.pljrapispigot.exceptions.NoHeldItemException;
 import me.pljr.pljrapispigot.exceptions.PlayerOfflineException;
 import me.pljr.pljrapispigot.utils.BungeeUtil;
 import me.pljr.pljrapispigot.utils.ChatUtil;
-import me.pljr.pljrapispigot.utils.FormatUtil;
 import me.pljr.pljrapispigot.utils.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
 
-public class MarriageUtil {
-    private final static PlayerManager playerManager = Marriage.getPlayerManager();
+public class MarriageManager {
+
+    private final JavaPlugin plugin;
+    private final PlayerManager playerManager;
+
+    public MarriageManager(JavaPlugin plugin, PlayerManager playerManager){
+        this.plugin = plugin;
+        this.playerManager = playerManager;
+    }
 
     /**
      * Tries to marry two players.
@@ -32,7 +36,7 @@ public class MarriageUtil {
      *
      * @throws HasPartnerException If one of the players already has a partner.
      */
-    public static void marry(MarriagePlayer marriagePlayer, MarriagePlayer marriagePartner) throws HasPartnerException {
+    public void marry(MarriagePlayer marriagePlayer, MarriagePlayer marriagePartner) throws HasPartnerException {
         UUID playerId = marriagePlayer.getUniqueId();
         UUID partnerId = marriagePartner.getUniqueId();
         if (marriagePlayer.getPartnerID() != null) throw new HasPartnerException(playerId);
@@ -42,7 +46,7 @@ public class MarriageUtil {
         marriagePlayer.setPartnerID(partnerId);
         marriagePartner.clearRequests();
         marriagePartner.setPartnerID(playerId);
-        playerManager.setPlayer(playerId, marriagePlayer);
+        playerManager.setPlayer(partnerId, marriagePartner);
         playerManager.setPlayer(partnerId, marriagePartner);
     }
 
@@ -53,7 +57,7 @@ public class MarriageUtil {
      *
      * @throws NoPartnerException If player does not have a partner.
      */
-    public static void divorce(MarriagePlayer marriagePlayer) throws NoPartnerException {
+    public void divorce(MarriagePlayer marriagePlayer) throws NoPartnerException {
         UUID playerId = marriagePlayer.getUniqueId();
         UUID partnerId = marriagePlayer.getPartnerID();
         if (partnerId == null) throw new NoPartnerException(playerId);
@@ -74,7 +78,7 @@ public class MarriageUtil {
      *
      * @throws HasPartnerException If one of the players already has a partner.
      */
-    public static void request(MarriagePlayer marriagePlayer, MarriagePlayer marriageRequest) throws HasPartnerException {
+    public void request(MarriagePlayer marriagePlayer, MarriagePlayer marriageRequest) throws HasPartnerException {
         UUID playerId = marriagePlayer.getUniqueId();
         UUID requestId = marriageRequest.getUniqueId();
         if (marriagePlayer.getPartnerID() != null) throw new HasPartnerException(playerId);
@@ -90,17 +94,18 @@ public class MarriageUtil {
      * @param marriagePlayer Player, whos partner will receive the message.
      * @param message Message which will be send to both partner and player.
      * @param format Format of the message, available placeholders are {name} and {message}.
+     * @param bungee Determines if the message should be sent thru the bungee or just this server.
      *
      * @throws NoPartnerException If player does not have a partner.
      */
-    public static void chat(MarriagePlayer marriagePlayer, String message, String format) throws NoPartnerException {
+    public void chat(MarriagePlayer marriagePlayer, String message, String format, boolean bungee) throws NoPartnerException {
         if (marriagePlayer.getPartnerID() == null) throw new NoPartnerException(marriagePlayer.getUniqueId());
 
         String playerName = PlayerUtil.getName(marriagePlayer.getUniqueId());
         format = format
                 .replace("{name}", playerName)
                 .replace("{message}", message);
-        if (CfgSettings.isBUNGEE()){
+        if (bungee){
             String partnerName = PlayerUtil.getName(marriagePlayer.getPartnerID());
             BungeeUtil.message(playerName, format);
             BungeeUtil.message(partnerName, format);
@@ -110,7 +115,7 @@ public class MarriageUtil {
             if (player != null) ChatUtil.sendMessage(player, format);
             if (partner != null) ChatUtil.sendMessage(partner, format);
         }
-        Bukkit.getScheduler().runTaskAsynchronously(Marriage.getInstance(), ()->{
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
             for (Player player : Bukkit.getOnlinePlayers()){
                 if (!player.hasPermission("marriage.admin.spy")) continue;
                 MarriagePlayer marriageAdmin = playerManager.getPlayer(player);
@@ -132,7 +137,7 @@ public class MarriageUtil {
      * @throws PlayerOfflineException If partner is offline.
      * @throws NoHeldItemException If player is not holding any item.
      */
-    public static void gift(MarriagePlayer marriagePlayer) throws NoPartnerException, PlayerOfflineException, NoHeldItemException {
+    public void gift(MarriagePlayer marriagePlayer) throws NoPartnerException, PlayerOfflineException, NoHeldItemException {
         if (marriagePlayer.getPartnerID() == null) throw new NoPartnerException(marriagePlayer.getUniqueId());
 
         UUID partnerId = marriagePlayer.getPartnerID();
@@ -159,7 +164,7 @@ public class MarriageUtil {
      *
      * @throws NoHomeException If the owner does not have set up a home.
      */
-    public static void home(Player player, MarriagePlayer marriagePlayer) throws NoHomeException {
+    public void home(Player player, MarriagePlayer marriagePlayer) throws NoHomeException {
         if (marriagePlayer.getHome() == null) throw new NoHomeException(marriagePlayer.getUniqueId());
         PlayerUtil.teleport(player, marriagePlayer.getHome());
     }
@@ -172,7 +177,7 @@ public class MarriageUtil {
      *
      * @throws NoPartnerException If marriage player does not have a partner.
      */
-    public static void setHome(Player player, MarriagePlayer marriagePlayer) throws NoPartnerException {
+    public void setHome(Player player, MarriagePlayer marriagePlayer) throws NoPartnerException {
         UUID playerId = marriagePlayer.getUniqueId();
         UUID partnerId = marriagePlayer.getPartnerID();
         if (partnerId == null) throw new NoPartnerException(playerId);
@@ -191,11 +196,11 @@ public class MarriageUtil {
      * Tries to get the last time, player's partner was online.
      *
      * @param marriagePlayer Marriage player whos partner's time will be sent.
-     * @return The last tiime player's partner was on the server.
+     * @return The last time player's partner was on the server in milliseconds.
      *
      * @throws NoPartnerException If player does not have a partner.
      */
-    public static long lastSeen(MarriagePlayer marriagePlayer) throws NoPartnerException {
+    public long lastSeen(MarriagePlayer marriagePlayer) throws NoPartnerException {
         UUID partnerId = marriagePlayer.getPartnerID();
         if (partnerId == null) throw new NoPartnerException(marriagePlayer.getUniqueId());
 
@@ -211,7 +216,7 @@ public class MarriageUtil {
      * @throws NoPartnerException If the player does not have a partner.
      * @throws PlayerOfflineException If the partner is offline.
      */
-    public static void teleport(MarriagePlayer marriagePlayer) throws NoPartnerException, PlayerOfflineException {
+    public void teleport(MarriagePlayer marriagePlayer) throws NoPartnerException, PlayerOfflineException {
         UUID playerId = marriagePlayer.getUniqueId();
         UUID partnerId = marriagePlayer.getPartnerID();
         if (partnerId == null) throw new NoPartnerException(playerId);

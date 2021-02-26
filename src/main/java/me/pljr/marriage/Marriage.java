@@ -4,25 +4,29 @@ import me.pljr.marriage.commands.AMarryCommand;
 import me.pljr.marriage.commands.MarryCommand;
 import me.pljr.marriage.config.*;
 import me.pljr.marriage.listeners.*;
+import me.pljr.marriage.managers.MarriageManager;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.managers.QueryManager;
 import me.pljr.pljrapispigot.database.DataSource;
 import me.pljr.pljrapispigot.managers.ConfigManager;
+import me.pljr.pljrapispigot.utils.BStatsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Marriage extends JavaPlugin {
-    private static Marriage instance;
+    private static final int BSTATS_ID = 10454;
 
-    private static ConfigManager configManager;
+    private ConfigManager configManager;
+    private CfgSettings cfgSettings;
 
-    private static PlayerManager playerManager;
-    private static QueryManager queryManager;
+    private PlayerManager playerManager;
+    private QueryManager queryManager;
+    private MarriageManager marriageManager;
 
     @Override
     public void onEnable() {
-        instance = this;
+        BStatsUtil.addMetrics(this, BSTATS_ID);
         setupConfig();
         setupDatabase();
         setupManagers();
@@ -37,7 +41,7 @@ public final class Marriage extends JavaPlugin {
         saveDefaultConfig();
         saveConfig();
         configManager = new ConfigManager(this, "config.yml");
-        CfgSettings.load(configManager);
+        cfgSettings = new CfgSettings(configManager);
         Lang.load(new ConfigManager(this, "lang.yml"));
         MenuItem.load(new ConfigManager(this, "menus.yml"));
         SoundType.load(new ConfigManager(this, "sounds.yml"));
@@ -53,31 +57,20 @@ public final class Marriage extends JavaPlugin {
 
     private void setupManagers(){
         playerManager = new PlayerManager(queryManager);
+        marriageManager = new MarriageManager(this, playerManager);
     }
 
     private void setupListeners(){
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new AsyncPlayerPreLoginListener(playerManager), this);
         pluginManager.registerEvents(new PlayerQuitListener(playerManager), this);
-        pluginManager.registerEvents(new KissListeners(this, playerManager), this);
+        pluginManager.registerEvents(new KissListeners(this, playerManager, cfgSettings), this);
         pluginManager.registerEvents(new PvPListeners(playerManager), this);
         pluginManager.registerEvents(new SharingListeners(playerManager), this);
     }
 
     private void setupCommands(){
-        new MarryCommand(this, playerManager).registerCommand(this);
-        new AMarryCommand(playerManager).registerCommand(this);
-    }
-
-    public static Marriage getInstance() {
-        return instance;
-    }
-    public static PlayerManager getPlayerManager() {
-        return playerManager;
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+        new MarryCommand(this, playerManager, marriageManager, cfgSettings).registerCommand(this);
+        new AMarryCommand(this, playerManager, marriageManager, cfgSettings).registerCommand(this);
     }
 }

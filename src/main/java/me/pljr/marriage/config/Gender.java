@@ -30,38 +30,27 @@ public enum Gender {
         FileConfiguration fileConfig = config.getConfig();
         for (Gender gender : values()){
             if (!fileConfig.isSet(gender.toString())){
-                fileConfig.set(gender.toString()+".name", gender.getDefaultName());
-                fileConfig.set(gender.toString()+".symbol", gender.getDefaultSymbol());
-                fileConfig.set(gender.toString()+".color", gender.getDefaultColor());
+                fileConfig.set(gender.toString()+".name", gender.defaultName);
+                fileConfig.set(gender.toString()+".symbol", gender.defaultSymbol);
+                fileConfig.set(gender.toString()+".color", gender.defaultColor);
+            }else{
+                names.put(gender, config.getString(gender.toString()+".name"));
+                symbols.put(gender, config.getString(gender.toString()+".symbol"));
+                colors.put(gender, config.getString(gender.toString()+".color"));
             }
-            names.put(gender, config.getString(gender.toString()+".name"));
-            symbols.put(gender, config.getString(gender.toString()+".symbol"));
-            colors.put(gender, config.getString(gender.toString()+".color"));
         }
         config.save();
     }
 
     public String getName(){
-        return names.get(this);
+        return names.getOrDefault(this, defaultName);
     }
 
     public String getSymbol(){
-        return symbols.get(this);
+        return symbols.getOrDefault(this, defaultSymbol);
     }
 
     public String getColor(){
-        return colors.get(this);
-    }
-
-    public String getDefaultName() {
-        return defaultName;
-    }
-
-    public String getDefaultSymbol() {
-        return defaultSymbol;
-    }
-
-    public String getDefaultColor() {
-        return defaultColor;
+        return colors.getOrDefault(this, defaultColor);
     }
 }

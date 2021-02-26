@@ -1,5 +1,6 @@
 package me.pljr.marriage.commands;
 
+import lombok.AllArgsConstructor;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgSettings;
 import me.pljr.marriage.config.Lang;
@@ -8,9 +9,9 @@ import me.pljr.marriage.config.TitleType;
 import me.pljr.marriage.exceptions.HasPartnerException;
 import me.pljr.marriage.exceptions.NoHomeException;
 import me.pljr.marriage.exceptions.NoPartnerException;
+import me.pljr.marriage.managers.MarriageManager;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.MarriagePlayer;
-import me.pljr.marriage.utils.MarriageUtil;
 import me.pljr.pljrapispigot.builders.TitleBuilder;
 import me.pljr.pljrapispigot.utils.ChatUtil;
 import me.pljr.pljrapispigot.utils.CommandUtil;
@@ -20,11 +21,18 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class AMarryCommand extends CommandUtil {
-    private final PlayerManager playerManager;
 
-    public AMarryCommand(PlayerManager playerManager) {
+    private final Marriage marriage;
+    private final PlayerManager playerManager;
+    private final MarriageManager manager;
+    private final CfgSettings settings;
+
+    public AMarryCommand(Marriage marriage, PlayerManager playerManager, MarriageManager manager, CfgSettings settings) {
         super("amarry", "marriage.admin");
+        this.marriage = marriage;
         this.playerManager = playerManager;
+        this.manager = manager;
+        this.settings = settings;
     }
 
     @Override
@@ -54,7 +62,7 @@ public class AMarryCommand extends CommandUtil {
                     break;
                 case "RELOAD":
                     if (!checkPerm(player, "marriage.admin.reload")) return;
-                    Marriage.getInstance().setupConfig();
+                    marriage.setupConfig();
                     sendMessage(player, Lang.RELOAD.get());
                     break;
             }
@@ -69,7 +77,7 @@ public class AMarryCommand extends CommandUtil {
                     MarriagePlayer marriageUnmarryTarget = playerManager.getPlayer(unmarryTarget);
                     UUID divorcePartnerId = marriageUnmarryTarget.getPartnerID();
                     try {
-                        MarriageUtil.divorce(marriageUnmarryTarget);
+                        manager.divorce(marriageUnmarryTarget);
                     } catch (NoPartnerException e) {
                         sendMessage(player, Lang.NO_PARTNER_PLAYER.get().replace("{name}", unmarryTarget.getName()));
                         return;
@@ -77,7 +85,7 @@ public class AMarryCommand extends CommandUtil {
                     Player divorcePartner = Bukkit.getPlayer(divorcePartnerId);
                     ChatUtil.broadcast(Lang.UNMARRY_BROADCAST.get()
                             .replace("{partner}", divorcePartner.getName())
-                            .replace("{player}", unmarryTarget.getName()), "", CfgSettings.isBUNGEE());
+                            .replace("{player}", unmarryTarget.getName()), "", settings.isBungee());
                     if (divorcePartnerId != null) {
                         SoundType.DIVORCE.get().play(divorcePartner);
                         TitleType.DIVORCE_PARTNER.get().send(divorcePartner);
@@ -92,7 +100,7 @@ public class AMarryCommand extends CommandUtil {
                     String targetName = target.getName();
                     MarriagePlayer marriageTarget = playerManager.getPlayer(target);
                     try {
-                        MarriageUtil.setHome(player, marriageTarget);
+                        manager.setHome(player, marriageTarget);
                     } catch (NoPartnerException e) {
                         sendMessage(player, Lang.NO_PARTNER_PLAYER.get().replace("{name}", targetName));
                         return;
@@ -107,7 +115,7 @@ public class AMarryCommand extends CommandUtil {
                     String targetName = target.getName();
                     MarriagePlayer marriageTarget = playerManager.getPlayer(target);
                     try {
-                        MarriageUtil.home(player, marriageTarget);
+                        manager.home(player, marriageTarget);
                     } catch (NoHomeException e) {
                         sendMessage(player, Lang.NO_HOME_PLAYER.get().replace("{name}", targetName));
                         return;
@@ -187,7 +195,7 @@ public class AMarryCommand extends CommandUtil {
                 MarriagePlayer marriageTargetOne = playerManager.getPlayer(marryTargetOneId);
                 MarriagePlayer marriageTargetTwo = playerManager.getPlayer(marryTargetTwoId);
                 try {
-                    MarriageUtil.marry(marriageTargetOne, marriageTargetTwo);
+                    manager.marry(marriageTargetOne, marriageTargetTwo);
                 } catch (HasPartnerException e) {
                     if (e.getSource() == marryTargetOneId) {
                         sendMessage(player, Lang.HAS_PARTNER.get().replace("{name}", marryTargetOne.getName()));
@@ -209,7 +217,7 @@ public class AMarryCommand extends CommandUtil {
                 ChatUtil.broadcast(Lang.MARRY_BROADCAST.get()
                                 .replace("{partner}", marryTargetTwoName)
                                 .replace("{player}", marryTargetOneName),
-                        "", CfgSettings.isBUNGEE());
+                        "", settings.isBungee());
             }
         }
     }

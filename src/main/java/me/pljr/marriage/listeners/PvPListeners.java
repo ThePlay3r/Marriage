@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class PvPListeners implements Listener {
+
     private final PlayerManager playerManager;
 
     public PvPListeners(PlayerManager playerManager){
