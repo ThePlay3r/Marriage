@@ -9,10 +9,10 @@ import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.menus.MarryMenu;
 import me.pljr.marriage.objects.MarriagePlayer;
 import me.pljr.pljrapispigot.builders.TitleBuilder;
+import me.pljr.pljrapispigot.commands.BukkitCommand;
 import me.pljr.pljrapispigot.exceptions.NoHeldItemException;
 import me.pljr.pljrapispigot.exceptions.PlayerOfflineException;
 import me.pljr.pljrapispigot.utils.ChatUtil;
-import me.pljr.pljrapispigot.utils.CommandUtil;
 import me.pljr.pljrapispigot.utils.FormatUtil;
 import me.pljr.pljrapispigot.utils.PlayerUtil;
 import org.apache.commons.lang.ArrayUtils;
@@ -23,7 +23,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
-public class MarryCommand extends CommandUtil {
+public class MarryCommand extends BukkitCommand {
 
     private final Plugin plugin;
     private final PlayerManager playerManager;

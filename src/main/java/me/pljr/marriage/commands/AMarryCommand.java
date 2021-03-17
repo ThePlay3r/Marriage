@@ -1,6 +1,5 @@
 package me.pljr.marriage.commands;
 
-import lombok.AllArgsConstructor;
 import me.pljr.marriage.Marriage;
 import me.pljr.marriage.config.CfgSettings;
 import me.pljr.marriage.config.Lang;
@@ -13,14 +12,14 @@ import me.pljr.marriage.managers.MarriageManager;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.MarriagePlayer;
 import me.pljr.pljrapispigot.builders.TitleBuilder;
+import me.pljr.pljrapispigot.commands.BukkitCommand;
 import me.pljr.pljrapispigot.utils.ChatUtil;
-import me.pljr.pljrapispigot.utils.CommandUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class AMarryCommand extends CommandUtil {
+public class AMarryCommand extends BukkitCommand {
 
     private final Marriage marriage;
     private final PlayerManager playerManager;

@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.github.ThePlay3r</groupId>
             <artifactId>PLJRApi-Spigot</artifactId>
-            <version>v2.0.2</version>
+            <version>v2.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

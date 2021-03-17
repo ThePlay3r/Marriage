@@ -7,6 +7,7 @@ import me.pljr.marriage.listeners.*;
 import me.pljr.marriage.managers.MarriageManager;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.managers.QueryManager;
+import me.pljr.pljrapispigot.PLJRApiSpigot;
 import me.pljr.pljrapispigot.database.DataSource;
 import me.pljr.pljrapispigot.managers.ConfigManager;
 import me.pljr.pljrapispigot.utils.BStatsUtil;
@@ -16,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Marriage extends JavaPlugin {
     private static final int BSTATS_ID = 10454;
+
+    private PLJRApiSpigot pljrApiSpigot;
 
     private ConfigManager configManager;
     private CfgSettings cfgSettings;
@@ -27,6 +30,7 @@ public final class Marriage extends JavaPlugin {
     @Override
     public void onEnable() {
         BStatsUtil.addMetrics(this, BSTATS_ID);
+        if (!setupPLJRApi()) return;
         setupConfig();
         setupDatabase();
         setupManagers();
@@ -35,6 +39,15 @@ public final class Marriage extends JavaPlugin {
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             new PapiExpansion(this, playerManager).register();
         }
+    }
+
+    public boolean setupPLJRApi(){
+        if (PLJRApiSpigot.get() == null){
+            getLogger().warning("PLJRApi-Spigot is not enabled!");
+            return false;
+        }
+        pljrApiSpigot = PLJRApiSpigot.get();
+        return true;
     }
 
     public void setupConfig(){
@@ -51,7 +64,7 @@ public final class Marriage extends JavaPlugin {
     }
 
     private void setupDatabase(){
-        DataSource dataSource = DataSource.getFromConfig(configManager);
+        DataSource dataSource = pljrApiSpigot.getDataSource(configManager);
         queryManager = new QueryManager(this, dataSource);
     }
 
