@@ -6,22 +6,18 @@ import me.pljr.pljrapispigot.database.DataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class QueryManager {
 
-    private final Plugin plugin;
     private final DataSource dataSource;
 
-    public QueryManager(Plugin plugin, DataSource dataSource){
-        this.plugin = plugin;
+    public QueryManager(DataSource dataSource){
         this.dataSource = dataSource;
 
         try {
@@ -47,10 +43,6 @@ public class QueryManager {
         }catch (SQLException e){
             e.printStackTrace();
         }
-    }
-
-    public void loadPlayerAsync(UUID uuid, Consumer<MarriagePlayer> consumer){
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> consumer.accept(loadPlayer(uuid)));
     }
 
     public MarriagePlayer loadPlayer(UUID uuid){
@@ -101,10 +93,6 @@ public class QueryManager {
             e.printStackTrace();
         }
         return new MarriagePlayer(uuid);
-    }
-
-    public void savePlayerAsync(MarriagePlayer player){
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> savePlayer(player));
     }
 
     public void savePlayer(MarriagePlayer player){

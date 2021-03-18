@@ -1,7 +1,7 @@
 package me.pljr.marriage.listeners;
 
 import me.pljr.marriage.config.ActionBarType;
-import me.pljr.marriage.config.CfgSettings;
+import me.pljr.marriage.config.Settings;
 import me.pljr.marriage.managers.PlayerManager;
 import me.pljr.marriage.objects.MarriagePlayer;
 import me.pljr.pljrapispigot.xenondevs.particle.ParticleEffect;
@@ -19,12 +19,12 @@ public class  KissListeners implements Listener {
 
     private final Plugin plugin;
     private final PlayerManager playerManager;
-    private final CfgSettings settings;
+    private final Settings settings;
 
     private final List<Player> kissing;
 
 
-    public KissListeners(Plugin plugin, PlayerManager playerManager, CfgSettings settings){
+    public KissListeners(Plugin plugin, PlayerManager playerManager, Settings settings){
         this.plugin = plugin;
         this.playerManager = playerManager;
         this.settings = settings;
@@ -36,7 +36,7 @@ public class  KissListeners implements Listener {
     public void onInteract(PlayerInteractEntityEvent event){
         if (!(event.getRightClicked() instanceof Player)) return;
         Player player = event.getPlayer();
-        MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
+        MarriagePlayer marriagePlayer = playerManager.getPlayer(player.getUniqueId());
         if (marriagePlayer.getPartnerID() == null) return;
         Player target = (Player) event.getRightClicked();
         // Converted to String, because comparing as UUIDs doesn't work, why should it, right? RIGHT?! ¯\_(ツ)_/¯

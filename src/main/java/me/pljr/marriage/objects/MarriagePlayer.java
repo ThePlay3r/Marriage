@@ -3,7 +3,6 @@ package me.pljr.marriage.objects;
 import lombok.Getter;
 import lombok.Setter;
 import me.pljr.marriage.config.Gender;
-import me.pljr.marriage.managers.PlayerManager;
 import org.bukkit.Location;
 
 import java.util.ArrayList;

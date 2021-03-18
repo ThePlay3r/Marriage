@@ -24,7 +24,7 @@ public class SharingListeners implements Listener {
     public void onFoodChange(FoodLevelChangeEvent event){
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
+        MarriagePlayer marriagePlayer = playerManager.getPlayer(player.getUniqueId());
         if (!marriagePlayer.isSharedFood()) return;
         if (marriagePlayer.getPartnerID() == null) return;
         if (!PlayerUtil.isPlayer(marriagePlayer.getPartnerID())) return;
@@ -46,7 +46,7 @@ public class SharingListeners implements Listener {
     @EventHandler
     public void onExpChange(PlayerExpChangeEvent event){
         Player player = event.getPlayer();
-        MarriagePlayer marriagePlayer = playerManager.getPlayer(player);
+        MarriagePlayer marriagePlayer = playerManager.getPlayer(player.getUniqueId());
         if (!marriagePlayer.isSharedFood()) return;
         if (marriagePlayer.getPartnerID() == null) return;
         if (!PlayerUtil.isPlayer(marriagePlayer.getPartnerID())) return;

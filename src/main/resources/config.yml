@@ -36,4 +36,5 @@ settings:
   menu: true #-> Should /marry open a GUI? (false = help message will be send instead)
   cost-marry: 7500 #-> How much should marrying someone cost?
   cost-divorce: 5000 #-> How much should divorcing someone cost?
+  cache-players: true #-> Should we save player data in memory? (false = loading on each join)
 #|--------------------------------------------------------------------------------------------------------------------|#

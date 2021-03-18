@@ -15,13 +15,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public final class Marriage extends JavaPlugin {
     private static final int BSTATS_ID = 10454;
 
+    public static Logger log;
     private PLJRApiSpigot pljrApiSpigot;
 
     private ConfigManager configManager;
-    private CfgSettings cfgSettings;
+    private Settings settings;
 
     private PlayerManager playerManager;
     private QueryManager queryManager;
@@ -30,6 +33,7 @@ public final class Marriage extends JavaPlugin {
     @Override
     public void onEnable() {
         BStatsUtil.addMetrics(this, BSTATS_ID);
+        log = getLogger();
         if (!setupPLJRApi()) return;
         setupConfig();
         setupDatabase();
@@ -54,7 +58,7 @@ public final class Marriage extends JavaPlugin {
         saveDefaultConfig();
         saveConfig();
         configManager = new ConfigManager(this, "config.yml");
-        cfgSettings = new CfgSettings(configManager);
+        settings = new Settings(configManager);
         Lang.load(new ConfigManager(this, "lang.yml"));
         MenuItem.load(new ConfigManager(this, "menus.yml"));
         SoundType.load(new ConfigManager(this, "sounds.yml"));
@@ -65,11 +69,12 @@ public final class Marriage extends JavaPlugin {
 
     private void setupDatabase(){
         DataSource dataSource = pljrApiSpigot.getDataSource(configManager);
-        queryManager = new QueryManager(this, dataSource);
+        dataSource.initPool("Marriage-Pool");
+        queryManager = new QueryManager(dataSource);
     }
 
     private void setupManagers(){
-        playerManager = new PlayerManager(queryManager);
+        playerManager = new PlayerManager(this, queryManager, settings.isCachePlayers());
         marriageManager = new MarriageManager(this, playerManager);
     }
 
@@ -77,13 +82,13 @@ public final class Marriage extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new AsyncPlayerPreLoginListener(playerManager), this);
         pluginManager.registerEvents(new PlayerQuitListener(playerManager), this);
-        pluginManager.registerEvents(new KissListeners(this, playerManager, cfgSettings), this);
+        pluginManager.registerEvents(new KissListeners(this, playerManager, settings), this);
         pluginManager.registerEvents(new PvPListeners(playerManager), this);
         pluginManager.registerEvents(new SharingListeners(playerManager), this);
     }
 
     private void setupCommands(){
-        new MarryCommand(this, playerManager, marriageManager, cfgSettings).registerCommand(this);
-        new AMarryCommand(this, playerManager, marriageManager, cfgSettings).registerCommand(this);
+        new MarryCommand(this, playerManager, marriageManager, settings).registerCommand(this);
+        new AMarryCommand(this, playerManager, marriageManager, settings).registerCommand(this);
     }
 }

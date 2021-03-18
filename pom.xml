@@ -6,7 +6,7 @@
 
     <groupId>me.pljr</groupId>
     <artifactId>Marriage</artifactId>
-    <version>2.2</version>
+    <version>2.3</version>
     <packaging>jar</packaging>
 
     <name>Marriage</name>
@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.github.ThePlay3r</groupId>
             <artifactId>PLJRApi-Spigot</artifactId>
-            <version>v2.1.0</version>
+            <version>v2.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

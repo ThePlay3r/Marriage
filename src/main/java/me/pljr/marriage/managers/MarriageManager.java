@@ -62,12 +62,12 @@ public class MarriageManager {
         UUID partnerId = marriagePlayer.getPartnerID();
         if (partnerId == null) throw new NoPartnerException(playerId);
 
-        MarriagePlayer marriagePartner = playerManager.getPlayer(partnerId);
-
-        marriagePlayer.setPartnerID(null);
-        marriagePartner.setPartnerID(null);
-        playerManager.setPlayer(playerId, marriagePlayer);
-        playerManager.setPlayer(partnerId, marriagePartner);
+        playerManager.getPlayer(partnerId, marriagePartner -> {
+            marriagePlayer.setPartnerID(null);
+            marriagePartner.setPartnerID(null);
+            playerManager.setPlayer(playerId, marriagePlayer);
+            playerManager.setPlayer(partnerId, marriagePartner);
+        });
     }
 
     /**
@@ -118,7 +118,7 @@ public class MarriageManager {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, ()->{
             for (Player player : Bukkit.getOnlinePlayers()){
                 if (!player.hasPermission("marriage.admin.spy")) continue;
-                MarriagePlayer marriageAdmin = playerManager.getPlayer(player);
+                MarriagePlayer marriageAdmin = playerManager.getPlayer(player.getUniqueId());
                 if (!marriageAdmin.isSpy()) continue;
                 ChatUtil.sendMessage(player, Lang.CHAT_SPY.get()
                         .replace("{message}", message)
@@ -182,14 +182,14 @@ public class MarriageManager {
         UUID partnerId = marriagePlayer.getPartnerID();
         if (partnerId == null) throw new NoPartnerException(playerId);
 
-        MarriagePlayer marriagePartner = playerManager.getPlayer(partnerId);
+        playerManager.getPlayer(partnerId, marriagePartner -> {
+            Location homeLocation = player.getLocation();
+            marriagePlayer.setHome(homeLocation);
+            marriagePartner.setHome(homeLocation);
 
-        Location homeLocation = player.getLocation();
-        marriagePlayer.setHome(homeLocation);
-        marriagePartner.setHome(homeLocation);
-
-        playerManager.setPlayer(playerId, marriagePlayer);
-        playerManager.setPlayer(partnerId, marriagePartner);
+            playerManager.setPlayer(playerId, marriagePlayer);
+            playerManager.setPlayer(partnerId, marriagePartner);
+        });
     }
 
     /**
