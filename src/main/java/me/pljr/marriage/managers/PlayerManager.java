@@ -47,8 +47,8 @@ public class PlayerManager {
     }
 
     public void savePlayer(UUID uuid){
-        if (!cachePlayers) players.remove(uuid);
         queryManager.savePlayer(players.get(uuid));
+        if (!cachePlayers) players.remove(uuid);
     }
 
     public void initAutoSave(){
